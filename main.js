@@ -62,34 +62,3 @@ function blocks() {
 
     
 }
-
-// let intervalInMilliseconds = 1; // change this to watever value you like
-// let activeInterval = undefined;
-// function lvl1() {
-//     if (activeInterval) {
-//          clearInterval(activeInterval);
-//     }
-//     drawTiles(block1);
-//     drawTiles(block2);
-//     drawTiles(block3);
-//     activeInterval = setInterval(lvl1, intervalInMilliseconds);
-// }
-// function lvl2() {
-//     if (activeInterval) {
-//          clearInterval(activeInterval);
-//     }
-//     drawTiles(block1);
-//     drawTiles(block2);
-//     drawTiles(block3);
-//     activeInterval = setInterval(lvl2, intervalInMilliseconds);
-// }
-// function lvl3() {
-//     if (activeInterval) {
-//          clearInterval(activeInterval);
-//     }
-//     drawTiles(block1);
-//     drawTiles(block4);
-//     drawTiles(block5);
-//     drawTiles(block6);
-//     activeInterval = setInterval(lvl3, intervalInMilliseconds);
-// }
