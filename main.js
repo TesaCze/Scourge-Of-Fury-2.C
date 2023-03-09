@@ -59,6 +59,6 @@ function blocks() {
     player2.kolize(block1);
     player2.kolize(block2);
     player2.kolize(block3);
-
+    
     
 }
