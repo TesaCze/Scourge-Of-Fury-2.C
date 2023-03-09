@@ -134,3 +134,16 @@ class tiles {
         };
     }
 }
+
+class GameObjects {
+    constructor(x, y, width, height, layer, haveCollision) {
+        this.x = x;
+        this.y = y,
+        this.width = width,
+        this.height = height;
+        this.layer = layer;
+        this.haveCollision = haveCollision;
+        this.sprites = [];
+        
+    }
+}

@@ -1,6 +1,9 @@
 let canvas = document.getElementById("kanvas");
 let ctx = canvas.getContext("2d");
 
+let allObjects = [3, 15, 7, 1, 6, 2, 9]
+let sorted = [];
+
 let player1 = new hraci(
     -15,60,50,100,"#fff",6,14,-0.3,0,true,false
 );
@@ -24,6 +27,7 @@ function Update() {
     blocks();
     drawPlayer(player1);
     drawPlayer(player2);
+
     //console.log(player1.canvasPos().y);
 }
 setInterval(Update, 16);
@@ -61,4 +65,23 @@ function blocks() {
     player2.kolize(block3);
     
     
+}
+
+function Render() {
+    SortLayers();
+
+}
+
+function SortLayers() {
+    allObjects.sort(function(a, b){return a - b});
+    
+}
+
+
+function DrawLayers() {
+    for (let i = 0; i < allObjects.length; i++) {
+        
+
+    }
+
 }
