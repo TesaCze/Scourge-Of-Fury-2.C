@@ -32,7 +32,8 @@ function drawPlayer(hrac) {
     ctx.fillStyle = hrac.color;
     ctx.fillRect(
         hrac.canvasPos().x,
-        hrac.canvasPos().y,
+        50,
+        // hrac.canvasPos().y,
         hrac.width,
         hrac.height
     );
