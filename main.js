@@ -63,6 +63,7 @@ function blocks() {
 
 function Render() {
     SortLayers();
+    DrawLayers();
 
 }
 
@@ -74,7 +75,13 @@ function SortLayers() {
 
 function DrawLayers() {
     for (let i = 0; i < allObjects.length; i++) {
-        
+        ctx.fillStyle = allObjects[i].color;
+        ctx.fillRect(
+            allObjects[i].canvasPos().x,
+            allObjects[i].canvasPos().y,
+            allObjects[i].width,
+            allObjects[i].height
+        );
 
     }
 
