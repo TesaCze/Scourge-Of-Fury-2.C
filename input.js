@@ -4,28 +4,13 @@ document.addEventListener("keypress", (event) => {
             player1.dir.left = true;
             break;
         case "w":
-            player1.canJump = true;
+            player1.dir.up = true;
             break;
         case "d":
             player1.dir.right = true;
             break;
-        case "j":
-            player2.dir.left = true;
-            break;
-        case "i":
-            player2.canJump = true;
-            break;
-        case "l":
-            player2.dir.right = true;
-            break;
-        case "1":
-            lvl1();
-            break;
-        case "2":
-            lvl2();
-            break;
-        case "3":
-            lvl3();
+        case "s":
+            player1.dir.down = true;
             break;
     }
 });
@@ -37,10 +22,10 @@ document.addEventListener("keyup", (event) => {
         case "d":
             player1.dir.right = false;
             break;
-        case "j":
-            player2.dir.left = false;
+        case "w":
+            player1.dir.up = false;
             break;
-        case "l":
-            player2.dir.right = false;
+        case "s":
+            player1.dir.down = false;
     }
 });

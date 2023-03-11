@@ -7,9 +7,6 @@ class hraci {
         color,
         speed,
         velocity,
-        gravitace,
-        jumpCount,
-        canJump,
         isColliding
     ) {
         this.x = x;
@@ -18,11 +15,8 @@ class hraci {
         this.height = height;
         this.color = color;
         this.speed = speed;
-        this.dir = { left: false, right: false };
+        this.dir = { left: false, right: false, up: false, down: false};
         this.velocity = velocity;
-        this.gravitace = gravitace;
-        this.jumpCount = 2;
-        this.canJump = canJump;
         this.isColliding = false;
     }
 
@@ -40,17 +34,6 @@ class hraci {
         this.velocity += this.gravitace;
         this.y += this.velocity;
 
-        if (this.jumpCount > 2) {
-            this.canJump = false;
-        }
-
-        if (this.canJump == true && this.jumpCount < 2) {
-            this.velocity = 10;
-            this.canJump = false;
-            this.jumpCount++;
-            console.log(this.jumpCount);
-        }
-
         //toto me dojebe :)
         if (this.y < -309) {
             this.y = -308;
@@ -58,15 +41,7 @@ class hraci {
             this.jumpCount = 0;
         }
         //-------------------
-
-        switch (this.jumpCount) {
-            case 2: this.color = "red";
-                break;
-            case 1: this.color = "yellow";
-                break;
-            case 0: this.color = "green";
-                break;
-        }
+        
     }
 
     kolize(blok) {
