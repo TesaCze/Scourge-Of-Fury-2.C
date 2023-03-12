@@ -33,15 +33,15 @@ class hraci {
         this.y += this.speed * this.dir.down;
         this.y -= this.speed * this.dir.up;
 
-        this.velocity += this.gravitace;
-        this.y += this.velocity;
+      //  this.velocity += this.gravitace;
+        //this.y += this.velocity;
 
         //toto me dojebe :)
-        if (this.y < -309) {
-            this.y = -308;
-            this.velocity = 0;
-            this.jumpCount = 0;
-        }
+        //if (this.y < -309) {
+          //  this.y = -308;
+            //this.velocity = 0;
+            //this.jumpCount = 0;
+        //}
         //-------------------
         
     }

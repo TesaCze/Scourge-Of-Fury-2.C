@@ -80,14 +80,14 @@ canvas.addEventListener("wheel", (e)=>
 
 canvas.addEventListener("mousedown", (e)=> 
 { 
-    isDragging = true;
+    isDraging = true;
     editorCamera.dragPosition.x = e.offsetX - editorCamera.position.x
     editorCamera.dragPosition.y = e.offsetY - editorCamera.position.y;
 });
 
 canvas.addEventListener("mousemove", (e)=> 
 {
-    if(isDragging)
+    if(isDraging)
     {
         editorCamera.position.x = e.offsetX - editorCamera.dragPosition.x 
         editorCamera.position.y = e.offsetY - editorCamera.dragPosition.y 
@@ -96,8 +96,8 @@ canvas.addEventListener("mousemove", (e)=>
 
 canvas.addEventListener("mouseup", (e)=> 
 {
-    if(isDragging)
+    if(isDraging)
     {
-        isDragging = false;
+        isDraging = false;
     }
 });
