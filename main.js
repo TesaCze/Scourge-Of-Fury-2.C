@@ -58,6 +58,7 @@ function blocks() {
     player1.kolize(block2);
     player1.kolize(block3);
     
+    //block1.Movable()
 }
 
 function Render() {

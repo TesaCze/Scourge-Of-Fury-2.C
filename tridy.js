@@ -30,8 +30,8 @@ class hraci {
     move() {
         this.x += this.speed * this.dir.right;
         this.x -= this.speed * this.dir.left;
-        this.y -= this.speed * this.dir.down;
-        this.y += this.speed * this.dir.up;
+        this.y += this.speed * this.dir.down;
+        this.y -= this.speed * this.dir.up;
 
       //  this.velocity += this.gravitace;
         //this.y += this.velocity;
@@ -110,6 +110,54 @@ class tiles {
             y: -this.y + canvas.height / 2 - this.height / 2,
         };
     }
+
+    /*Movable(blok) {
+        if (
+            this.y + this.height / 2 > blok.y - blok.height / 2 &&
+            this.y - this.height / 2 < blok.y + blok.height / 2 &&
+            this.x - this.width / 2 < blok.x + blok.width / 2 &&
+            this.x + this.width / 2 > blok.x - blok.width / 2
+        ) {
+            this.isColliding = true;
+
+            let top = blok.y - blok.height / 2 - (this.y + this.height / 2);
+            let down = blok.y + blok.height / 2 - (this.y - this.height / 2);
+            let right = blok.x - blok.width / 2 - (this.x + this.width / 2);
+            let left = blok.x + blok.width / 2 - (this.x - this.width / 2);
+
+            if (
+                Math.abs(top) < down &&
+                Math.abs(top) < Math.abs(right) &&
+                Math.abs(top) < left
+            ) {
+                this.y += top;
+                this.velocity = 0;
+            } else if (
+                down < Math.abs(top) &&
+                down < Math.abs(right) &&
+                down < left
+            ) {
+                this.y += down+1;
+                this.velocity = 0;
+                this.jumpCount = 0;
+            } else if (
+                left < Math.abs(top) &&
+                left < Math.abs(right) &&
+                left < down
+            ) {
+                this.x += left;
+            } else if (
+                Math.abs(right) < Math.abs(top) &&
+                Math.abs(right) < left &&
+                Math.abs(right) < down
+            ) {
+                this.x += right;
+            }
+        } else {
+            //this.color = "white";
+            this.isColliding = false;
+        }
+    }*/
 }
 
 class GameObjects {
