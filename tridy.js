@@ -30,8 +30,8 @@ class hraci {
     move() {
         this.x += this.speed * this.dir.right;
         this.x -= this.speed * this.dir.left;
-        this.y += this.speed * this.dir.down;
-        this.y -= this.speed * this.dir.up;
+        this.y -= this.speed * this.dir.down;
+        this.y += this.speed * this.dir.up;
 
       //  this.velocity += this.gravitace;
         //this.y += this.velocity;
