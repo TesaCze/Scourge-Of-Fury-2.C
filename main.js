@@ -5,7 +5,7 @@ let allObjects = [3, 15, 7, 1, 6, 2, 9]
 let sorted = [];
 
 let player1 = new hraci(
-    -15, 60, 50, 100, "#fff", 6, -0.3, false
+    0, 0, 50, 100, "#fff", 6, -0.3, false
     );
 
 let block1 = new tiles(200, -150, 250, 30, "red");
