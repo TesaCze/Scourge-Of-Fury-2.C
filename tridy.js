@@ -125,3 +125,11 @@ class GameObjects {
         
     }
 }
+
+class PhysicGameObjects extends GameObjects {
+    constructor(x, y, width, height, layer, haveCollision, ) {
+        
+
+    } 
+
+}
