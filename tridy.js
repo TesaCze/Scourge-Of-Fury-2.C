@@ -124,12 +124,101 @@ class GameObjects {
         this.sprites = [];
         
     }
+
+    getCurrentSprite(sprites) {
+
+    }
 }
 
 class PhysicGameObjects extends GameObjects {
-    constructor(x, y, width, height, layer, haveCollision, ) {
+    constructor(x, y, width, height, layer, haveCollision, sprites) {
         
+        class Player{
+            
+            Move() {
 
+            }
+        }
+
+        class Enemy {
+            
+            Move() {
+
+            }
+        }
+
+        class Button {
+
+            Pressed() {
+
+            }
+        }
+
+        class MovableBlocks {
+        
+            Move() {
+
+            }
+
+            Slide() {
+
+            }
+        }
     } 
 
+    Collider() {
+
+    }
+
+    CollideWith() {
+
+    }
+
+    Update() {
+        
+    }
+
+    
+
+}
+
+class Camera {
+    constructor(x, y, zoom) {
+        this.x = x,
+        this.y = y,
+        this.zoom = zoom
+    }
+
+
+
+}
+
+class Game {
+    constructor(AllGameObjects, PhysicGameObjects, ctx, canvas, camera) {
+        this.AllGameObjects = [],
+        this.PhysicGameObjects = [],
+        this.ctx = ctx,
+        this.canvas = canvas,
+        this.camera = camera
+    }
+
+    Render() {
+
+    }
+    
+    ToCanvas() {
+
+    }
+
+    Start() {
+
+    }
+
+    Update() {
+
+    }
+ 
+    SpawnObjects() {
+        
+    }
 }
