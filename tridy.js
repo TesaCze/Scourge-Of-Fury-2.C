@@ -1,5 +1,5 @@
 class GameObjects {
-    constructor(x, y, width, height, layer, haveCollision, texture) {
+    constructor(x, y, width, height, layer, haveCollision, texture, canMove) {
         this.x = x;
         this.y = y,
         this.width = width,
@@ -9,6 +9,7 @@ class GameObjects {
         this.sprites = [];
         this.texture = new Image(75, 75);
         this.texture.src = texture;
+        this.canMove = canMove;
      
         
     }
@@ -47,6 +48,7 @@ class Player extends PhysicGameObjects{
         y,
         width,
         height,
+        layer,
         speed,
         velocity,
         isColliding,
@@ -58,9 +60,11 @@ class Player extends PhysicGameObjects{
         this.dir = {left:false, right: false, up:false, down:false}
         this.x = 50;
         this.y = 50;
+        this.layer = layer;
         this.speed = 7;
         this.texture = new Image(75, 75);
         this.texture.src = texture;
+        this.isAttacking = false;
      
     }
 
@@ -75,9 +79,8 @@ class Player extends PhysicGameObjects{
 
     kolize(blok) {
 
-        //pridat vsemu jestli maji kolize
-        console.log(this.haveCollision)
         if (blok.haveCollision == true) {
+
             if (
             this.y + this.height / 2 > blok.y - blok.height / 2 &&
             this.y - this.height / 2 < blok.y + blok.height / 2 &&
@@ -112,7 +115,7 @@ class Player extends PhysicGameObjects{
                 left < down
             ) {
                 this.x += left;
-                camera
+                
             } else if (
                 Math.abs(right) < Math.abs(top) &&
                 Math.abs(right) < left &&
@@ -124,6 +127,14 @@ class Player extends PhysicGameObjects{
             this.isColliding = false;
         }
         }
+
+        if(blok.canMove == true && this.isColliding == true) {
+            blok.x += this.speed * this.dir.right;
+            blok.x -= this.speed * this.dir.left;
+            blok.y -= this.speed * this.dir.down;
+            blok.y += this.speed * this.dir.up;
+          
+        }
         
     }
 
@@ -132,9 +143,24 @@ class Player extends PhysicGameObjects{
         for (let i = 0; i < AllGameObjects.length; i++) {
             this.kolize(AllGameObjects[i]) 
         }
-
       
     }
+}
+
+class Sword extends GameObjects {
+    constructor(x, y, width, height, layer, texture, isAttacking) {
+        super(x, y, width, height, layer, texture)
+        this.x = player1.x,
+        this.y = player1.y,
+        this.width = width,
+        this.height = height,
+        this.layer = layer,
+        this.texture = new Image(28, 75),
+        this.isAttacking = isAttacking
+    
+    }
+
+    
 }
 
 class Enemy extends PhysicGameObjects{
@@ -215,7 +241,10 @@ class Game {
                 this.AllGameObjects[i].Update(this.AllGameObjects);
             }
         }
+        this.SortLayers();
         this.Render();
+
+        console.log(sword)
     }
  
     SpawnObjects() {
@@ -223,7 +252,7 @@ class Game {
     }
 
     SortLayers() {
-        this.AllGameObjects.sort(function(a, b){return a - b});
-        
+        this.AllGameObjects.sort(function(a, b)
+        {return a.layer - b.layer});
     }
 }
