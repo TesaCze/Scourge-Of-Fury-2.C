@@ -1,23 +1,5 @@
-class tiles {
-    constructor(x, y, width, height, color) {
-        this.x = x;
-        this.y = y;
-        this.width = width;
-        this.height = height;
-        this.color = color;
-    }
-
-    canvasPos() {
-        return {
-            x: this.x + canvas.width / 2 - this.width / 2,
-            y: -this.y + canvas.height / 2 - this.height / 2,
-        };
-    }
-
-}
-
 class GameObjects {
-    constructor(x, y, width, height, layer, haveCollision) {
+    constructor(x, y, width, height, layer, haveCollision, texture) {
         this.x = x;
         this.y = y,
         this.width = width,
@@ -25,6 +7,9 @@ class GameObjects {
         this.layer = layer;
         this.haveCollision = haveCollision;
         this.sprites = [];
+        this.texture = new Image(75, 75);
+        this.texture.src = texture;
+     
         
     }
 
@@ -62,25 +47,21 @@ class Player extends PhysicGameObjects{
         y,
         width,
         height,
-        color,
         speed,
         velocity,
-        isColliding
+        isColliding,
+        texture
+
     ) {
-        super(x, y, width,height, velocity)
+        super(x, y, width,height, velocity, texture)
         this.isColliding = false;
         this.dir = {left:false, right: false, up:false, down:false}
         this.x = 50;
         this.y = 50;
         this.speed = 7;
-        this.color = color;
-    }
-
-    canvasPos() {
-        return {
-            x: this.x + canvas.width / 2 - this.width / 2,
-            y: -this.y + canvas.height / 2 - this.height / 2,
-        };
+        this.texture = new Image(75, 75);
+        this.texture.src = texture;
+     
     }
 
     move() {
@@ -88,13 +69,16 @@ class Player extends PhysicGameObjects{
         this.x -= this.speed * this.dir.left;
         this.y -= this.speed * this.dir.down;
         this.y += this.speed * this.dir.up;
-        
+        camera.x = this.x;
+        camera.y = this.y;
     }
 
     kolize(blok) {
 
         //pridat vsemu jestli maji kolize
-        if (
+        console.log(this.haveCollision)
+        if (blok.haveCollision == true) {
+            if (
             this.y + this.height / 2 > blok.y - blok.height / 2 &&
             this.y - this.height / 2 < blok.y + blok.height / 2 &&
             this.x - this.width / 2 < blok.x + blok.width / 2 &&
@@ -139,6 +123,8 @@ class Player extends PhysicGameObjects{
         } else {
             this.isColliding = false;
         }
+        }
+        
     }
 
     Update(AllGameObjects) {
@@ -183,6 +169,7 @@ class Camera {
         this.zoom = zoom
     }
 
+
 }
 
 class Game {
@@ -195,14 +182,7 @@ class Game {
 
     DrawLayers() {
         for (let i = 0; i < this.AllGameObjects.length; i++) {
-            ctx.fillStyle = this.AllGameObjects[i].color;
-            ctx.fillRect(
-                this.AllGameObjects[i].canvasPos().x,
-                this.AllGameObjects[i].canvasPos().y,
-                this.AllGameObjects[i].width,
-                this.AllGameObjects[i].height
-            );
-            
+            ctx.drawImage(this.AllGameObjects[i].texture, this.canvasPos(this.AllGameObjects[i]).x - this.camera.x, this.canvasPos(this.AllGameObjects[i]).y + this.camera.y, 75, 75);        
         }
     
     }
@@ -215,6 +195,14 @@ class Game {
     ToCanvas() {
 
     }
+
+    canvasPos(GameObjects) {
+        return {
+            x: GameObjects.x + canvas.width / 2 - GameObjects.width / 2,
+            y: -GameObjects.y + canvas.height / 2 - GameObjects.height / 2,
+        };
+    }
+
 
     Start() {
 
