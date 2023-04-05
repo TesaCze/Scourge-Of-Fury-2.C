@@ -32,17 +32,6 @@ class hraci {
         this.x -= this.speed * this.dir.left;
         this.y -= this.speed * this.dir.down;
         this.y += this.speed * this.dir.up;
-
-      //  this.velocity += this.gravitace;
-        //this.y += this.velocity;
-
-        //toto me dojebe :)
-        //if (this.y < -309) {
-          //  this.y = -308;
-            //this.velocity = 0;
-            //this.jumpCount = 0;
-        //}
-        //-------------------
         
     }
 
@@ -81,6 +70,7 @@ class hraci {
                 left < down
             ) {
                 this.x += left;
+                camera
             } else if (
                 Math.abs(right) < Math.abs(top) &&
                 Math.abs(right) < left &&
@@ -133,37 +123,6 @@ class GameObjects {
 class PhysicGameObjects extends GameObjects {
     constructor(x, y, width, height, layer, haveCollision, sprites) {
         
-        class Player{
-            
-            Move() {
-
-            }
-        }
-
-        class Enemy {
-            
-            Move() {
-
-            }
-        }
-
-        class Button {
-
-            Pressed() {
-
-            }
-        }
-
-        class MovableBlocks {
-        
-            Move() {
-
-            }
-
-            Slide() {
-
-            }
-        }
     } 
 
     Collider() {
@@ -180,6 +139,38 @@ class PhysicGameObjects extends GameObjects {
 
     
 
+}
+
+class Player{
+            
+    Move() {
+
+    }
+}
+
+class Enemy {
+    
+    Move() {
+
+    }
+}
+
+class Button {
+
+    Pressed() {
+
+    }
+}
+
+class MovableBlocks {
+
+    Move() {
+
+    }
+
+    Slide() {
+
+    }
 }
 
 class Camera {
