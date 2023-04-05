@@ -29,3 +29,6 @@ document.addEventListener("keyup", (event) => {
             player1.dir.down = false;
     }
 });
+document.addEventListener("click", (event) => {
+    
+})
