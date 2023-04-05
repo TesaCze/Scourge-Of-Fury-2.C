@@ -1,4 +1,62 @@
-class hraci {
+class tiles {
+    constructor(x, y, width, height, color) {
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+        this.color = color;
+    }
+
+    canvasPos() {
+        return {
+            x: this.x + canvas.width / 2 - this.width / 2,
+            y: -this.y + canvas.height / 2 - this.height / 2,
+        };
+    }
+
+}
+
+class GameObjects {
+    constructor(x, y, width, height, layer, haveCollision) {
+        this.x = x;
+        this.y = y,
+        this.width = width,
+        this.height = height;
+        this.layer = layer;
+        this.haveCollision = haveCollision;
+        this.sprites = [];
+        
+    }
+
+    getCurrentSprite(sprites) {
+
+    }
+}
+
+class PhysicGameObjects extends GameObjects {
+    constructor(x, y, width, height, layer, haveCollision, sprites) {
+        super(x, y, width, height, layer, haveCollision, sprites)
+        console.log(x)
+    } 
+
+    Collider() {
+
+    }
+
+    CollideWith() {
+
+    }
+
+    Update() {
+        
+    }
+
+    
+
+}
+
+class Player extends PhysicGameObjects{
+            
     constructor(
         x,
         y,
@@ -9,15 +67,13 @@ class hraci {
         velocity,
         isColliding
     ) {
-        this.x = x;
-        this.y = y;
-        this.width = width;
-        this.height = height;
-        this.color = color;
-        this.speed = speed;
-        this.dir = { left: false, right: false, up: false, down: false};
-        this.velocity = velocity;
+        super(x, y, width,height, velocity)
         this.isColliding = false;
+        this.dir = {left:false, right: false, up:false, down:false}
+        this.x = 50;
+        this.y = 50;
+        this.speed = 7;
+        this.color = color;
     }
 
     canvasPos() {
@@ -36,6 +92,8 @@ class hraci {
     }
 
     kolize(blok) {
+
+        //pridat vsemu jestli maji kolize
         if (
             this.y + this.height / 2 > blok.y - blok.height / 2 &&
             this.y - this.height / 2 < blok.y + blok.height / 2 &&
@@ -79,90 +137,35 @@ class hraci {
                 this.x += right;
             }
         } else {
-            //this.color = "white";
             this.isColliding = false;
         }
     }
-}
 
-class tiles {
-    constructor(x, y, width, height, color) {
-        this.x = x;
-        this.y = y;
-        this.width = width;
-        this.height = height;
-        this.color = color;
-    }
+    Update(AllGameObjects) {
+        this.move()
+        for (let i = 0; i < AllGameObjects.length; i++) {
+            this.kolize(AllGameObjects[i]) 
+        }
 
-    canvasPos() {
-        return {
-            x: this.x + canvas.width / 2 - this.width / 2,
-            y: -this.y + canvas.height / 2 - this.height / 2,
-        };
-    }
-
-}
-
-class GameObjects {
-    constructor(x, y, width, height, layer, haveCollision) {
-        this.x = x;
-        this.y = y,
-        this.width = width,
-        this.height = height;
-        this.layer = layer;
-        this.haveCollision = haveCollision;
-        this.sprites = [];
-        
-    }
-
-    getCurrentSprite(sprites) {
-
+      
     }
 }
 
-class PhysicGameObjects extends GameObjects {
-    constructor(x, y, width, height, layer, haveCollision, sprites) {
-        
-    } 
-
-    Collider() {
-
-    }
-
-    CollideWith() {
-
-    }
-
-    Update() {
-        
-    }
-
-    
-
-}
-
-class Player{
-            
-    Move() {
-
-    }
-}
-
-class Enemy {
+class Enemy extends PhysicGameObjects{
     
     Move() {
 
     }
 }
 
-class Button {
+class Button extends PhysicGameObjects{
 
     Pressed() {
 
     }
 }
 
-class MovableBlocks {
+class MovableBlocks extends PhysicGameObjects{
 
     Move() {
 
@@ -180,21 +183,33 @@ class Camera {
         this.zoom = zoom
     }
 
-
-
 }
 
 class Game {
-    constructor(AllGameObjects, PhysicGameObjects, ctx, canvas, camera) {
+    constructor(ctx, canvas, camera) {
         this.AllGameObjects = [],
-        this.PhysicGameObjects = [],
         this.ctx = ctx,
         this.canvas = canvas,
         this.camera = camera
     }
 
-    Render() {
+    DrawLayers() {
+        for (let i = 0; i < this.AllGameObjects.length; i++) {
+            ctx.fillStyle = this.AllGameObjects[i].color;
+            ctx.fillRect(
+                this.AllGameObjects[i].canvasPos().x,
+                this.AllGameObjects[i].canvasPos().y,
+                this.AllGameObjects[i].width,
+                this.AllGameObjects[i].height
+            );
+            
+        }
+    
+    }
 
+    Render() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        this.DrawLayers()
     }
     
     ToCanvas() {
@@ -206,10 +221,21 @@ class Game {
     }
 
     Update() {
-
+        for (let i = 0; i < this.AllGameObjects.length; i++) {
+            if(this.AllGameObjects[i].Update != undefined)
+            {
+                this.AllGameObjects[i].Update(this.AllGameObjects);
+            }
+        }
+        this.Render();
     }
  
     SpawnObjects() {
+        
+    }
+
+    SortLayers() {
+        this.AllGameObjects.sort(function(a, b){return a - b});
         
     }
 }
