@@ -40,7 +40,7 @@ class Player extends PhysicGameObjects{
         super(x, y, width, height, layer, haveCollision, sprites,tag, canMove)
         this.isColliding = false;
         this.dir = {left:false, right: false, up:false, down:false}
-        this.speed = 7;
+        this.speed = 5;
         this.isAttacking = false;
      
     }
