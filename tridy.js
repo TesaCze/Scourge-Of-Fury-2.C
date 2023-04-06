@@ -1,5 +1,5 @@
 class GameObjects {
-    constructor(x, y, width, height, layer, haveCollision, sprites, canMove) {
+    constructor(x, y, width, height, layer, haveCollision, sprites,tag, canMove) {
         this.x = x;
         this.y = y,
         this.width = width,
@@ -7,6 +7,7 @@ class GameObjects {
         this.layer = layer;
         this.haveCollision = haveCollision;
         this.sprites = [];
+        this.tag = tag;
        // this.texture = new Image(75, 75);
         //this.texture.src = texture;
         this.canMove = canMove;
@@ -17,8 +18,8 @@ class GameObjects {
 }
 
 class PhysicGameObjects extends GameObjects {
-    constructor(x, y, width, height, layer, haveCollision, sprites, canMove) {
-        super(x, y, width, height, layer, haveCollision, sprites)
+    constructor(x, y, width, height, layer, haveCollision, sprites,tag, canMove) {
+        super(x, y, width, height, layer, haveCollision, sprites,tag, canMove)
         console.log(x)
     } 
 
@@ -40,8 +41,8 @@ class PhysicGameObjects extends GameObjects {
 
 class Player extends PhysicGameObjects{
             
-    constructor(x, y, width, height, layer, haveCollision, sprites, canMove,speed) {
-        super(x, y, width, height, layer, haveCollision, sprites, canMove)
+    constructor(x, y, width, height, layer, haveCollision, sprites,tag, canMove,speed) {
+        super(x, y, width, height, layer, haveCollision, sprites,tag, canMove)
         this.isColliding = false;
         this.dir = {left:false, right: false, up:false, down:false}
         this.speed = 7;
