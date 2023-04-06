@@ -8,10 +8,9 @@ class GameObjects {
         this.haveCollision = haveCollision;
         this.sprites = [];
         this.tag = tag;
-       // this.texture = new Image(75, 75);
-        //this.texture.src = texture;
+
         this.canMove = canMove;
-     
+
         
     }
 
@@ -183,11 +182,10 @@ class Game {
 
     DrawLayers() {
         for (let i = 0; i < this.AllGameObjects.length; i++) {
-            ctx.drawImage(this.AllGameObjects[i].texture, this.canvasPos(this.AllGameObjects[i]).x - this.camera.x, this.canvasPos(this.AllGameObjects[i]).y + this.camera.y, 75, 75);        
+            let texture = new Image(75, 75);
+            texture.src = this.AllGameObjects[i].sprites[0];
+            ctx.drawImage(texture, this.canvasPos(this.AllGameObjects[i]).x - this.camera.x, this.canvasPos(this.AllGameObjects[i]).y + this.camera.y, 75, 75);        
         }
-        sword.x = player1.x + player1.width/2;
-        sword.y = player1.y;
-        console.log(this.AllGameObjects)
     }
 
     Render() {
