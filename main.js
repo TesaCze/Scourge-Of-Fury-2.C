@@ -19,8 +19,7 @@ async function Start() {
 
     for (let i = 0; i < map.length; i++) {
 
-        for(let j = 0; j < map[j].sprites.length; j++)
-        {
+        for(let j = 0; j < map[j].sprites.length; j++) {
                 sprites.push(map[j].sprites[j])
         }
         switch(map[i].tag)
@@ -37,8 +36,6 @@ async function Start() {
         game.AllGameObjects.push(newGameObject)
 
     }
-
-    sprites[5] = "penis";
     console.log(game.AllGameObjects)
     console.log(game.sprites[5])
 }
