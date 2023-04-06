@@ -24,6 +24,7 @@ async function Start() {
             
             case "player":
                 newGameObject = new Player(map[i].x,map[i].y,map[i].width,map[i].height,map[i].layer,map[i].haveCollision,map[i].sprites,map[i].tag,map[i].canMove,map[i].speed)
+                player = i;
             break;
             case "wall":
                 newGameObject = new GameObjects(map[i].x,map[i].y,map[i].width,map[i].height,map[i].layer, map[i].haveCollision,map[i].sprites,map[i].tag)
