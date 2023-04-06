@@ -8,7 +8,7 @@ let game = new Game(ctx, canvas, camera);
 let player;
 let map;
 let newGameObject;
-let sprites = [];
+
 
 setInterval(Update, 16);
 
@@ -19,25 +19,19 @@ async function Start() {
 
     for (let i = 0; i < map.length; i++) {
 
-        for(let j = 0; j < map[j].sprites.length; j++) {
-                sprites.push(map[j].sprites[j])
-        }
         switch(map[i].tag)
         {
             
             case "player":
-                newGameObject = new Player(map[i].x,map[i].y,map[i].width,map[i].height,map[i].layer,map[i].haveCollision,sprites,map[i].tag,map[i].canMove,map[i].speed)
-                console.log(map[i].sprites)
+                newGameObject = new Player(map[i].x,map[i].y,map[i].width,map[i].height,map[i].layer,map[i].haveCollision,map[i].sprites,map[i].tag,map[i].canMove,map[i].speed)
             break;
             case "wall":
-                newGameObject = new GameObjects(map[i].x,map[i].y,map[i].width,map[i].height,map[i].layer, map[i].haveCollision,sprites,map[i].tag)
+                newGameObject = new GameObjects(map[i].x,map[i].y,map[i].width,map[i].height,map[i].layer, map[i].haveCollision,map[i].sprites,map[i].tag)
             break;
         }
         game.AllGameObjects.push(newGameObject)
 
     }
-    console.log(game.AllGameObjects)
-    console.log(game.sprites[5])
 }
 
 function Update() {

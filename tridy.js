@@ -6,16 +6,9 @@ class GameObjects {
         this.height = height;
         this.layer = layer;
         this.haveCollision = haveCollision;
-        this.sprites = [];
+        this.sprites = sprites;
         this.tag = tag;
-<<<<<<< HEAD
-        this.sprites = sprites
-=======
-
->>>>>>> 61b09b81164a6a4d62038b9030570e436ebae472
         this.canMove = canMove;
-
-        
     }
 
 }
@@ -23,7 +16,6 @@ class GameObjects {
 class PhysicGameObjects extends GameObjects {
     constructor(x, y, width, height, layer, haveCollision, sprites,tag, canMove) {
         super(x, y, width, height, layer, haveCollision, sprites,tag, canMove)
-        console.log(x)
     } 
 
     Collider() {
