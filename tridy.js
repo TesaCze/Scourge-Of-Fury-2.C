@@ -9,6 +9,7 @@ class GameObjects {
         this.sprites = sprites;
         this.tag = tag;
         this.canMove = canMove;
+        this.currentSprite = 0;
     }
 
 }
