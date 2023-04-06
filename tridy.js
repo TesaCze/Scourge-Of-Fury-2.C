@@ -8,8 +8,7 @@ class GameObjects {
         this.haveCollision = haveCollision;
         this.sprites = [];
         this.tag = tag;
-       // this.texture = new Image(75, 75);
-        //this.texture.src = texture;
+        this.sprites = sprites
         this.canMove = canMove;
      
         

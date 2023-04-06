@@ -36,7 +36,25 @@ function Update()
 function Draw()
 {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    DrawObjects();
     DrawGrid();
+}
+
+function DrawObjects()
+{
+    SortLayers(AllGameObjects)
+
+    for(let i = 0; i < AllGameObjects.length;i++)
+    {
+        let pos = WorldToCnavas(AllGameObjects[i].x,AllGameObjects[i].y)
+        let img = new Image(grid.size,grid.size)
+        img.src = AllGameObjects[i].sprites[0]
+        ctx.drawImage(img, pos.x - AllGameObjects[i].width/2 * editorCamera.zoom, pos.y - AllGameObjects[i].height/2* editorCamera.zoom, grid.size * editorCamera.zoom, grid.size* editorCamera.zoom);        
+    }
+}
+
+function SortLayers(arr) {
+    arr.sort(function(a, b){return a.layer - b.layer});
 }
 
 function DrawGrid()
@@ -46,18 +64,19 @@ function DrawGrid()
 
     for(let i = 0; i < canvas.height/grid.size  ; i++)
     {
-
+        let pos = grid.size * Math.round(i * grid.size)
         ctx.beginPath();
-        ctx.moveTo(0, i * grid.size  *editorCamera.zoom  + editorCamera.position.y  + canvas.height/2 +grid.size/2 - grid.size * Math.round(canvas.height/grid.size/2));
-        ctx.lineTo(canvas.width, i * grid.size * editorCamera.zoom  + editorCamera.position.y  + canvas.height/2 +grid.size/2- grid.size * Math.round(canvas.height/grid.size/2));
+        ctx.moveTo(0, pos);
+        ctx.lineTo(canvas.width, pos);
         ctx.stroke();
     }
 
     for(let i = -0; i < canvas.width/grid.size ; i++)
     {
+        let pos = i * grid.size * editorCamera.zoom
         ctx.beginPath();
-        ctx.moveTo(i * grid.size * editorCamera.zoom  + editorCamera.position.x + canvas.width/2 + grid.size/2- grid.size * Math.round(canvas.width/grid.size/2 ) ,0 );
-        ctx.lineTo(i * grid.size * editorCamera.zoom  + editorCamera.position.x +  canvas.width/2 +grid.size/2- grid.size * Math.round(canvas.width/grid.size/2 ), canvas.height);
+        ctx.moveTo(pos ,0 );
+        ctx.lineTo(pos, canvas.height);
         ctx.stroke();
     }
 }
@@ -66,34 +85,34 @@ function CanvasToWorld(x,y)
 {
     
     return{
-        x: (x - canvas.width/2 - editorCamera.position.x)  ,
-        y: -(y - canvas.height/2 - editorCamera.position.y) 
+        x: (x / editorCamera.zoom- canvas.width/2 - editorCamera.position.x)  ,
+        y: -(y / editorCamera.zoom - canvas.height/2 - editorCamera.position.y) 
     }
 }
 
 function WorldToCnavas(x,y)
 {
+    console.log(editorCamera.position)
     return{
-        x: x * grid.size + canvas.width/2,
-        y: y * grid.size + canvas.height/2
+        x: (x + canvas.width/2 ) + editorCamera.position.x ,
+        y: (-y + canvas.height/2 ) + editorCamera.position.y 
     }
 }
 
 //----------------------------------Zooooooooooooooom-----------------------
 canvas.addEventListener("wheel", (e)=> 
 {  
-    startPos = {x:e.offsetX ,y:e.offsetY }
+    startPos = {x:e.offsetX - canvas.width/2 ,y:e.offsetY - canvas.height/2}
     endPos = {x:0 ,y:0 }
-
+    console.log(editorCamera.position)
     if (e.deltaY < 0) 
     {
         editorCamera.zoom += editorCamera.zoomSpeed * editorCamera.zoom;
 
         endPos.x = startPos.x * (editorCamera.zoomSpeed + 1);
         endPos.y = startPos.y * (editorCamera.zoomSpeed + 1);
-   
-        editorCamera.position.x +=  startPos.x - endPos.x + (editorCamera.position.x + canvas.width/2+ grid.size/2- grid.size * Math.round(canvas.width/grid.size/2)) * editorCamera.zoomSpeed ;
-        editorCamera.position.y +=  startPos.y - endPos.y + (editorCamera.position.y + canvas.height/2+ grid.size/2- grid.size * Math.round(canvas.height/grid.size/2)) * editorCamera.zoomSpeed;
+        editorCamera.position.x +=  startPos.x - endPos.x + editorCamera.position.x * editorCamera.zoomSpeed;
+        editorCamera.position.y +=  startPos.y - endPos.y + editorCamera.position.y * editorCamera.zoomSpeed;
     }
     else
     {
@@ -105,8 +124,9 @@ canvas.addEventListener("wheel", (e)=>
         endPos.x = startPos.x * (editorCamera.zoomSpeed + 1);
         endPos.y = startPos.y * (editorCamera.zoomSpeed + 1);
    
-        editorCamera.position.x -=  startPos.x - endPos.x + (editorCamera.position.x + canvas.width/2+ grid.size/2- grid.size * Math.round(canvas.width/grid.size/2)) * editorCamera.zoomSpeed;
-        editorCamera.position.y -=  startPos.y - endPos.y + (editorCamera.position.y + canvas.height/2+ grid.size/2- grid.size * Math.round(canvas.height/grid.size/2)) * editorCamera.zoomSpeed;
+        editorCamera.position.x -=  startPos.x - endPos.x + editorCamera.position.x * editorCamera.zoomSpeed;
+        editorCamera.position.y -=  startPos.y - endPos.y + editorCamera.position.y * editorCamera.zoomSpeed;
+
     }
    
 });
@@ -125,15 +145,30 @@ canvas.addEventListener("mousedown", (e)=>
         pos.x = grid.size * Math.round(pos.x/grid.size)
         pos.y = grid.size * Math.round(pos.y/grid.size)
 
-        if(type == "player")
+        let newGameObject;
+
+        
+        switch(currentBlock.type)
         {
-            //Player newGameObject = new Player()
+            case "player":
+                newGameObject = new Player(pos.x,pos.y,grid.size,grid.size,0,true,currentBlock.sprites,"player",true,7)
+            break;
+            case "wall":
+                newGameObject = new GameObjects(pos.x,pos.y,grid.size,grid.size,0,true,currentBlock.sprites,"wall")
+            break;
         }
 
         for(let i = 0; i < AllGameObjects.length;i++)
         {
-           //if()
+            
+           if((newGameObject.x == AllGameObjects[i].x && newGameObject.y == AllGameObjects[i].y))
+           {
+                return
+           }
         }
+        console.log(newGameObject)
+        AllGameObjects.push(newGameObject);
+       
     }
     
 });
@@ -155,10 +190,10 @@ canvas.addEventListener("mouseup", (e)=>
     }
 });
 
-function onTextureClick(src,type)
+function onTextureClick(obj)
 {
-    console.log(src,type)
-    currentBlock = {src:src,type:type}
+
+    currentBlock = obj
 }
 
 function addTexturesToDiv()
@@ -166,9 +201,17 @@ function addTexturesToDiv()
     for(let i = 0; i < Textures.length;i++)
     {
         const newDiv = document.createElement("img");
-        newDiv.src = Textures[i].src
+        newDiv.src = Textures[i].sprites[0]
         console.log()
-        newDiv.setAttribute("onclick","onTextureClick('"+Textures[i].src + "','"+Textures[i].type+"')");
+        newDiv.setAttribute("onclick","onTextureClick("+JSON.stringify(Textures[i])+")");
         document.getElementById("textury").appendChild(newDiv) 
     }
 }
+
+function downloadMap() {
+    const a = document.createElement("a");
+    const file = new Blob([JSON.stringify(AllGameObjects)], { type: "text/plain" });
+    a.href = URL.createObjectURL(file);
+    a.download = "mapa.json";
+    a.click();
+  }

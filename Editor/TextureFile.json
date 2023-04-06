@@ -1,5 +1,5 @@
 [
-    {"src":"../Textures/playerTexture.png","type":"player"},
-    {"src":"../Textures/blockTexture.png","type":"wall"},
-    {"src":"../Textures/ncBlockTexture.png","type":"wall"}
+    {"sprites":["../Textures/playerTexture.png"],"type":"player"},
+    {"sprites":["../Textures/blockTexture.png"],"type":"wall"},
+    {"sprites":["../Textures/ncBlockTexture.png"],"type":"wall"}
 ]
