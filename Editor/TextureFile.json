@@ -1,0 +1,5 @@
+[
+    {"src":"../Textures/playerTexture.png","type":"player"},
+    {"src":"../Textures/blockTexture.png","type":"wall"},
+    {"src":"../Textures/ncBlockTexture.png","type":"wall"}
+]
