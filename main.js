@@ -5,7 +5,8 @@ let allObjects = [3, 15, 7, 1, 6, 2, 9]
 let sorted = [];
 
 let player1 = new Player(0, 0, 75, 75, 1, 6, 1, false, "playerTexture.png");
-let sword = new Sword(150, 0, 28, 75, 1, 6, 1, false, "swordTextureFalse.png");
+let sword = new Sword(150, 0, 28, 75, 1,  0,  "swordTextureFalse.png",false);
+let attackingTexture = new GameObjects()
 
 let block1 = new GameObjects(200, -150, 75, 75, 0, true, "blockTexture.png", false);
 let block2 = new GameObjects(400, 150, 75, 75, 0, true, "blockTexture.png", false);
