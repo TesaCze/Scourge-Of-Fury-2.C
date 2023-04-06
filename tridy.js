@@ -40,7 +40,7 @@ class PhysicGameObjects extends GameObjects {
 
 class Player extends PhysicGameObjects{
             
-    constructor(x, y, width, height, layer, haveCollision, sprites, canMove,speed,velocity) {
+    constructor(x, y, width, height, layer, haveCollision, sprites, canMove,speed) {
         super(x, y, width, height, layer, haveCollision, sprites, canMove)
         this.isColliding = false;
         this.dir = {left:false, right: false, up:false, down:false}
