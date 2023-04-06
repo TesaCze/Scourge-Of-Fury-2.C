@@ -30,5 +30,5 @@ document.addEventListener("keyup", (event) => {
     }
 });
 document.addEventListener("click", (event) => {
-    
+    return 0;
 })

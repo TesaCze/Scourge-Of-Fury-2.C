@@ -1,5 +1,5 @@
 class GameObjects {
-    constructor(x, y, width, height, layer, haveCollision, texture, canMove) {
+    constructor(x, y, width, height, layer, haveCollision, sprites, canMove) {
         this.x = x;
         this.y = y,
         this.width = width,
@@ -7,20 +7,17 @@ class GameObjects {
         this.layer = layer;
         this.haveCollision = haveCollision;
         this.sprites = [];
-        this.texture = new Image(75, 75);
-        this.texture.src = texture;
+       // this.texture = new Image(75, 75);
+        //this.texture.src = texture;
         this.canMove = canMove;
      
         
     }
 
-    getCurrentSprite(sprites) {
-
-    }
 }
 
 class PhysicGameObjects extends GameObjects {
-    constructor(x, y, width, height, layer, haveCollision, sprites) {
+    constructor(x, y, width, height, layer, haveCollision, sprites, canMove) {
         super(x, y, width, height, layer, haveCollision, sprites)
         console.log(x)
     } 
@@ -43,27 +40,11 @@ class PhysicGameObjects extends GameObjects {
 
 class Player extends PhysicGameObjects{
             
-    constructor(
-        x,
-        y,
-        width,
-        height,
-        layer,
-        speed,
-        velocity,
-        isColliding,
-        texture
-
-    ) {
-        super(x, y, width,height, velocity, texture)
+    constructor(x, y, width, height, layer, haveCollision, sprites, canMove,speed,velocity) {
+        super(x, y, width, height, layer, haveCollision, sprites, canMove)
         this.isColliding = false;
         this.dir = {left:false, right: false, up:false, down:false}
-        this.x = 50;
-        this.y = 50;
-        this.layer = layer;
         this.speed = 7;
-        this.texture = new Image(75, 75);
-        this.texture.src = texture;
         this.isAttacking = false;
      
     }
@@ -148,16 +129,9 @@ class Player extends PhysicGameObjects{
 }
 
 class Sword extends GameObjects {
-    constructor(x, y, width, height, layer, texture, isAttacking) {
-        super(x, y, width, height, layer, texture)
-        this.x = player1.x,
-        this.y = player1.y,
-        this.width = width,
-        this.height = height,
-        this.layer = layer,
-        this.texture = new Image(28, 75),
-        this.isAttacking = isAttacking
-    
+    constructor(x, y, width, height, layer, haveCollision, texture, canMove) {
+        super(x, y, width, height, layer, haveCollision, texture, canMove)
+        this.isAttacking = false;    
     }
 
     
@@ -210,7 +184,9 @@ class Game {
         for (let i = 0; i < this.AllGameObjects.length; i++) {
             ctx.drawImage(this.AllGameObjects[i].texture, this.canvasPos(this.AllGameObjects[i]).x - this.camera.x, this.canvasPos(this.AllGameObjects[i]).y + this.camera.y, 75, 75);        
         }
-    
+        sword.x = player1.x + player1.width/2;
+        sword.y = player1.y;
+        console.log(this.AllGameObjects)
     }
 
     Render() {
@@ -243,8 +219,6 @@ class Game {
         }
         this.SortLayers();
         this.Render();
-
-        console.log(sword)
     }
  
     SpawnObjects() {
