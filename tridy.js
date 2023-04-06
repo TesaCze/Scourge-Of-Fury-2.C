@@ -42,8 +42,44 @@ class Player extends PhysicGameObjects{
         this.dir = {left:false, right: false, up:false, down:false}
         this.speed = 5;
         this.isAttacking = false;
+
+        document.addEventListener("keypress", (event) => {
+            switch (event.key) {
+                case "a":
+                    this.dir.left = true;
+                    break;
+                case "w":
+                    this.dir.up = true;
+                    break;
+                case "d":
+                    this.dir.right = true;
+                    break;
+                case "s":
+                    this.dir.down = true;
+                    break;
+            }
+        });
+        document.addEventListener("keyup", (event) => {
+            switch (event.key) {
+                case "a":
+                    this.dir.left = false;
+                    break;
+                case "d":
+                    this.dir.right = false;
+                    break;
+                case "w":
+                    this.dir.up = false;
+                    break;
+                case "s":
+                    this.dir.down = false;
+            }
+        });
+        document.addEventListener("click", (event) => {
+            return 0;
+        })
      
     }
+    
 
     move() {
         this.x += this.speed * this.dir.right;
