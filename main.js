@@ -5,6 +5,7 @@ addEventListener("load", (event) => {Start();});
 
 let camera = new Camera(0, 0, 0);
 let game = new Game(ctx, canvas, camera);
+let enemy = new Enemy(75, 150, 75, 75, 1, true, ["../Textures/enemyTexture.png"], "enemy", true)
 let map;
 let newGameObject;
 
@@ -31,6 +32,7 @@ async function Start() {
         game.AllGameObjects.push(newGameObject)
 
     }
+    game.AllGameObjects.push(enemy)
 }
 
 function Update() {
