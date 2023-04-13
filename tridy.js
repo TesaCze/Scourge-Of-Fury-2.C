@@ -28,7 +28,6 @@ class PhysicGameObjects extends GameObjects {
     }
 
     Update() {
-        
     }
 
     
@@ -37,12 +36,13 @@ class PhysicGameObjects extends GameObjects {
 
 class Player extends PhysicGameObjects{
             
-    constructor(x, y, width, height, layer, haveCollision, sprites,tag, canMove,speed) {
+    constructor(x, y, width, height, layer, haveCollision, sprites,tag, canMove,speed, hp) {
         super(x, y, width, height, layer, haveCollision, sprites,tag, canMove)
         this.isColliding = false;
         this.dir = {left:false, right: false, up:false, down:false}
         this.speed = 5;
         this.isAttacking = false;
+        this.hp = 100;
 
         document.addEventListener("keypress", (event) => {
             switch (event.key) {
@@ -91,15 +91,21 @@ class Player extends PhysicGameObjects{
         camera.y = this.y;
     }
 
+    Health() {
+        if(this.isColliding == true) {
+            return 0;
+        }
+    }
+
     kolize(blok) {
 
         if (blok.haveCollision == true) {
 
             if (
-            this.y + this.height / 2 > blok.y - blok.height / 2 &&
-            this.y - this.height / 2 < blok.y + blok.height / 2 &&
-            this.x - this.width / 2 < blok.x + blok.width / 2 &&
-            this.x + this.width / 2 > blok.x - blok.width / 2
+                this.y + this.height / 2 > blok.y - blok.height / 2 &&
+                this.y - this.height / 2 < blok.y + blok.height / 2 &&
+                this.x - this.width / 2 < blok.x + blok.width / 2 &&
+                this.x + this.width / 2 > blok.x - blok.width / 2
         ) {
             this.isColliding = true;
 
@@ -149,6 +155,10 @@ class Player extends PhysicGameObjects{
             blok.y += this.speed * this.dir.up;
           
         }
+
+        if(blok.tag == "wall" && this.isColliding == true) {
+     
+        }
         
     }
 
@@ -171,7 +181,12 @@ class Sword extends GameObjects {
 }
 
 class Enemy extends PhysicGameObjects{
-    
+    constructor(x, y, width, height, layer, haveCollision, sprites, tag, canMove) {
+        super(x, y, width, height, layer, haveCollision, sprites,tag, canMove)
+        this.isColliding = false;
+        this.speed = 5;
+        this.isAttacking = false;
+    } 
     Move() {
 
     }
@@ -205,7 +220,7 @@ class Camera {
 
 }
 
-class Game {
+class Game{
     constructor(ctx, canvas, camera) {
         this.AllGameObjects = [],
         this.ctx = ctx,
