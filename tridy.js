@@ -27,10 +27,86 @@ class PhysicGameObjects extends GameObjects {
 
     }
 
-    Update() {
+    UpdateX(AllGameObjects) {
+        for (let i = 0; i < AllGameObjects.length; i++) {
+            this.kolize(AllGameObjects[i]) 
+
+        }
     }
 
-    
+    kolize(blok) {
+
+        if (blok.haveCollision == true) {
+
+            if (
+                this.y + this.height / 2 > blok.y - blok.height / 2 &&
+                this.y - this.height / 2 < blok.y + blok.height / 2 &&
+                this.x - this.width / 2 < blok.x + blok.width / 2 &&
+                this.x + this.width / 2 > blok.x - blok.width / 2
+        ) {
+            this.isColliding = true;
+
+            let top = blok.y - blok.height / 2 - (this.y + this.height / 2);
+            let down = blok.y + blok.height / 2 - (this.y - this.height / 2);
+            let right = blok.x - blok.width / 2 - (this.x + this.width / 2);
+            let left = blok.x + blok.width / 2 - (this.x - this.width / 2);
+
+            if (
+                Math.abs(top) < down &&
+                Math.abs(top) < Math.abs(right) &&
+                Math.abs(top) < left
+            ) {
+                this.y += top;
+                this.velocity = 0;
+            } else if (
+                down < Math.abs(top) &&
+                down < Math.abs(right) &&
+                down < left
+            ) {
+                this.y += down+1;
+                this.velocity = 0;
+                this.jumpCount = 0;
+            } else if (
+                left < Math.abs(top) &&
+                left < Math.abs(right) &&
+                left < down
+            ) {
+                this.x += left;
+                
+            } else if (
+                Math.abs(right) < Math.abs(top) &&
+                Math.abs(right) < left &&
+                Math.abs(right) < down
+            ) {
+                this.x += right;
+            }
+        } else {
+            this.isColliding = false;
+        }
+        }
+
+        let player;
+                                                                        //----------------chyba
+        for(let i = 0; i < AllGameObjects.length; i++) {
+            if(AllGameObjects[i].tag == "player") {
+                player = AllGameObjects[i]
+                break;
+            }
+        }        
+
+        if(blok.canMove == true && this.isColliding == true) {
+            blok.x += this.speed * player.dir.right;
+            blok.x -= this.speed * player.dir.left;
+            blok.y -= this.speed * player.dir.down;
+            blok.y += this.speed * player.dir.up;
+          
+        }
+
+        if(blok.tag == "wall" && this.isColliding == true) {
+     
+        }
+        
+    }
 
 }
 
@@ -97,76 +173,9 @@ class Player extends PhysicGameObjects{
         }
     }
 
-    kolize(blok) {
-
-        if (blok.haveCollision == true) {
-
-            if (
-                this.y + this.height / 2 > blok.y - blok.height / 2 &&
-                this.y - this.height / 2 < blok.y + blok.height / 2 &&
-                this.x - this.width / 2 < blok.x + blok.width / 2 &&
-                this.x + this.width / 2 > blok.x - blok.width / 2
-        ) {
-            this.isColliding = true;
-
-            let top = blok.y - blok.height / 2 - (this.y + this.height / 2);
-            let down = blok.y + blok.height / 2 - (this.y - this.height / 2);
-            let right = blok.x - blok.width / 2 - (this.x + this.width / 2);
-            let left = blok.x + blok.width / 2 - (this.x - this.width / 2);
-
-            if (
-                Math.abs(top) < down &&
-                Math.abs(top) < Math.abs(right) &&
-                Math.abs(top) < left
-            ) {
-                this.y += top;
-                this.velocity = 0;
-            } else if (
-                down < Math.abs(top) &&
-                down < Math.abs(right) &&
-                down < left
-            ) {
-                this.y += down+1;
-                this.velocity = 0;
-                this.jumpCount = 0;
-            } else if (
-                left < Math.abs(top) &&
-                left < Math.abs(right) &&
-                left < down
-            ) {
-                this.x += left;
-                
-            } else if (
-                Math.abs(right) < Math.abs(top) &&
-                Math.abs(right) < left &&
-                Math.abs(right) < down
-            ) {
-                this.x += right;
-            }
-        } else {
-            this.isColliding = false;
-        }
-        }
-
-        if(blok.canMove == true && this.isColliding == true) {
-            blok.x += this.speed * this.dir.right;
-            blok.x -= this.speed * this.dir.left;
-            blok.y -= this.speed * this.dir.down;
-            blok.y += this.speed * this.dir.up;
-          
-        }
-
-        if(blok.tag == "wall" && this.isColliding == true) {
-     
-        }
-        
-    }
-
     Update(AllGameObjects) {
+
         this.move()
-        for (let i = 0; i < AllGameObjects.length; i++) {
-            this.kolize(AllGameObjects[i]) 
-        }
       
     }
 }
@@ -184,12 +193,56 @@ class Enemy extends PhysicGameObjects{
     constructor(x, y, width, height, layer, haveCollision, sprites, tag, canMove) {
         super(x, y, width, height, layer, haveCollision, sprites,tag, canMove)
         this.isColliding = false;
-        this.speed = 5;
+        this.speed = 6;
         this.isAttacking = false;
-    } 
-    Move() {
+    }
+
+    Move(AllGameObjects) {
+    let player;
+        for(let i = 0; i < AllGameObjects.length; i++) {
+            if(AllGameObjects[i].tag == "player") {
+                player = AllGameObjects[i]
+                break;
+            }
+        }
+      
+        let dir = this.Direction(player)
+
+        this.x += dir.x * this.speed;
+        this.y += dir.y * this.speed;
+    }
+
+    //--------------Toban------------
+
+    Magnitude(pos){
+        return Math.sqrt((pos.x * pos.x) + (pos.y * pos.y));
+    }
+
+    Normalized(pos){
+        let m = this.Magnitude(pos);
+        return {x:(pos.x / m), y:(pos.y / m)}
+    }
+    Distance(player){
+        return Math.sqrt((player.x - this.x)* (player.x - this.x) + (player.y - this.y) *(player.y - this.y))
+    }
+    
+    Direction(player){
+        let dir = {x:player.x-this.x, y: player.y - this.y}
+        return (this.Normalized(dir))
+    }
+
+    //-----------------------------
+
+    Kolize() {
 
     }
+
+    Update(AllGameObjects) {
+        this.UpdateX(AllGameObjects)
+        this.Move(AllGameObjects);
+       
+    }
+    
 }
 
 class Button extends PhysicGameObjects{
