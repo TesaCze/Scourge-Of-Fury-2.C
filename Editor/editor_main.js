@@ -5,15 +5,15 @@ let ctx = canvas.getContext("2d");
 let grid = {lineColor:"#bfbfbf",lineWidth:0.5,size:75}
 
 
-
 //-----------------------------------------Nesahat-----------------------------------------
-let editorCamera = {zoom:1, zoomSpeed: 0.1,zoomMin: 0.05,position:{x:0,y:0},dragPosition:{x:0,y:0}}
+let editorCamera = {zoom:1, zoomSpeed: 0.1,zoomMin: 0.2,zoomMax: 4,position:{x:0,y:0},dragPosition:{x:0,y:0}}
 let isDraging = false;
 let AllGameObjects = [];
 let currentBlock = null;
+let history = [];
+let udnoHistory = [];
 
 let Textures;
-
 
 addEventListener("load", (event) => {Start();});
 
@@ -62,21 +62,36 @@ function DrawGrid()
     ctx.strokeStyle = grid.lineColor;
     ctx.lineWidth = grid.lineWidth;
 
-    for(let i = 0; i < canvas.height/grid.size  ; i++)
+    let yCount =  Math.round(canvas.height/(grid.size * editorCamera.zoom));
+    if((yCount % 2) == 1)
     {
-        let pos = grid.size * Math.round(i * grid.size)
+        yCount++
+    }
+    
+    for(let i = 0; i < yCount; i++)
+    {
+        let y = ((grid.size * i) - ((Math.round(yCount )/2) * grid.size)) + (Math.round(editorCamera.position.y / grid.size / editorCamera.zoom) * grid.size) + grid.size/2
+        let pos = WorldToCnavas(0,y)
         ctx.beginPath();
-        ctx.moveTo(0, pos);
-        ctx.lineTo(canvas.width, pos);
+        ctx.moveTo(0, pos.y);
+        ctx.lineTo(canvas.width, pos.y);
         ctx.stroke();
     }
 
-    for(let i = -0; i < canvas.width/grid.size ; i++)
+    let xCount =  Math.round(canvas.width/(grid.size * editorCamera.zoom));
+
+    if((xCount % 2) == 1)
     {
-        let pos = i * grid.size * editorCamera.zoom
+        xCount++
+    }
+
+    for(let i = 0; i < xCount ; i++)
+    {
+        let x = ((grid.size * i) - ((Math.round(xCount )/2) * grid.size)) - (Math.round(editorCamera.position.x / grid.size / editorCamera.zoom) * grid.size) + grid.size/2
+        let pos = WorldToCnavas(x,0)
         ctx.beginPath();
-        ctx.moveTo(pos ,0 );
-        ctx.lineTo(pos, canvas.height);
+        ctx.moveTo(pos.x ,0 );
+        ctx.lineTo(pos.x, canvas.height);
         ctx.stroke();
     }
 }
@@ -85,17 +100,16 @@ function CanvasToWorld(x,y)
 {
     
     return{
-        x: (x / editorCamera.zoom- canvas.width/2 - editorCamera.position.x)  ,
-        y: -(y / editorCamera.zoom - canvas.height/2 - editorCamera.position.y) 
+        x:( x - canvas.width/2 - editorCamera.position.x)/ editorCamera.zoom,
+        y: (-y + canvas.height/2 + editorCamera.position.y)/ editorCamera.zoom 
     }
 }
 
 function WorldToCnavas(x,y)
 {
-    console.log(editorCamera.position)
     return{
-        x: (x + canvas.width/2 ) + editorCamera.position.x ,
-        y: (-y + canvas.height/2 ) + editorCamera.position.y 
+        x: (x* editorCamera.zoom + canvas.width/2 ) + editorCamera.position.x  ,
+        y: (-y* editorCamera.zoom + canvas.height/2 ) + editorCamera.position.y  
     }
 }
 
@@ -104,29 +118,40 @@ canvas.addEventListener("wheel", (e)=>
 {  
     startPos = {x:e.offsetX - canvas.width/2 ,y:e.offsetY - canvas.height/2}
     endPos = {x:0 ,y:0 }
-    console.log(editorCamera.position)
     if (e.deltaY < 0) 
     {
         editorCamera.zoom += editorCamera.zoomSpeed * editorCamera.zoom;
 
-        endPos.x = startPos.x * (editorCamera.zoomSpeed + 1);
-        endPos.y = startPos.y * (editorCamera.zoomSpeed + 1);
-        editorCamera.position.x +=  startPos.x - endPos.x + editorCamera.position.x * editorCamera.zoomSpeed;
-        editorCamera.position.y +=  startPos.y - endPos.y + editorCamera.position.y * editorCamera.zoomSpeed;
+        if(editorCamera.zoom > editorCamera.zoomMax)
+        {
+            editorCamera.zoom = editorCamera.zoomMax
+        }
+        else
+        {
+            endPos.x = startPos.x * (editorCamera.zoomSpeed + 1);
+            endPos.y = startPos.y * (editorCamera.zoomSpeed + 1);
+            editorCamera.position.x +=  startPos.x - endPos.x + editorCamera.position.x * editorCamera.zoomSpeed;
+            editorCamera.position.y +=  startPos.y - endPos.y + editorCamera.position.y * editorCamera.zoomSpeed;
+        }
+
+       
     }
     else
     {
         editorCamera.zoom -= editorCamera.zoomSpeed * editorCamera.zoom;
+
         if(editorCamera.zoom < editorCamera.zoomMin)
         {
             editorCamera.zoom = editorCamera.zoomMin
         }
+        else
+        {
         endPos.x = startPos.x * (editorCamera.zoomSpeed + 1);
         endPos.y = startPos.y * (editorCamera.zoomSpeed + 1);
    
         editorCamera.position.x -=  startPos.x - endPos.x + editorCamera.position.x * editorCamera.zoomSpeed;
         editorCamera.position.y -=  startPos.y - endPos.y + editorCamera.position.y * editorCamera.zoomSpeed;
-
+        }
     }
    
 });
@@ -173,7 +198,7 @@ canvas.addEventListener("mousedown", (e)=>
     
 });
 
-canvas.addEventListener("mousemove", (e)=> 
+canvas.addEventListener("mousemove", (e) => 
 {
     if(isDraging)
     {
@@ -182,7 +207,7 @@ canvas.addEventListener("mousemove", (e)=>
     }
 });
 
-canvas.addEventListener("mouseup", (e)=> 
+canvas.addEventListener("mouseup", (e) => 
 {
     if(isDraging)
     {
@@ -190,9 +215,26 @@ canvas.addEventListener("mouseup", (e)=>
     }
 });
 
+document.addEventListener("keydown", (e) => 
+{
+    console.log(e)
+    switch(e.code)
+    {
+        case "Space":
+            editorCamera.position.x = 0;
+            editorCamera.position.y = 0;
+            editorCamera.zoom = 1;
+        break;
+    }
+
+    if(e.code == "KeyZ" && e.ctrlKey)
+    {
+        
+    }
+})
+
 function onTextureClick(obj)
 {
-
     currentBlock = obj
 }
 
