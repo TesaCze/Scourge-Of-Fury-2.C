@@ -10,6 +10,8 @@ let editorCamera = {zoom:1, zoomSpeed: 0.1,zoomMin: 0.2,zoomMax: 4,position:{x:0
 let isDraging = false;
 let AllGameObjects = [];
 let currentBlock = null;
+let history = [];
+let udnoHistory = [];
 
 let Textures;
 
@@ -196,7 +198,7 @@ canvas.addEventListener("mousedown", (e)=>
     
 });
 
-canvas.addEventListener("mousemove", (e)=> 
+canvas.addEventListener("mousemove", (e) => 
 {
     if(isDraging)
     {
@@ -205,13 +207,31 @@ canvas.addEventListener("mousemove", (e)=>
     }
 });
 
-canvas.addEventListener("mouseup", (e)=> 
+canvas.addEventListener("mouseup", (e) => 
 {
     if(isDraging)
     {
         isDraging = false;
     }
 });
+
+document.addEventListener("keydown", (e) => 
+{
+    console.log(e)
+    switch(e.code)
+    {
+        case "Space":
+            editorCamera.position.x = 0;
+            editorCamera.position.y = 0;
+            editorCamera.zoom = 1;
+        break;
+    }
+
+    if(e.code == "KeyZ" && e.ctrlKey)
+    {
+        
+    }
+})
 
 function onTextureClick(obj)
 {
