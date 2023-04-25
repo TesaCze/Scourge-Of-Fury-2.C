@@ -30,12 +30,11 @@ class PhysicGameObjects extends GameObjects {
 
     UpdateX(AllGameObjects) {
         for (let i = 0; i < AllGameObjects.length; i++) {
-            this.kolize(AllGameObjects[i]) 
-
+            this.kolize(AllGameObjects[i]); 
         }
     }
 
-    kolize(blok) {
+    kolize(blok, xd) {
 
         if (blok.haveCollision == true) {
 
@@ -88,7 +87,7 @@ class PhysicGameObjects extends GameObjects {
 
         let player;
         
-        for(let i = 0; i < AllGameObjects.length; i++) {
+        /*for(let i = 0; i < AllGameObjects.length; i++) {
             if(AllGameObjects[i].tag == "player") {
                 player = AllGameObjects[i]
                 break;
@@ -106,7 +105,7 @@ class PhysicGameObjects extends GameObjects {
         if(blok.tag == "wall" && this.isColliding == true) {
      
         }
-        
+        */
     }
   
 }
