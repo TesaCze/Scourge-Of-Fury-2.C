@@ -1,4 +1,4 @@
-class GameObjects {
+class GameObjects{
     constructor(x, y, width, height, layer, haveCollision, sprites,tag, canMove) {
         this.x = x;
         this.y = y,
@@ -17,6 +17,7 @@ class GameObjects {
 class PhysicGameObjects extends GameObjects {
     constructor(x, y, width, height, layer, haveCollision, sprites,tag, canMove) {
         super(x, y, width, height, layer, haveCollision, sprites,tag, canMove)
+
     } 
 
     Collider() {
@@ -86,13 +87,13 @@ class PhysicGameObjects extends GameObjects {
         }
 
         let player;
-                                                                        //----------------chyba
+        
         for(let i = 0; i < AllGameObjects.length; i++) {
             if(AllGameObjects[i].tag == "player") {
                 player = AllGameObjects[i]
                 break;
             }
-        }        
+        }      
 
         if(blok.canMove == true && this.isColliding == true) {
             blok.x += this.speed * player.dir.right;
@@ -107,7 +108,7 @@ class PhysicGameObjects extends GameObjects {
         }
         
     }
-
+  
 }
 
 class Player extends PhysicGameObjects{
@@ -157,6 +158,10 @@ class Player extends PhysicGameObjects{
      
     }
     
+    AnimationSwitch() {
+        let playerAnimations = [];
+        
+    }
 
     move() {
         this.x += this.speed * this.dir.right;
@@ -168,13 +173,11 @@ class Player extends PhysicGameObjects{
     }
 
     Health() {
-        if(this.isColliding == true) {
-            return 0;
-        }
+
     }
 
     Update(AllGameObjects) {
-
+        this.Health();
         this.move()
       
     }
@@ -274,24 +277,55 @@ class Camera {
 }
 
 class Game{
-    constructor(ctx, canvas, camera) {
+    constructor(ctx, canvas, camera, playerHp) {
         this.AllGameObjects = [],
         this.ctx = ctx,
         this.canvas = canvas,
         this.camera = camera
+        this.playerHp = 30;
     }
 
+    /*SpriteSwitch() {
+        let currSprite; 
+        for (let i = 1; i < this.AllGameObjects.currentSprite.length; i++) {
+            currSprite++;
+        }
+    }*/
+
     DrawLayers() {
+        //this.SpriteSwitch();
         for (let i = 0; i < this.AllGameObjects.length; i++) {
             let texture = new Image(75, 75);
-            texture.src = this.AllGameObjects[i].sprites[0];
+                texture.src = this.AllGameObjects[i].sprites[0];
             ctx.drawImage(texture, this.canvasPos(this.AllGameObjects[i]).x - this.camera.x, this.canvasPos(this.AllGameObjects[i]).y + this.camera.y, 75, 75);        
         }
     }
 
+    PlayerHealth() {
+        addEventListener("keyup", (event) => {
+            if(event.key == "p") {
+                this.Hit();
+            }
+        });
+
+        ctx.fillStyle='#fff';
+        ctx.fillRect(canvas.width - 120, canvas.height - 75, 90, 40);  
+        ctx.font = "20px Arial";
+        ctx.fillStyle = "black"
+        ctx.fillText(this.playerHp + "/30", canvas.width - 100, canvas.height - 50);
+        if(this.isColliding == true) {
+            return 0;
+        }
+    }    
+    
+    Hit() {
+        this.playerHp --;
+    }
+
     Render() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        this.DrawLayers()
+        this.DrawLayers();
+        this.PlayerHealth();
     }
     
     ToCanvas() {
