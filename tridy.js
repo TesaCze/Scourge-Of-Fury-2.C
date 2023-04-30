@@ -1,114 +1,104 @@
-class GameObjects{
-    constructor(x, y, width, height, layer, haveCollision, sprites,tag, canMove) {
-        this.x = x;
-        this.y = y,
-        this.width = width,
-        this.height = height;
-        this.layer = layer;
-        this.haveCollision = haveCollision;
-        this.sprites = sprites;
-        this.tag = tag;
-        this.canMove = canMove;
-        this.currentSprite = 0;
+class GameObjects{                                                                     // Pouze inicializace nezbytnych promenych
+    constructor(x, y, width, height, layer, sprites,tag,id) {
+        this.id = id
+        this.x = x;                 //x pozice
+        this.y = y,                 //y pozice
+        this.width = width,         //sirka
+        this.height = height;       //vyska
+        this.layer = layer;         //vrstva (pri vykreslovani) - mensi vrstva se vykresluje prvni
+        this.sprites = sprites;     //[Animation][Snimek]
+        this.tag = tag;             //tag
+        this.currentAnimation = 0   //Animace z ktere ma vykreslovat
+        this.currentSprite = 0;     //Sprite z animace ktery ma vykreslit
+        this.AllGameObjects;        //Vsechny objekty ve hre - pro ruzne scripty v updatu
     }
-
 }
 
-class PhysicGameObjects extends GameObjects {
-    constructor(x, y, width, height, layer, haveCollision, sprites,tag, canMove) {
-        super(x, y, width, height, layer, haveCollision, sprites,tag, canMove)
+class PhysicGameObjects extends GameObjects //objekty s kolizemi
+{
 
-    } 
-
-    Collider() {
-
+    constructor(x, y, width, height, layer, sprites,tag,id, haveCollision)
+    {
+        super(x, y, width, height, layer, sprites,tag,id)
+        this.haveCollision = haveCollision;     //Ma kolize        
     }
 
-    CollideWith() {
-
-    }
-
-    UpdateX(AllGameObjects) {
-        for (let i = 0; i < AllGameObjects.length; i++) {
-            this.kolize(AllGameObjects[i]) 
-
+    PhysicCollider() //provede kolize
+    {
+        console.log(this.AllGameObjects[1])
+        for (let i = 0; i < this.AllGameObjects.length; i++) {
+            this.Kolize(this.AllGameObjects[i]) 
         }
     }
+    
 
-    kolize(blok) {
+    CollideWith() //vrati array id se kteryma ma kolizi
+    {
+                    //--------------------------------------------------kkte toto dodelej------------------------------------------------
+    }
 
-        if (blok.haveCollision == true) {
+    Update() //kazdy snimek
+    {
+        this.PhysicCollider();
+        
+    }
+        
+    Kolize(blok) 
+    {
+
+        if (blok.haveCollision == true) 
+        {
 
             if (
                 this.y + this.height / 2 > blok.y - blok.height / 2 &&
                 this.y - this.height / 2 < blok.y + blok.height / 2 &&
                 this.x - this.width / 2 < blok.x + blok.width / 2 &&
                 this.x + this.width / 2 > blok.x - blok.width / 2
-        ) {
-            this.isColliding = true;
+                ) 
+            {
+                this.isColliding = true;
 
-            let top = blok.y - blok.height / 2 - (this.y + this.height / 2);
-            let down = blok.y + blok.height / 2 - (this.y - this.height / 2);
-            let right = blok.x - blok.width / 2 - (this.x + this.width / 2);
-            let left = blok.x + blok.width / 2 - (this.x - this.width / 2);
+                let top = blok.y - blok.height / 2 - (this.y + this.height / 2);
+                let down = blok.y + blok.height / 2 - (this.y - this.height / 2);
+                let right = blok.x - blok.width / 2 - (this.x + this.width / 2);
+                let left = blok.x + blok.width / 2 - (this.x - this.width / 2);
 
-            if (
-                Math.abs(top) < down &&
-                Math.abs(top) < Math.abs(right) &&
-                Math.abs(top) < left
-            ) {
-                this.y += top;
-                this.velocity = 0;
-            } else if (
-                down < Math.abs(top) &&
-                down < Math.abs(right) &&
-                down < left
-            ) {
-                this.y += down+1;
-                this.velocity = 0;
-                this.jumpCount = 0;
-            } else if (
-                left < Math.abs(top) &&
-                left < Math.abs(right) &&
-                left < down
-            ) {
-                this.x += left;
-                
-            } else if (
-                Math.abs(right) < Math.abs(top) &&
-                Math.abs(right) < left &&
-                Math.abs(right) < down
-            ) {
-                this.x += right;
+                if (
+                    Math.abs(top) < down &&
+                    Math.abs(top) < Math.abs(right) &&
+                    Math.abs(top) < left
+                ) {
+                    this.y += top;
+                  //  this.velocity = 0;
+                } else if (
+                    down < Math.abs(top) &&
+                    down < Math.abs(right) &&
+                    down < left
+                ) {
+                    this.y += down//+1;
+                   // this.velocity = 0;
+                   // this.jumpCount = 0;
+                } else if (
+                    left < Math.abs(top) &&
+                    left < Math.abs(right) &&
+                    left < down
+                ) {
+                    this.x += left;
+                    
+                } else if (
+                    Math.abs(right) < Math.abs(top) &&
+                    Math.abs(right) < left &&
+                    Math.abs(right) < down
+                ) {
+                    this.x += right;
+                }
+            } 
+            else 
+            {
+                this.isColliding = false;
             }
-        } else {
-            this.isColliding = false;
-        }
-        }
-
-        let player;
-        
-        for(let i = 0; i < AllGameObjects.length; i++) {
-            if(AllGameObjects[i].tag == "player") {
-                player = AllGameObjects[i]
-                break;
-            }
-        }      
-
-        if(blok.canMove == true && this.isColliding == true) {
-            blok.x += this.speed * player.dir.right;
-            blok.x -= this.speed * player.dir.left;
-            blok.y -= this.speed * player.dir.down;
-            blok.y += this.speed * player.dir.up;
-          
-        }
-
-        if(blok.tag == "wall" && this.isColliding == true) {
-     
-        }
-        
+        }   
     }
-  
 }
 
 class Player extends PhysicGameObjects{
@@ -176,10 +166,12 @@ class Player extends PhysicGameObjects{
 
     }
 
-    Update(AllGameObjects) {
+
+    Update() 
+    {
+        this.PhysicCollider();
         this.Health();
-        this.move()
-      
+        this.move()  
     }
 }
 
@@ -200,11 +192,11 @@ class Enemy extends PhysicGameObjects{
         this.isAttacking = false;
     }
 
-    Move(AllGameObjects) {
+    Move() {
     let player;
-        for(let i = 0; i < AllGameObjects.length; i++) {
-            if(AllGameObjects[i].tag == "player") {
-                player = AllGameObjects[i]
+        for(let i = 0; i < this.AllGameObjects.length; i++) {
+            if(this.AllGameObjects[i].tag == "player") {
+                player = this.AllGameObjects[i]
                 break;
             }
         }
@@ -240,9 +232,9 @@ class Enemy extends PhysicGameObjects{
 
     }
 
-    Update(AllGameObjects) {
-        this.UpdateX(AllGameObjects)
-        this.Move(AllGameObjects);
+    Update() {
+        this.PhysicCollider();
+        this.Move();
        
     }
     
@@ -272,8 +264,6 @@ class Camera {
         this.y = y,
         this.zoom = zoom
     }
-
-
 }
 
 class Game{

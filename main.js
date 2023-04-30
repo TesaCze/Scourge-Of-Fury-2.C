@@ -23,12 +23,13 @@ async function Start() {
         {
             
             case "player":
-                newGameObject = new Player(map[i].x,map[i].y,map[i].width,map[i].height,map[i].layer,map[i].haveCollision,map[i].sprites,map[i].tag,map[i].canMove,map[i].speed)
+                newGameObject = new Player(map[i].x,map[i].y,map[i].width,map[i].height,map[i].layer,map[i].haveCollision,map[i].sprites,map[i].tag,map[i].canMove,map[i].speed) 
             break;
             case "wall":
                 newGameObject = new GameObjects(map[i].x,map[i].y,map[i].width,map[i].height,map[i].layer, map[i].haveCollision,map[i].sprites,map[i].tag)
             break;
         }
+        newGameObject.AllGameObjects = game.AllGameObjects;
         game.AllGameObjects.push(newGameObject)
 
     }
