@@ -156,6 +156,7 @@ canvas.addEventListener("wheel", (e)=>
 
 canvas.addEventListener("mousedown", (e)=> 
 { 
+    console.log(e)
     if(e.button == 1)
     {
         isDraging = true;
@@ -165,6 +166,10 @@ canvas.addEventListener("mousedown", (e)=>
     else if(e.button == 0 && currentBlock != null)
     {
         addBlock(e.offsetX,e.offsetY)
+    }
+    else if(e.button == 2)
+    {
+        removeBlock(e.offsetX,e.offsetY)
     }
     
 });
@@ -198,11 +203,29 @@ function addBlock(x,y)
             newGameObject = new Player(pos.x,pos.y,grid.size,grid.size,0,currentBlock.sprites,"player",true,1,true,false,7)
         break;
         case "wall":    //(x, y, width, height, layer, sprites,tag,id, haveCollision,isStatic)
-            newGameObject = new PhysicGameObjects(pos.x,pos.y,grid.size,grid.size,0,currentBlock.sprites,"wall",1,true,true)
+            newGameObject = new PhysicGameObjects(pos.x,pos.y,grid.size,grid.size,0,currentBlock.sprites,"wall",1,currentBlock.haveCollision.ha,true)
         break;
     }
     
     AllGameObjects.push(newGameObject);
+}
+
+function removeBlock(x,y)
+{
+
+    let pos = CanvasToWorld(x,y)
+    pos.x = grid.size * Math.round(pos.x/grid.size)
+    pos.y = grid.size * Math.round(pos.y/grid.size)
+
+    
+    for(let i = 0; i < AllGameObjects.length;i++)
+    {
+        
+       if((pos.x == AllGameObjects[i].x && pos.y == AllGameObjects[i].y))
+       {
+            AllGameObjects.splice(i,1)
+       }
+    }
 }
 
 canvas.addEventListener("mousemove", (e) => 
@@ -216,6 +239,10 @@ canvas.addEventListener("mousemove", (e) =>
     if(e.buttons == 1 && currentBlock != null)
     {
         addBlock(e.offsetX,e.offsetY)
+    }
+    else if(e.buttons == 2)
+    {
+        removeBlock(e.offsetX,e.offsetY)
     }
 });
 
