@@ -13,6 +13,7 @@ class GameObjects{                                                              
         this.AllGameObjects;        //Vsechny objekty ve hre - pro ruzne scripty v updatu
     }
 }
+//lmao vojcek nema ponozkyyy
 
 class PhysicGameObjects extends GameObjects //objekty s kolizemi
 {
