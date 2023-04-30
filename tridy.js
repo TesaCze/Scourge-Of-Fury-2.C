@@ -337,23 +337,43 @@ class Game{
             let dir = {x:player.x-enemy.x, y: player.y - enemy.y}
             for(let i = 0; i < 10; i++)
             {
-                let x = enemy.x + (dir.x/10*i)+ canvas.width / 2
-                let y = -(enemy.y + (dir.y/10*i)) + canvas.height / 2
+                let x = enemy.x + (dir.x/10*i)
+                let y = enemy.y + (dir.y/10*i)
                 ctx.beginPath();
-                ctx.arc(x - this.camera.x, y + this.camera.y, 10, 0, Math.PI * 2);
+                let circle = ctx.arc(x - this.camera.x + this.canvas.width/2 , -y + this.camera.y + this.canvas.height/2 , 10, 0, Math.PI * 2);
+                ctx.strokeStyle = '#fff';
+                
+                let wallCollide;
+                for(let i = 0; i < this.AllGameObjects.length; i++) {
+                    if(this.AllGameObjects[i].tag == "wall") {
+                        wallCollide = this.AllGameObjects[i]
+                        let isDetecing = false;
+                        if(y > wallCollide.y - wallCollide.height /2 &&
+                            y < wallCollide.y + wallCollide.height /2 &&
+                            x < wallCollide.x + wallCollide.width /2  &&
+                            x > wallCollide.x - wallCollide.width /2) {
+                                console.log("penis")
+                            }
+                    }
+                
+                
+                    /*this.y + this.height / 2 > blok.y - blok.height / 2 &&
+                this.y - this.height / 2 < blok.y + blok.height / 2 &&
+                this.x - this.width / 2 < blok.x + blok.width / 2 &&
+                this.x + this.width / 2 > blok.x - blok.width / 2*/
+
+                if(this.Distance(enemy, player) > 600) {
+                    ctx.fillStyle = '#fff'; 
+                } else {
+                    ctx.fillStyle = '#ff0000'; 
+                }
+                console.log(this.Distance(enemy, player) - 75)
                 ctx.fill();
             }
 
-       // ctx.moveTo(this.canvasPos(enemy).x + 37 - this.camera.x , this.canvasPos(enemy).y + 37 + this.camera.y);
-       // ctx.lineTo(this.canvasPos(player).x + 37 - this.camera.x, this.canvasPos(player).y + 37 + this.camera.y);
-        ctx.strokeStyle = '#fff';
-        if(this.Distance(enemy, player) > 600) {
-            ctx.strokeStyle = '#fff'; 
-        } else {
-            ctx.strokeStyle = '#ff0000'; 
-        }
-        console.log(this.Distance(enemy, player) - 75)
+
         
+        }
     }
 
     Distance(enemmy, player) {
