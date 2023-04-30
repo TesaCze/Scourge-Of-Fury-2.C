@@ -164,37 +164,46 @@ canvas.addEventListener("mousedown", (e)=>
     }
     else if(e.button == 0 && currentBlock != null)
     {
-        let pos = CanvasToWorld(e.offsetX,e.offsetY)
-        pos.x = grid.size * Math.round(pos.x/grid.size)
-        pos.y = grid.size * Math.round(pos.y/grid.size)
-
-        let newGameObject;
-
-        
-        switch(currentBlock.type)
-        {
-            case "player":
-                newGameObject = new Player(pos.x,pos.y,grid.size,grid.size,0,true,currentBlock.sprites,"player",true,7)
-            break;
-            case "wall":
-                newGameObject = new GameObjects(pos.x,pos.y,grid.size,grid.size,0,true,currentBlock.sprites,"wall")
-            break;
-        }
-
-        for(let i = 0; i < AllGameObjects.length;i++)
-        {
-            
-           if((newGameObject.x == AllGameObjects[i].x && newGameObject.y == AllGameObjects[i].y))
-           {
-                return
-           }
-        }
-        console.log(newGameObject)
-        AllGameObjects.push(newGameObject);
-       
+        addBlock(e.offsetX,e.offsetY)
     }
     
 });
+
+function addBlock(x,y)
+{
+    let pos = CanvasToWorld(x,y)
+    pos.x = grid.size * Math.round(pos.x/grid.size)
+    pos.y = grid.size * Math.round(pos.y/grid.size)
+
+    let newGameObject;
+
+    
+    for(let i = 0; i < AllGameObjects.length;i++)
+    {
+        
+       if((pos.x == AllGameObjects[i].x && pos.y == AllGameObjects[i].y))
+       {
+            AllGameObjects.splice(i,1)
+       }
+       else if(currentBlock.type == "player" && AllGameObjects[i].tag == "player")
+       {
+            AllGameObjects.splice(i,1)
+       }
+    }
+
+
+    switch(currentBlock.type)
+    {
+        case "player": //(x, y, width, height, layer, sprites,tag,id, haveCollision,isStatic,speed,hp)
+            newGameObject = new Player(pos.x,pos.y,grid.size,grid.size,0,currentBlock.sprites,"player",true,1,true,false,7)
+        break;
+        case "wall":    //(x, y, width, height, layer, sprites,tag,id, haveCollision,isStatic)
+            newGameObject = new PhysicGameObjects(pos.x,pos.y,grid.size,grid.size,0,currentBlock.sprites,"wall",1,true,true)
+        break;
+    }
+    
+    AllGameObjects.push(newGameObject);
+}
 
 canvas.addEventListener("mousemove", (e) => 
 {
@@ -202,6 +211,11 @@ canvas.addEventListener("mousemove", (e) =>
     {
         editorCamera.position.x = e.offsetX - editorCamera.dragPosition.x 
         editorCamera.position.y = e.offsetY - editorCamera.dragPosition.y 
+    }
+
+    if(e.buttons == 1 && currentBlock != null)
+    {
+        addBlock(e.offsetX,e.offsetY)
     }
 });
 
@@ -248,11 +262,11 @@ function addTexturesToDiv()
         newDiv.src = Textures[i].sprites[0]
         newDiv.setAttribute("onclick","onTextureClick("+JSON.stringify(Textures[i])+")");
         newDiv.setAttribute("id", "block[" + i + "]");
-        newDiv.setAttribute("onclick", "selectedBlock()");
+     //   newDiv.setAttribute("onclick", "selectedBlock()");
         document.getElementById("block[" + i + "]").appendChild(newDiv) 
         const popisDivu = document.createElement("span");
         document.getElementById("block[" + i + "]").appendChild(popisDivu)
-        popisDivu.innerHTML="ndfsajk";
+        popisDivu.innerHTML=Textures[i].text;
         popisDivu.classList.add("visible");
 
     }
