@@ -51,8 +51,7 @@ class PhysicGameObjects extends GameObjects //objekty s kolizemi
     {
         if(!this.isStatic)
         {
-            this.PhysicCollider();
-            
+            this.PhysicCollider(); 
         }
     }
         
