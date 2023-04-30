@@ -102,3 +102,12 @@ h2 {
     display: inline-flex;
     gap: 15px;
 }
+.download {
+    width: 100px;
+    margin-top: 150px;
+}
+.download button {
+    background-color: red;
+    color: white;
+    width: 100px;
+}
