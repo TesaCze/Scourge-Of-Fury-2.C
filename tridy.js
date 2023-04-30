@@ -52,14 +52,16 @@ class PhysicGameObjects extends GameObjects //objekty s kolizemi
         if(!this.isStatic)
         {
             this.PhysicCollider();
+            
         }
     }
         
     Kolize(blok) 
     {
-
+        
         if (blok.haveCollision == true) 
         {  
+           
             if (
                 this.y + this.height / 2 > blok.y - blok.height / 2 &&
                 this.y - this.height / 2 < blok.y + blok.height / 2 &&
@@ -207,6 +209,7 @@ class Enemy extends PhysicGameObjects{
 
         this.x += dir.x * this.speed;
         this.y += dir.y * this.speed;
+        
     }
 
     //--------------Toban------------
@@ -226,10 +229,6 @@ class Enemy extends PhysicGameObjects{
     }
 
     //-----------------------------
-
-    Kolize() {
-
-    }
 
     Update() {
         this.Move();
