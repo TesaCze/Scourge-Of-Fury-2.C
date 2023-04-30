@@ -1,5 +1,5 @@
 [
     {"sprites":["../Textures/playerTexture.png"],"type":"player","text":"Hrac"},
-    {"sprites":["../Textures/blockTexture.png"],"type":"wall","text":"stena"},
-    {"sprites":["../Textures/ncBlockTexture.png"],"type":"wall","text":"stena"}
+    {"sprites":["../Textures/blockTexture.png"],"type":"wall","text":"stena", "haveCollision":true},
+    {"sprites":["../Textures/ncBlockTexture.png"],"type":"wall","text":"stena","haveCollision":false}
 ]

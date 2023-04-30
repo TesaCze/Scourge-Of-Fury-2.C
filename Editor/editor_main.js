@@ -198,7 +198,7 @@ function addBlock(x,y)
             newGameObject = new Player(pos.x,pos.y,grid.size,grid.size,0,currentBlock.sprites,"player",true,1,true,false,7)
         break;
         case "wall":    //(x, y, width, height, layer, sprites,tag,id, haveCollision,isStatic)
-            newGameObject = new PhysicGameObjects(pos.x,pos.y,grid.size,grid.size,0,currentBlock.sprites,"wall",1,true,true)
+            newGameObject = new PhysicGameObjects(pos.x,pos.y,grid.size,grid.size,0,currentBlock.sprites,"wall",1,currentBlock.haveCollision.ha,true)
         break;
     }
     
