@@ -15,7 +15,16 @@ class GameObjects{                                                              
 
     GetObjectstByTag(tag) //vrati pole objektu s tagem
     {
+        /*let playerDetection;
+        for(let i = 0; i < this.AllGameObjects.length; i++) {
+            if(this.AllGameObjects[i].tag == "player") {
+                playplayerDetectioner = this.AllGameObjects[i]
+                break;
+            }
+        }*/
         
+        
+
     }    
 
     GetObjecttById(id) //vrati Objekt podle id

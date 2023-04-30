@@ -248,15 +248,23 @@ function addTexturesToDiv()
         newDiv.src = Textures[i].sprites[0]
         newDiv.setAttribute("onclick","onTextureClick("+JSON.stringify(Textures[i])+")");
         newDiv.setAttribute("id", "block[" + i + "]");
+        newDiv.setAttribute("onclick", "selectedBlock()");
         document.getElementById("block[" + i + "]").appendChild(newDiv) 
         const popisDivu = document.createElement("span");
-        console.log(newDiv)
         document.getElementById("block[" + i + "]").appendChild(popisDivu)
         popisDivu.innerHTML="ndfsajk";
         popisDivu.classList.add("visible");
-        //popisDivu.style = "display: none";
 
     }
+
+    var slider = document.getElementById("rozsah");
+    var output = document.getElementById("value");
+    output.innerHTML = slider.value; // Display the default slider value
+
+// Update the current slider value (each time you drag the slider handle)
+    slider.oninput = function() {
+    output.innerHTML = this.value;
+}
 }
 
 function downloadMap() {

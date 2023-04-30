@@ -9,13 +9,35 @@
 </head>
 <body>
 
-    <canvas id="kanvas" width="1920" height="1080"></canvas>
+    <div class="obsah">
+        <canvas id="kanvas" width="1920" height="1080"></canvas>
 
-    <div class="editor">
-        <p>Texturiiiii</p>
-        <div class="textury" id="textury">
+        <span class="editor">
+            <p class="nadpis">Texturiiiii</p>
+            <div class="textury" id="textury">
 
-        </div>
+            </div>
+            <div class="parametry">
+                <p class="nadpis">Parametry</p>
+                <div class="set">
+                    <div class="param">
+                        <h2>Speed</h2>
+                        <div class="value">
+                        <input type="range" min="1" max="100" value="50" class="slider" id="rozsah">
+                        <p id="value"></p>
+                    </div>
+                    <div class="param">
+                        <h2>Speed</h2>
+                        <div class="value">
+                        <input type="checkbox" min="1" max="100" value="50" class="slider" id="rozsah">
+                        <p id="value"></p>
+                    </div>
+                    </div>
+                    
+                    
+                </div>
+            </div>
+        </span>
     </div>
 </body>
 <script src="editor_main.js" defer></script>
