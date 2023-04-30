@@ -23,7 +23,7 @@ class GameObjects{                                                              
             }
         }*/
         
-        
+
 
     }    
 
@@ -219,7 +219,6 @@ class Enemy extends PhysicGameObjects{
         this.y += dir.y * this.speed;
         
     }
-
     //--------------Toban------------
 
     Magnitude(pos){
@@ -317,9 +316,43 @@ class Game{
         this.playerHp --;
     }
 
+    FindPlayer() {
+        let player;
+        let enemy;
+        for(let i = 0; i < this.AllGameObjects.length; i++) {
+            if(this.AllGameObjects[i].tag == "player") {
+                player = this.AllGameObjects[i]
+                break;
+            }
+        }
+        for(let i = 0; i < this.AllGameObjects.length; i++) {
+            if(this.AllGameObjects[i].tag == "enemy") {
+                enemy = this.AllGameObjects[i]
+                break;
+            }
+        }
+        ctx.beginPath();
+        ctx.setLineDash([10, 50]);
+        ctx.moveTo(this.canvasPos(enemy).x + 37 - this.camera.x , this.canvasPos(enemy).y + 37 + this.camera.y);
+        ctx.lineTo(this.canvasPos(player).x + 37 - this.camera.x, this.canvasPos(player).y + 37 + this.camera.y);
+        ctx.strokeStyle = '#fff';
+        if(this.Distance(enemy, player) > 600) {
+            ctx.strokeStyle = '#fff'; 
+        } else {
+            ctx.strokeStyle = '#ff0000'; 
+        }
+        console.log(this.Distance(enemy, player) - 75)
+        ctx.stroke();
+    }
+
+    Distance(enemmy, player) {
+        return Math.sqrt((player.x - enemmy.x)* (player.x - enemmy.x) + (player.y - enemmy.y) *(player.y - enemmy.y))
+    }
+
     Render() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         this.DrawLayers();
+        this.FindPlayer();
         this.PlayerHealth();
     }
     
