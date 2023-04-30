@@ -13,7 +13,7 @@ class GameObjects{                                                              
         this.AllGameObjects;        //Vsechny objekty ve hre - pro ruzne scripty v updatu
     }
 }
-
+//Vojta ke chytri clovek
 class PhysicGameObjects extends GameObjects //objekty s kolizemi
 {
 
