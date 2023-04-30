@@ -242,11 +242,22 @@ function addTexturesToDiv()
 {
     for(let i = 0; i < Textures.length;i++)
     {
+        const blocky = document.createElement("div");
+        document.getElementById("textury").appendChild(blocky)
+        blocky.setAttribute("id", "block[" + i + "]");
+        blocky.classList.add("hover-text");
         const newDiv = document.createElement("img");
         newDiv.src = Textures[i].sprites[0]
-        console.log()
         newDiv.setAttribute("onclick","onTextureClick("+JSON.stringify(Textures[i])+")");
-        document.getElementById("textury").appendChild(newDiv) 
+        newDiv.setAttribute("id", "block[" + i + "]");
+        document.getElementById("block[" + i + "]").appendChild(newDiv) 
+        const popisDivu = document.createElement("span");
+        console.log(newDiv)
+        document.getElementById("block[" + i + "]").appendChild(popisDivu)
+        popisDivu.innerHTML="ndfsajk";
+        popisDivu.classList.add("visible");
+        //popisDivu.style = "display: none";
+
     }
 }
 

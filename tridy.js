@@ -97,7 +97,32 @@ class PhysicGameObjects extends GameObjects //objekty s kolizemi
             {
                 this.isColliding = false;
             }
-        }   
+        } else {
+            this.isColliding = false;
+        }
+        
+
+   
+        
+        /*for(let i = 0; i < AllGameObjects.length; i++) {
+            if(AllGameObjects[i].tag == "player") {
+                player = AllGameObjects[i]
+                break;
+            }
+        }      
+
+        if(blok.canMove == true && this.isColliding == true) {
+            blok.x += this.speed * player.dir.right;
+            blok.x -= this.speed * player.dir.left;
+            blok.y -= this.speed * player.dir.down;
+            blok.y += this.speed * player.dir.up;
+          
+        }
+
+        if(blok.tag == "wall" && this.isColliding == true) {
+     
+        }
+        */
     }
 }
 
