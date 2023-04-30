@@ -333,37 +333,45 @@ class Game{
             }
         }
 
-            this.ctx.fillStyle = '#fff'
+         
             let dir = {x:player.x-enemy.x, y: player.y - enemy.y}
+            let isSeeing = true;
             for(let i = 0; i < 10; i++)
             {
                 let x = enemy.x + (dir.x/10*i)
                 let y = enemy.y + (dir.y/10*i)
-                ctx.beginPath();
-                let circle = ctx.arc(x - this.camera.x + this.canvas.width/2 , -y + this.camera.y + this.canvas.height/2 , 10, 0, Math.PI * 2);
-                ctx.strokeStyle = '#fff';
-                
-                let wallCollide;
+              
                 for(let i = 0; i < this.AllGameObjects.length; i++) {
-                    if(this.AllGameObjects[i].tag == "wall") {
-                        wallCollide = this.AllGameObjects[i]
-
-                        if(y > wallCollide.y - wallCollide.height /2 &&
-                            y < wallCollide.y + wallCollide.height /2 &&
-                            x < wallCollide.x + wallCollide.width /2  &&
-                            x > wallCollide.x - wallCollide.width /2 && 
-                            this.Distance(enemy, player) > 600) {
-                                ctx.fillStyle = '#fff'; 
-                            }else {
-                                ctx.fillStyle = '#ff0000'; 
+                    if(this.AllGameObjects[i].haveCollision == true && this.AllGameObjects[i].tag == "wall") {
+                        let wallCollide = this.AllGameObjects[i]
+                        if(this.Distance(enemy, player) > 600 || (y < wallCollide.y +wallCollide.height /2 &&
+                            y > wallCollide.y - wallCollide.height /2 &&
+                            x > wallCollide.x - wallCollide.width /2  &&
+                            x < wallCollide.x + wallCollide.width /2  )
+                            ) 
+                            {
+                                isSeeing = false
+                                break;
                             }
                     }
+            }
+
+            for(let i = 0; i < 10; i++)
+            {
+                let x = enemy.x + (dir.x/10*i)
+                let y = enemy.y + (dir.y/10*i)
+
                 
-                /*if(this.Distance(enemy, player) > 600) {
-                    ctx.fillStyle = '#fff'; 
-                } else {
-                    ctx.fillStyle = '#ff0000'; 
-                }*/
+                ctx.beginPath();
+                if(isSeeing)
+                {
+                    ctx.fillStyle = "#fff"
+                }
+                else
+                {
+                    ctx.fillStyle = "#ff0000"
+                }
+                ctx.arc(x - this.camera.x + this.canvas.width/2 , -y + this.camera.y + this.canvas.height/2 , 10, 0, Math.PI * 2);
                 ctx.fill();
             }
 
