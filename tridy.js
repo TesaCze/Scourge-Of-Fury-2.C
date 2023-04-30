@@ -260,6 +260,7 @@ class MovableBlocks extends PhysicGameObjects{
     Slide() {
 
     }
+   
 }
 
 class Camera {
