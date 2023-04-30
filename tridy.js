@@ -333,18 +333,19 @@ class Game{
             }
         }
 
+            this.ctx.fillStyle = '#fff'
             let dir = {x:player.x-enemy.x, y: player.y - enemy.y}
             for(let i = 0; i < 10; i++)
             {
-                let x = enemy.x + (dir.x/10*i)
-                let y = enemy.y + (dir.y/10*i)
+                let x = enemy.x + (dir.x/10*i)+ canvas.width / 2
+                let y = -(enemy.y + (dir.y/10*i)) + canvas.height / 2
                 ctx.beginPath();
-                ctx.arc(this.canvasPos({x,y}).x - this.camera.x, this.canvasPos({x,y}).y - this.camera.y, 50, 0, Math.PI * 2);
-                ctx.stroke();
+                ctx.arc(x - this.camera.x, y + this.camera.y, 10, 0, Math.PI * 2);
+                ctx.fill();
             }
-        ctx.setLineDash([10, 50]);
-        ctx.moveTo(this.canvasPos(enemy).x + 37 - this.camera.x , this.canvasPos(enemy).y + 37 + this.camera.y);
-        ctx.lineTo(this.canvasPos(player).x + 37 - this.camera.x, this.canvasPos(player).y + 37 + this.camera.y);
+
+       // ctx.moveTo(this.canvasPos(enemy).x + 37 - this.camera.x , this.canvasPos(enemy).y + 37 + this.camera.y);
+       // ctx.lineTo(this.canvasPos(player).x + 37 - this.camera.x, this.canvasPos(player).y + 37 + this.camera.y);
         ctx.strokeStyle = '#fff';
         if(this.Distance(enemy, player) > 600) {
             ctx.strokeStyle = '#fff'; 
@@ -352,6 +353,7 @@ class Game{
             ctx.strokeStyle = '#ff0000'; 
         }
         console.log(this.Distance(enemy, player) - 75)
+        
     }
 
     Distance(enemmy, player) {
