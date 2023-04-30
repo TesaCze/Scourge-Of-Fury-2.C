@@ -347,27 +347,23 @@ class Game{
                 for(let i = 0; i < this.AllGameObjects.length; i++) {
                     if(this.AllGameObjects[i].tag == "wall") {
                         wallCollide = this.AllGameObjects[i]
-                        let isDetecing = false;
+
                         if(y > wallCollide.y - wallCollide.height /2 &&
                             y < wallCollide.y + wallCollide.height /2 &&
                             x < wallCollide.x + wallCollide.width /2  &&
-                            x > wallCollide.x - wallCollide.width /2) {
-                                console.log("penis")
+                            x > wallCollide.x - wallCollide.width /2 && 
+                            this.Distance(enemy, player) > 600) {
+                                ctx.fillStyle = '#fff'; 
+                            }else {
+                                ctx.fillStyle = '#ff0000'; 
                             }
                     }
                 
-                
-                    /*this.y + this.height / 2 > blok.y - blok.height / 2 &&
-                this.y - this.height / 2 < blok.y + blok.height / 2 &&
-                this.x - this.width / 2 < blok.x + blok.width / 2 &&
-                this.x + this.width / 2 > blok.x - blok.width / 2*/
-
-                if(this.Distance(enemy, player) > 600) {
+                /*if(this.Distance(enemy, player) > 600) {
                     ctx.fillStyle = '#fff'; 
                 } else {
                     ctx.fillStyle = '#ff0000'; 
-                }
-                console.log(this.Distance(enemy, player) - 75)
+                }*/
                 ctx.fill();
             }
 
