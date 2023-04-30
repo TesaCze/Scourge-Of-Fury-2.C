@@ -133,8 +133,6 @@ canvas.addEventListener("wheel", (e)=>
             editorCamera.position.x +=  startPos.x - endPos.x + editorCamera.position.x * editorCamera.zoomSpeed;
             editorCamera.position.y +=  startPos.y - endPos.y + editorCamera.position.y * editorCamera.zoomSpeed;
         }
-
-       
     }
     else
     {

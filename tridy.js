@@ -12,21 +12,30 @@ class GameObjects{                                                              
         this.currentSprite = 0;     //Sprite z animace ktery ma vykreslit
         this.AllGameObjects;        //Vsechny objekty ve hre - pro ruzne scripty v updatu
     }
+
+    GetObjectstByTag(tag) //vrati pole objektu s tagem
+    {
+        
+    }    
+
+    GetObjecttById(id) //vrati Objekt podle id
+    {
+        
+    }  
 }
-//lmao vojcek nema ponozkyyy
 
 class PhysicGameObjects extends GameObjects //objekty s kolizemi
 {
 
-    constructor(x, y, width, height, layer, sprites,tag,id, haveCollision)
+    constructor(x, y, width, height, layer, sprites,tag,id, haveCollision,isStatic)
     {
         super(x, y, width, height, layer, sprites,tag,id)
-        this.haveCollision = haveCollision;     //Ma kolize        
+        this.haveCollision = haveCollision;   //Ma kolize 
+        this.isStatic = isStatic;  //Je staticky (nebude ovlivnovan colisemi jinych objektu)  
     }
 
     PhysicCollider() //provede kolize
     {
-        console.log(this.AllGameObjects[1])
         for (let i = 0; i < this.AllGameObjects.length; i++) {
             this.Kolize(this.AllGameObjects[i]) 
         }
@@ -35,21 +44,22 @@ class PhysicGameObjects extends GameObjects //objekty s kolizemi
 
     CollideWith() //vrati array id se kteryma ma kolizi
     {
-                    //--------------------------------------------------kkte toto dodelej------------------------------------------------
+                   
     }
 
     Update() //kazdy snimek
     {
-        this.PhysicCollider();
-        
+        if(!this.isStatic)
+        {
+            this.PhysicCollider();
+        }
     }
         
     Kolize(blok) 
     {
 
         if (blok.haveCollision == true) 
-        {
-
+        {  
             if (
                 this.y + this.height / 2 > blok.y - blok.height / 2 &&
                 this.y - this.height / 2 < blok.y + blok.height / 2 &&
@@ -57,8 +67,6 @@ class PhysicGameObjects extends GameObjects //objekty s kolizemi
                 this.x + this.width / 2 > blok.x - blok.width / 2
                 ) 
             {
-                this.isColliding = true;
-
                 let top = blok.y - blok.height / 2 - (this.y + this.height / 2);
                 let down = blok.y + blok.height / 2 - (this.y - this.height / 2);
                 let right = blok.x - blok.width / 2 - (this.x + this.width / 2);
@@ -70,15 +78,12 @@ class PhysicGameObjects extends GameObjects //objekty s kolizemi
                     Math.abs(top) < left
                 ) {
                     this.y += top;
-                  //  this.velocity = 0;
                 } else if (
                     down < Math.abs(top) &&
                     down < Math.abs(right) &&
                     down < left
                 ) {
-                    this.y += down//+1;
-                   // this.velocity = 0;
-                   // this.jumpCount = 0;
+                    this.y += down;
                 } else if (
                     left < Math.abs(top) &&
                     left < Math.abs(right) &&
@@ -94,46 +99,18 @@ class PhysicGameObjects extends GameObjects //objekty s kolizemi
                     this.x += right;
                 }
             } 
-            else 
-            {
-                this.isColliding = false;
-            }
-        } else {
-            this.isColliding = false;
-        }
-        
-
-   
-        
-        /*for(let i = 0; i < AllGameObjects.length; i++) {
-            if(AllGameObjects[i].tag == "player") {
-                player = AllGameObjects[i]
-                break;
-            }
-        }      
-
-        if(blok.canMove == true && this.isColliding == true) {
-            blok.x += this.speed * player.dir.right;
-            blok.x -= this.speed * player.dir.left;
-            blok.y -= this.speed * player.dir.down;
-            blok.y += this.speed * player.dir.up;
-          
-        }
-
-        if(blok.tag == "wall" && this.isColliding == true) {
-     
-        }
-        */
+            
+        } 
     }
 }
 
 class Player extends PhysicGameObjects{
             
-    constructor(x, y, width, height, layer, haveCollision, sprites,tag, canMove,speed, hp) {
-        super(x, y, width, height, layer, haveCollision, sprites,tag, canMove)
+    constructor(x, y, width, height, layer, sprites,tag,id, haveCollision,isStatic,speed,hp){
+        super(x, y, width, height, layer, sprites,tag,id, haveCollision,isStatic)
         this.isColliding = false;
         this.dir = {left:false, right: false, up:false, down:false}
-        this.speed = 5;
+        this.speed = 8;
         this.isAttacking = false;
         this.hp = 100;
 
@@ -179,7 +156,7 @@ class Player extends PhysicGameObjects{
         
     }
 
-    move() {
+    Move() {
         this.x += this.speed * this.dir.right;
         this.x -= this.speed * this.dir.left;
         this.y -= this.speed * this.dir.down;
@@ -195,9 +172,9 @@ class Player extends PhysicGameObjects{
 
     Update() 
     {
+        this.Move() 
         this.PhysicCollider();
         this.Health();
-        this.move()  
     }
 }
 
@@ -211,10 +188,9 @@ class Sword extends GameObjects {
 }
 
 class Enemy extends PhysicGameObjects{
-    constructor(x, y, width, height, layer, haveCollision, sprites, tag, canMove) {
-        super(x, y, width, height, layer, haveCollision, sprites,tag, canMove)
-        this.isColliding = false;
-        this.speed = 6;
+    constructor(x, y, width, height, layer, sprites,tag,id, haveCollision,isStatic) {
+        super(x, y, width, height, layer, sprites,tag,id, haveCollision,isStatic)
+        this.speed = 3;
         this.isAttacking = false;
     }
 
@@ -243,9 +219,6 @@ class Enemy extends PhysicGameObjects{
         let m = this.Magnitude(pos);
         return {x:(pos.x / m), y:(pos.y / m)}
     }
-    Distance(player){
-        return Math.sqrt((player.x - this.x)* (player.x - this.x) + (player.y - this.y) *(player.y - this.y))
-    }
     
     Direction(player){
         let dir = {x:player.x-this.x, y: player.y - this.y}
@@ -259,9 +232,8 @@ class Enemy extends PhysicGameObjects{
     }
 
     Update() {
-        this.PhysicCollider();
         this.Move();
-       
+        this.PhysicCollider();
     }
     
 }
