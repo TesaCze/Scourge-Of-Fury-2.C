@@ -200,25 +200,34 @@ class Sword extends GameObjects {
 class Enemy extends PhysicGameObjects{
     constructor(x, y, width, height, layer, sprites,tag,id, haveCollision,isStatic) {
         super(x, y, width, height, layer, sprites,tag,id, haveCollision,isStatic)
-        this.speed = 3;
+        this.speed = 5;
         this.isAttacking = false;
+        this.isSeeing = false;
+
+        this.traceX = traceX;
+        this.traceY = traceY;
     }
 
-    Move() {
-    let player;
-        for(let i = 0; i < this.AllGameObjects.length; i++) {
-            if(this.AllGameObjects[i].tag == "player") {
-                player = this.AllGameObjects[i]
-                break;
+
+    Move() {                //movement script pro enemy
+        if(this.isSeeing == true) {
+            let player;
+            for(let i = 0; i < this.AllGameObjects.length; i++) {
+                if(this.AllGameObjects[i].tag == "player") {
+                    player = this.AllGameObjects[i]
+                    break;
+                }
             }
-        }
-      
-        let dir = this.Direction(player)
+            
+            let dir = this.Direction(player)
 
-        this.x += dir.x * this.speed;
-        this.y += dir.y * this.speed;
-        
-    }
+            this.x += dir.x * this.speed;
+            this.y += dir.y * this.speed; 
+        } else {
+            this.RerurnToLocation();
+        }
+                   
+        }
     //--------------Toban------------
 
     Magnitude(pos){
@@ -237,8 +246,93 @@ class Enemy extends PhysicGameObjects{
 
     //-----------------------------
 
+    FindPlayer() {                      // kontroluje zda enemy vidi hrace
+        let player;
+        let enemy;
+        for(let i = 0; i < this.AllGameObjects.length; i++) {
+            if(this.AllGameObjects[i].tag == "player") {
+                player = this.AllGameObjects[i]
+                break;
+            }
+        }
+        for(let i = 0; i < this.AllGameObjects.length; i++) {
+            if(this.AllGameObjects[i].tag == "enemy") {
+                enemy = this.AllGameObjects[i]
+                break;
+            }
+        }
+
+         
+            let dir = {x:player.x-enemy.x, y: player.y - enemy.y}
+            this.isSeeing = true;
+            for(let i = 0; i < 10; i++)
+            {
+                let x = enemy.x + (dir.x/10*i)
+                let y = enemy.y + (dir.y/10*i)
+              
+                for(let i = 0; i < this.AllGameObjects.length; i++) {
+                    if(this.AllGameObjects[i].haveCollision == true && this.AllGameObjects[i].tag == "wall") {
+                        let wallCollide = this.AllGameObjects[i]
+                        if(this.Distance(enemy, player) > 600 || (y < wallCollide.y +wallCollide.height /2 &&
+                            y > wallCollide.y - wallCollide.height /2 &&
+                            x > wallCollide.x - wallCollide.width /2  &&
+                            x < wallCollide.x + wallCollide.width /2  )
+                            ) 
+                            {
+                                this.isSeeing = false
+                                break;
+                            }
+                    }
+            }
+
+           /* for(let i = 0; i < 10; i++)
+            {
+                let x = enemy.x + (dir.x/10*i)
+                let y = enemy.y + (dir.y/10*i)
+
+                
+                ctx.beginPath();
+                if(isSeeing)
+                {
+                    ctx.fillStyle = "rgba(255, 0, 0, 0.2)"
+                    //Enemy.
+                }
+                else
+                {
+                    ctx.fillStyle = "rgba(200, 200, 200, 0.1)"
+                }
+                ctx.arc(x - this.camera.x + this.canvas.width/2 , -y + this.camera.y + this.canvas.height/2 , 10, 0, Math.PI * 2);
+                ctx.fill();
+            }*/
+
+
+        
+        }
+
+        
+
+        console.log(this.isSeeing);
+
+    }
+    
+    traceX = this.x;
+    traceY = this.y;
+
+    RerurnToLocation() {            //vrati enemy na pozici na spawnu
+        //console.log(this.traceX + " " + this.traceY)
+
+            this.x += this.traceX* this.speed;
+            this.y += this.traceY * this.speed; 
+    }
+    
+
+    Distance(enemmy, player) {
+        return Math.sqrt((player.x - enemmy.x)* (player.x - enemmy.x) + (player.y - enemmy.y) *(player.y - enemmy.y))
+    }
+
     Update() {
         this.Move();
+        this.FindPlayer();
         this.PhysicCollider();
     }
     
@@ -317,77 +411,12 @@ class Game{
         this.playerHp --;
     }
 
-    FindPlayer() {
-        let player;
-        let enemy;
-        for(let i = 0; i < this.AllGameObjects.length; i++) {
-            if(this.AllGameObjects[i].tag == "player") {
-                player = this.AllGameObjects[i]
-                break;
-            }
-        }
-        for(let i = 0; i < this.AllGameObjects.length; i++) {
-            if(this.AllGameObjects[i].tag == "enemy") {
-                enemy = this.AllGameObjects[i]
-                break;
-            }
-        }
 
-         
-            let dir = {x:player.x-enemy.x, y: player.y - enemy.y}
-            let isSeeing = true;
-            for(let i = 0; i < 10; i++)
-            {
-                let x = enemy.x + (dir.x/10*i)
-                let y = enemy.y + (dir.y/10*i)
-              
-                for(let i = 0; i < this.AllGameObjects.length; i++) {
-                    if(this.AllGameObjects[i].haveCollision == true && this.AllGameObjects[i].tag == "wall") {
-                        let wallCollide = this.AllGameObjects[i]
-                        if(this.Distance(enemy, player) > 600 || (y < wallCollide.y +wallCollide.height /2 &&
-                            y > wallCollide.y - wallCollide.height /2 &&
-                            x > wallCollide.x - wallCollide.width /2  &&
-                            x < wallCollide.x + wallCollide.width /2  )
-                            ) 
-                            {
-                                isSeeing = false
-                                break;
-                            }
-                    }
-            }
-
-            for(let i = 0; i < 10; i++)
-            {
-                let x = enemy.x + (dir.x/10*i)
-                let y = enemy.y + (dir.y/10*i)
-
-                
-                ctx.beginPath();
-                if(isSeeing)
-                {
-                    ctx.fillStyle = "#fff"
-                }
-                else
-                {
-                    ctx.fillStyle = "#ff0000"
-                }
-                ctx.arc(x - this.camera.x + this.canvas.width/2 , -y + this.camera.y + this.canvas.height/2 , 10, 0, Math.PI * 2);
-                ctx.fill();
-            }
-
-
-        
-        }
-    }
-
-    Distance(enemmy, player) {
-        return Math.sqrt((player.x - enemmy.x)* (player.x - enemmy.x) + (player.y - enemmy.y) *(player.y - enemmy.y))
-    }
 
     Render() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         this.DrawLayers();
-        this.FindPlayer();
+        //this.FindPlayer();
         this.PlayerHealth();
     }
     
