@@ -10,8 +10,9 @@ let editorCamera = {zoom:1, zoomSpeed: 0.1,zoomMin: 0.2,zoomMax: 4,position:{x:0
 let isDraging = false;
 let AllGameObjects = [];
 let currentBlock = null;
-let history = [];
-let udnoHistory = [];
+let history = []; //ctrl z
+let udnoHistory = []; //ctrl x
+let idCount = 0
 
 let Textures;
 
@@ -188,7 +189,8 @@ function addBlock(x,y)
         
        if((pos.x == AllGameObjects[i].x && pos.y == AllGameObjects[i].y))
        {
-            AllGameObjects.splice(i,1)
+        return
+           // AllGameObjects.splice(i,1)
        }
        else if(currentBlock.type == "player" && AllGameObjects[i].tag == "player")
        {
@@ -200,14 +202,17 @@ function addBlock(x,y)
     switch(currentBlock.type)
     {
         case "player": //(x, y, width, height, layer, sprites,tag,id, haveCollision,isStatic,speed,hp)
-            newGameObject = new Player(pos.x,pos.y,grid.size,grid.size,0,currentBlock.sprites,"player",true,1,true,false,7)
+            newGameObject = new Player(pos.x,pos.y,grid.size,grid.size,0,currentBlock.sprites,"player",idCount,true,false,7)
         break;
         case "wall":    //(x, y, width, height, layer, sprites,tag,id, haveCollision,isStatic)
-            newGameObject = new PhysicGameObjects(pos.x,pos.y,grid.size,grid.size,0,currentBlock.sprites,"wall",1,currentBlock.haveCollision.ha,true)
+            newGameObject = new PhysicGameObjects(pos.x,pos.y,grid.size,grid.size,0,currentBlock.sprites,"wall",idCount,currentBlock.haveCollision.ha,true)
         break;
     }
     
+    udnoHistory = [];
     AllGameObjects.push(newGameObject);
+    history.push([0,idCount]) //0 add 1 delete
+    idCount++;
 }
 
 function removeBlock(x,y)
@@ -223,6 +228,7 @@ function removeBlock(x,y)
         
        if((pos.x == AllGameObjects[i].x && pos.y == AllGameObjects[i].y))
        {
+            history.push([1,AllGameObjects[i]])
             AllGameObjects.splice(i,1)
        }
     }
@@ -256,7 +262,7 @@ canvas.addEventListener("mouseup", (e) =>
 
 document.addEventListener("keydown", (e) => 
 {
-    console.log(e)
+    //console.log(e)
     switch(e.code)
     {
         case "Space":
@@ -266,9 +272,55 @@ document.addEventListener("keydown", (e) =>
         break;
     }
 
-    if(e.code == "KeyZ" && e.ctrlKey)
+    if(e.code == "KeyZ" && e.ctrlKey) //Undo
     {
         
+        if(history.length != 0)
+        {
+            if(history[history.length-1][0] == 0)
+            {
+                for(let i = 0; i < AllGameObjects.length; i++)
+                {
+                    if(AllGameObjects[i].id == history[history.length-1][1])
+                    {
+                        udnoHistory.push([0,AllGameObjects[i]]);
+                        AllGameObjects.splice(i,1)
+                        history.pop()
+                    }
+                }
+            }
+            else
+            {
+                AllGameObjects.push(history[history.length-1][1])
+                udnoHistory.push([1,history[history.length-1][1].id]);
+                history.pop();
+            }
+            
+        }
+    }
+    else if(e.code == "KeyX" && e.ctrlKey) //Redo
+    {
+        if(udnoHistory.length != 0)
+        {
+            if(udnoHistory[udnoHistory.length-1][0] == 0)
+            {
+                AllGameObjects.push(udnoHistory[udnoHistory.length-1][1])
+                history.push([0,udnoHistory[udnoHistory.length-1][1].id])
+                udnoHistory.pop();
+            }
+            else
+            {
+                for(let i = 0; i < AllGameObjects.length; i++)
+                {
+                    if(AllGameObjects[i].id == udnoHistory[udnoHistory.length-1][1])
+                    {
+                        history.push([1,AllGameObjects[i]]);
+                        AllGameObjects.splice(i,1)
+                        udnoHistory.pop()
+                    }
+                }
+            }
+        }
     }
 })
 
@@ -307,10 +359,11 @@ function addTexturesToDiv()
 }
 }
 
-function downloadMap() {
+function downloadMap() 
+{
     const a = document.createElement("a");
     const file = new Blob([JSON.stringify(AllGameObjects)], { type: "text/plain" });
     a.href = URL.createObjectURL(file);
     a.download = "mapa.json";
     a.click();
-  }
+}
