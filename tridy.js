@@ -203,9 +203,10 @@ class Enemy extends PhysicGameObjects{
         this.speed = 5;
         this.isAttacking = false;
         this.isSeeing = false;
+        this.traceX = x + 1;     //vubec nevim proc tam musi byt +1 ale bez toho to nefaka
+        this.traceY = y;   
 
-        this.traceX = traceX;
-        this.traceY = traceY;
+        this.walls = [];
     }
 
 
@@ -262,7 +263,6 @@ class Enemy extends PhysicGameObjects{
             }
         }
 
-         
             let dir = {x:player.x-enemy.x, y: player.y - enemy.y}
             this.isSeeing = true;
             for(let i = 0; i < 10; i++)
@@ -305,33 +305,91 @@ class Enemy extends PhysicGameObjects{
                 ctx.fill();
             }*/
 
-
-        
         }
-
-        
 
         console.log(this.isSeeing);
 
     }
     
-    traceX = this.x;
-    traceY = this.y;
+    RerurnToLocation() {            //vrati enemy na pozici na spawnu            
+        let dir = this.RetDirection()
 
-    RerurnToLocation() {            //vrati enemy na pozici na spawnu
-        //console.log(this.traceX + " " + this.traceY)
+        this.x += dir.x * (this.speed / 2);
+        this.y += dir.y * (this.speed / 2); 
+    }
 
-            this.x += this.traceX* this.speed;
-            this.y += this.traceY * this.speed; 
+    RetMagnitude(pos){
+        return Math.sqrt((pos.x * pos.x) + (pos.y * pos.y));
+    }
+
+    RetNormalized(pos){
+        let m = this.RetMagnitude(pos);
+        return {x:(pos.x / m), y:(pos.y / m)}
     }
     
+    RetDirection(){
+        let dir = {x:this.traceX-this.x, y: this.traceY - this.y}
+        return (this.RetNormalized(dir))
+    }
 
     Distance(enemmy, player) {
         return Math.sqrt((player.x - enemmy.x)* (player.x - enemmy.x) + (player.y - enemmy.y) *(player.y - enemmy.y))
     }
 
+    WallCollision() { //kontroluje zda hrac narazi do sten kdyz se vraci
+
+        this.walls = [];
+        for(let i = 0; i < this.AllGameObjects.length; i++) {
+            if(this.AllGameObjects[i].tag == "wall") {
+                this.walls.push(this.AllGameObjects[i]) 
+            }
+            if (
+                this.y + (this.height / 2 + 10) > this.walls[i] - this.walls[i].height / 2 &&       //DELA TO CHUJOVINY S PARAMETRY WALLS fix
+                this.y - this.height / 2 < this.walls[i].y + this.walls[i].height / 2 &&
+                this.x - this.width / 2 < this.walls[i].x + this.walls[i].width / 2 &&
+                this.x + this.width / 2 > this.walls[i].x - this.walls[i].width / 2
+                ) 
+            {
+                /*let top = this.walls.y - this.walls.height / 2 - (this.y + this.height / 2);
+                let down = this.walls.y + this.walls.height / 2 - (this.y - this.height / 2);
+                let right = this.walls.x - this.walls.width / 2 - (this.x + this.width / 2);
+                let left = this.walls.x + this.walls.width / 2 - (this.x - this.width / 2);
+    
+                if (
+                    Math.abs(top) < down &&
+                    Math.abs(top) < Math.abs(right) &&
+                    Math.abs(top) < left
+                ) {
+                    this.y += top;
+                } else if (
+                    down < Math.abs(top) &&
+                    down < Math.abs(right) &&
+                    down < left
+                ) {
+                    this.y += down;
+                } else if (
+                    left < Math.abs(top) &&
+                    left < Math.abs(right) &&
+                    left < down
+                ) {
+                    this.x += left;
+                    
+                } else if (
+                    Math.abs(right) < Math.abs(top) &&
+                    Math.abs(right) < left &&
+                    Math.abs(right) < down
+                ) {
+                    this.x += right;
+                }*/
+                console.log("penis")
+            }
+        }
+        console.log(this.walls)
+    }
+
     Update() {
         this.Move();
+        this.WallCollision();
         this.FindPlayer();
         this.PhysicCollider();
     }
