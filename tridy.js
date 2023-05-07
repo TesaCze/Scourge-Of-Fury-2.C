@@ -207,10 +207,13 @@ class Enemy extends PhysicGameObjects{
         this.traceY = y;   
 
         this.walls = [];
+
+        this.lastX = x;
+        this.lastY = y;
     }
 
 
-    Move() {                //movement script pro enemy
+    Move() {                             //movement script pro enemy
         if(this.isSeeing == true) {
             let player;
             for(let i = 0; i < this.AllGameObjects.length; i++) {
@@ -273,10 +276,11 @@ class Enemy extends PhysicGameObjects{
                 for(let i = 0; i < this.AllGameObjects.length; i++) {
                     if(this.AllGameObjects[i].haveCollision == true && this.AllGameObjects[i].tag == "wall") {
                         let wallCollide = this.AllGameObjects[i]
-                        if(this.Distance(enemy, player) > 600 || (y < wallCollide.y +wallCollide.height /2 &&
+                        if(this.Distance(enemy, player) > 600 || (
+                            y < wallCollide.y +wallCollide.height /2 &&
                             y > wallCollide.y - wallCollide.height /2 &&
                             x > wallCollide.x - wallCollide.width /2  &&
-                            x < wallCollide.x + wallCollide.width /2  )
+                            x < wallCollide.x + wallCollide.width /2)
                             ) 
                             {
                                 this.isSeeing = false
@@ -311,11 +315,13 @@ class Enemy extends PhysicGameObjects{
 
     }
     
-    RerurnToLocation() {            //vrati enemy na pozici na spawnu            
+    RerurnToLocation() {                    //vrati enemy na pozici na spawnu            
         let dir = this.RetDirection()
 
-        this.x += dir.x * (this.speed / 2);
-        this.y += dir.y * (this.speed / 2); 
+        this.x += dir.x * (this.speed / 1.5);
+        this.y += dir.y * (this.speed / 1.5); 
+
+        
     }
 
     RetMagnitude(pos){
@@ -336,55 +342,121 @@ class Enemy extends PhysicGameObjects{
         return Math.sqrt((player.x - enemmy.x)* (player.x - enemmy.x) + (player.y - enemmy.y) *(player.y - enemmy.y))
     }
 
-    WallCollision() { //kontroluje zda hrac narazi do sten kdyz se vraci
+    WallCollision(dir) { //kontroluje zda hrac narazi do sten kdyz se vraci
 
         this.walls = [];
         for(let i = 0; i < this.AllGameObjects.length; i++) {
-            if(this.AllGameObjects[i].tag == "wall") {
+            if(this.AllGameObjects[i].tag == "wall" && this.AllGameObjects[i].haveCollision == true) {
                 this.walls.push(this.AllGameObjects[i]) 
             }
-            if (
-                this.y + (this.height / 2 + 10) > this.walls[i] - this.walls[i].height / 2 &&       //DELA TO CHUJOVINY S PARAMETRY WALLS fix
-                this.y - this.height / 2 < this.walls[i].y + this.walls[i].height / 2 &&
-                this.x - this.width / 2 < this.walls[i].x + this.walls[i].width / 2 &&
-                this.x + this.width / 2 > this.walls[i].x - this.walls[i].width / 2
-                ) 
-            {
-                /*let top = this.walls.y - this.walls.height / 2 - (this.y + this.height / 2);
-                let down = this.walls.y + this.walls.height / 2 - (this.y - this.height / 2);
-                let right = this.walls.x - this.walls.width / 2 - (this.x + this.width / 2);
-                let left = this.walls.x + this.walls.width / 2 - (this.x - this.width / 2);
+            for (let y = 0; y < this.walls.length; y++) {
+                if ((this.y + this.height / 2 + 2) > this.walls[y].y - this.walls[y].height / 2 &&
+                    (this.y - this.height / 2 - 2) < this.walls[y].y + this.walls[y].height / 2 &&
+                    (this.x - this.width / 2 - 2) < this.walls[y].x + this.walls[y].width / 2 &&
+                    (this.x + this.width / 2 + 2) > this.walls[y].x - this.walls[y].width / 2) {
+
+                let top = this.walls[y].y - this.walls[y].height / 2 - (this.y + this.height / 2);
+                let down = this.walls[y].y + this.walls[y].height / 2 - (this.y - this.height / 2);
+                let right = this.walls[y].x - this.walls[y].width / 2 - (this.x + this.width / 2);
+                let left = this.walls[y].x + this.walls[y].width / 2 - (this.x - this.width / 2);
+
+                this.lastX = this.x;
+                this.lastY = this.y;
+
+                let currX;
+                let currY;
     
                 if (
                     Math.abs(top) < down &&
                     Math.abs(top) < Math.abs(right) &&
                     Math.abs(top) < left
                 ) {
-                    this.y += top;
+                    currY = this.y
+                    if(this.lastY == currY) {
+                        this.DodgeTop(dir)
+                    }
+                    
                 } else if (
                     down < Math.abs(top) &&
                     down < Math.abs(right) &&
                     down < left
                 ) {
-                    this.y += down;
+                    currY = this.y
+                    if(this.lastY == currY) {
+                        this.DodgeDown(dir)
+                    }
                 } else if (
                     left < Math.abs(top) &&
                     left < Math.abs(right) &&
                     left < down
                 ) {
-                    this.x += left;
+                    currX = this.x
+                    if(this.lastX == currX) {
+                        this.DodgeLeft(dir)
+                    }
                     
                 } else if (
                     Math.abs(right) < Math.abs(top) &&
                     Math.abs(right) < left &&
                     Math.abs(right) < down
                 ) {
-                    this.x += right;
-                }*/
-                console.log("penis")
+                    currX = this.x
+                    if(this.lastX == currX) {
+                        this.DodgeRight(dir)
+                    }
+                }
             }
+            }
+            
         }
-        console.log(this.walls)
+    }
+
+    DodgeLeft(dir) {
+        console.log("dodgeL")
+        this.x += 1;
+        this.y -= 1;
+        /*dir = this.RetDirection()
+
+        console.log(dir)                    //ja jsem pica a nevim co delam
+
+        this.x -= dir.x * (this.speed / 1.5);
+        this.y -= dir.y * (this.speed / 1.5); */
+    }
+
+    DodgeRight(dir) {
+        console.log("dodgeR")
+        this.x -= 1;
+        this.y -= 1;
+        /*dir = this.RetDirection()
+
+        console.log(dir)                    //ja jsem pica a nevim co delam
+
+        this.x -= dir.x * (this.speed / 1.5);
+        this.y -= dir.y * (this.speed / 1.5); */
+    }
+
+    DodgeTop(dir) {
+        console.log("dodgeT")
+        this.x -= 1;
+        this.y -= 1;
+        /*dir = this.RetDirection()
+
+        console.log(dir)                    //ja jsem pica a nevim co delam
+
+        this.x -= dir.x * (this.speed / 1.5);
+        this.y -= dir.y * (this.speed / 1.5); */
+    }
+
+    DodgeDown(dir) {
+        console.log("dodgeD")
+        this.x += 1;
+        this.y += 1;
+        /*dir = this.RetDirection()
+
+        console.log(dir)                    //ja jsem pica a nevim co delam
+
+        this.x -= dir.x * (this.speed / 1.5);
+        this.y -= dir.y * (this.speed / 1.5); */
     }
 
     Update() {
@@ -474,7 +546,6 @@ class Game{
     Render() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         this.DrawLayers();
-        //this.FindPlayer();
         this.PlayerHealth();
     }
     

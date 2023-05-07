@@ -5,7 +5,7 @@ addEventListener("load", (event) => {Start();});
 
 let camera = new Camera(0, 0, 0);
 let game = new Game(ctx, canvas, camera);
-let enemy = new Enemy(75, 500, 75, 75, 0, ["../Textures/enemyTexture.png"],"enemy",69,true,false)
+let enemy = new Enemy(0, 500, 75, 75, 0, ["../Textures/enemyTexture.png"],"enemy",69,true,false)
 let map;
 let newGameObject;
 
@@ -47,5 +47,3 @@ async function LoadFromJson(path)
 function Update() {
     game.Update()
 }
-
-
