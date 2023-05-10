@@ -49,6 +49,12 @@ function Draw()
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     DrawObjects();
     DrawGrid();
+
+    if(selectedObjects.length != 0)
+    {
+        DrawObjectSelection();
+    }
+
     if(isSelecting)
     {
         DrawSelect();
@@ -149,6 +155,21 @@ function DrawSelectedObjects()
     }
 }
 
+function DrawObjectSelection()
+{
+    for(let i = 0; i < selectedObjects.length; i++)
+    {   
+        let pos = WorldToCnavas(selectedObjects[i].x - selectedObjects[i].width/2 , selectedObjects[i].y  + selectedObjects[i].height/2);
+        ctx.fillStyle = "rgba(0,145,255,0.2)"
+        ctx.fillRect(pos.x  ,pos.y ,selectedObjects[i].width * editorCamera.zoom,selectedObjects[i].height* editorCamera.zoom)
+        ctx.strokeStyle = "rgba(0,145,255,1)"
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.rect(pos.x  ,pos.y ,selectedObjects[i].width * editorCamera.zoom,selectedObjects[i].height* editorCamera.zoom)
+        ctx.stroke()
+    }
+}
+
 function CanvasToWorld(x,y)
 {
     
@@ -238,6 +259,7 @@ function selectBlocks()
             selectedObjects.push(AllGameObjects[i])
         }
     }
+    
 }
 
 function onTextureClick(obj)
