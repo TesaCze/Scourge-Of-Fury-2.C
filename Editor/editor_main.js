@@ -166,7 +166,6 @@ function WorldToCnavas(x,y)
     }
 }
 
-
 function addBlock(x,y)
 {
     let pos = CanvasToWorld(x,y)
