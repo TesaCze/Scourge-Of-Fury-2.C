@@ -554,7 +554,7 @@ class Game{
         //this.SpriteSwitch();
         for (let i = 0; i < this.AllGameObjects.length; i++) {
             let texture = new Image(75, 75);
-                texture.src = this.AllGameObjects[i].sprites[0];
+                texture.src = this.AllGameObjects[i].sprites[this.AllGameObjects[i].currentAnimation][this.AllGameObjects[i].currentSprite];
             ctx.drawImage(texture, this.canvasPos(this.AllGameObjects[i]).x - this.camera.x, this.canvasPos(this.AllGameObjects[i]).y + this.camera.y, 75, 75);        
         }
     }
