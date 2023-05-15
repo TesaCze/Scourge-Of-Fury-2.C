@@ -182,8 +182,7 @@ class Player extends PhysicGameObjects{
         this.x -= this.speed * this.dir.left;
         this.y -= this.speed * this.dir.down;
         this.y += this.speed * this.dir.up;
-        camera.x = this.x;
-        camera.y = this.y;
+        
     }
 
     Health() {
@@ -223,6 +222,8 @@ class Player extends PhysicGameObjects{
     {
         this.Move() 
         this.PhysicCollider();
+        camera.x = this.x;
+        camera.y = this.y;
         this.Health();
     }
 }
