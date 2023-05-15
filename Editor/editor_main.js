@@ -1,5 +1,6 @@
 let canvas = document.getElementById("kanvas");
 let ctx = canvas.getContext("2d");
+ctx.imageSmoothingEnabled = false;
 
 //----------------------------------Tady se muze cokoliv nastavit--------------------------
 let grid = {lineColor:"#bfbfbf",lineWidth:0.5,size:75}
@@ -12,7 +13,7 @@ let AllGameObjects = [];
 let currentBlock = null;
 
 let history = []; //ctrl z
-let udnoHistory = []; //ctrl x
+let undoHistory = []; //ctrl x
 
 let idCount = 0
 
@@ -139,44 +140,7 @@ function DrawSelectedObjects()
 {
     if(copiedObjects.length != 0)
     {
-        let minX = copiedObjects[0].x
-        let maxX = copiedObjects[0].x
-        let minY = copiedObjects[0].y
-        let maxY = copiedObjects[0].y
-
-        copiedObjects.forEach(element => {
-            if(element.x < minX)
-            {
-                minX = element.x
-            }
-
-        }); 
-
-        copiedObjects.forEach(element => {
-            if(element.x > maxX)
-            {
-                maxX = element.x
-            }
-
-        }); 
-
-        copiedObjects.forEach(element => {
-            if(element.y < minY)
-            {
-                minY = element.y
-            }
-
-        }); 
-
-        copiedObjects.forEach(element => {
-            if(element.y > maxY)
-            {
-                maxY = element.y
-            }
-
-        }); 
         
-
         console.log(minX,maxX,minY,maxY)
     }
     else if(currentBlock != null)
@@ -239,8 +203,7 @@ function addBlock(x,y)
         
        if((pos.x == AllGameObjects[i].x && pos.y == AllGameObjects[i].y))
        {
-        return
-           // AllGameObjects.splice(i,1)
+            return;
        }
        else if(currentBlock.type == "player" && AllGameObjects[i].tag == "player")
        {
@@ -259,9 +222,9 @@ function addBlock(x,y)
         break;
     }
     
-    udnoHistory = [];
+    undoHistory = [];
     AllGameObjects.push(newGameObject);
-    history.push([0,idCount]) //0 add 1 delete
+    history.push({type:0, objects:[idCount]}) //0 add 1 delete
     idCount++;
 }
 
@@ -278,7 +241,7 @@ function removeBlock(x,y)
         
        if((pos.x == AllGameObjects[i].x && pos.y == AllGameObjects[i].y))
        {
-            history.push([1,AllGameObjects[i]])
+            history.push({type:1, objects: [AllGameObjects[i]]})
             AllGameObjects.splice(i,1)
        }
     }
@@ -422,7 +385,7 @@ canvas.addEventListener("mouseup", (e) =>
 
 document.addEventListener("keydown", (e) => 
 {
-    //console.log(e)
+  //  console.log(e)
     switch(e.code)
     {
         case "Space":
@@ -430,29 +393,59 @@ document.addEventListener("keydown", (e) =>
             editorCamera.position.y = 0;
             editorCamera.zoom = 1;
         break;
+
+        case "Delete":
+            if(selectedObjects.length != 0)
+            {
+                for(let i = 0; i < selectedObjects.length;i++)
+                {
+                    for(let j = 0; j < AllGameObjects.length; j++)
+                    {
+                        if(selectedObjects[i].id == AllGameObjects[j].id)
+                        {
+                            AllGameObjects.splice(j,1);
+                        }
+                    }
+                }
+                history.push({type: 1, objects: selectedObjects});
+                selectedObjects = [];
+            }
+        break;
     }
 
     if(e.code == "KeyZ" && e.ctrlKey) //Undo
     {
+        selectedObjects = [];
         
         if(history.length != 0)
         {
-            if(history[history.length-1][0] == 0)
+            if(history[history.length-1].type == 0)
             {
+                let temp = []
                 for(let i = 0; i < AllGameObjects.length; i++)
                 {
-                    if(AllGameObjects[i].id == history[history.length-1][1])
+                    for(let j = 0; j < history[history.length-1].objects.length;j++)
                     {
-                        udnoHistory.push([0,AllGameObjects[i]]);
-                        AllGameObjects.splice(i,1)
-                        history.pop()
+                        if(AllGameObjects[i].id == history[history.length-1].objects[j])
+                        {
+                            temp.push(AllGameObjects[i]);
+                            AllGameObjects.splice(i,1)
+                        }
                     }
                 }
+                undoHistory.push({type:0,objects: temp});
+                history.pop()
             }
             else
             {
-                AllGameObjects.push(history[history.length-1][1])
-                udnoHistory.push([1,history[history.length-1][1].id]);
+                let temp = []
+                for(let i = 0; i < history[history.length-1].objects.length;i++)
+                {
+                    AllGameObjects.push(history[history.length-1].objects[i])
+                    temp.push(history[history.length-1].objects[i].id)
+                }
+             
+                undoHistory.push({type:1,objects: temp});
                 history.pop();
             }
             
@@ -460,31 +453,72 @@ document.addEventListener("keydown", (e) =>
     }
     else if(e.code == "KeyX" && e.ctrlKey) //Redo
     {
-        if(udnoHistory.length != 0)
+        selectedObjects = [];
+
+        if(undoHistory.length != 0)
         {
-            if(udnoHistory[udnoHistory.length-1][0] == 0)
+            if(undoHistory[undoHistory.length-1].type == 0)
             {
-                AllGameObjects.push(udnoHistory[udnoHistory.length-1][1])
-                history.push([0,udnoHistory[udnoHistory.length-1][1].id])
-                udnoHistory.pop();
+                let temp = []
+                for(let i = 0; i < undoHistory[undoHistory.length-1].objects.length; i++)
+                {
+                    AllGameObjects.push(undoHistory[undoHistory.length-1].objects[i])
+                    temp.push(undoHistory[undoHistory.length-1].objects[i].id)
+                }
+                history.push({type:0,objects: temp});
+                undoHistory.pop();
             }
             else
             {
+                let temp = [];
                 for(let i = 0; i < AllGameObjects.length; i++)
                 {
-                    if(AllGameObjects[i].id == udnoHistory[udnoHistory.length-1][1])
+                    for(let j = 0; j < undoHistory[undoHistory.length-1].objects.length;j++)
                     {
-                        history.push([1,AllGameObjects[i]]);
-                        AllGameObjects.splice(i,1)
-                        udnoHistory.pop()
-                    }
+                        if(AllGameObjects[i].id == undoHistory[undoHistory.length-1].objects[j])
+                        {
+                            console.log(i)
+                            temp.push(AllGameObjects[i]);
+                            AllGameObjects.splice(i,1)  //nefunguje tu break tak jsem ho oddelal vsude
+                        }
+                    } 
                 }
+                history.push({type:1,objects: temp});
+                undoHistory.pop()
             }
         }
     }
     else if(e.code == "KeyC" && e.ctrlKey) //copie
     {
         copiedObjects = selectedObjects
+
+        let minX = copiedObjects[0].x
+        let maxX = copiedObjects[0].x
+        let minY = copiedObjects[0].y
+        let maxY = copiedObjects[0].y
+
+        copiedObjects.forEach(element => 
+        {
+            if(element.x < minX)
+            {
+                minX = element.x
+            }
+
+            if(element.x > maxX)
+            {
+                maxX = element.x
+            }
+
+            if(element.y < minY)
+            {
+                minY = element.y
+            }
+
+            if(element.y > maxY)
+            {
+                maxY = element.y
+            }
+        })
     }
 })
 
