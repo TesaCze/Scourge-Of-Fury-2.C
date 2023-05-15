@@ -5,7 +5,7 @@ addEventListener("load", (event) => {Start();});
 
 let camera = new Camera(0, 0, 0);
 let game = new Game(ctx, canvas, camera);
-let enemy = new Enemy(0, 500, 75, 75, 0, ["../Textures/enemyTexture.png"],"enemy",69,true,false)
+let enemy = new Enemy(0, 500, 75, 75, 0, [["../Textures/enemyTexture.png"]],"enemy",69,true,false)
 let map;
 let newGameObject;
 
@@ -14,7 +14,7 @@ let newGameObject;
 
 async function Start() 
 {
-    await LoadFromJson('mapa_performenc_test.json')
+    await LoadFromJson('mapa_2.json')
     setInterval(Update, 16);
 }
 
