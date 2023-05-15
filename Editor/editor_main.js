@@ -73,7 +73,7 @@ function DrawObjects()
     {
         let pos = WorldToCnavas(AllGameObjects[i].x,AllGameObjects[i].y)
         let img = new Image(grid.size,grid.size)
-        img.src = AllGameObjects[i].sprites[0]
+        img.src = AllGameObjects[i].sprites[0][0]
         ctx.drawImage(img, pos.x - AllGameObjects[i].width/2 * editorCamera.zoom, pos.y - AllGameObjects[i].height/2* editorCamera.zoom, grid.size * editorCamera.zoom, grid.size* editorCamera.zoom);        
     }
 }
@@ -149,7 +149,7 @@ function DrawSelectedObjects()
         let pos2 = WorldToCnavas(pos.x,pos.y)
         ctx.globalAlpha = 0.2;
         let img = new Image(grid.size,grid.size)
-        img.src = currentBlock.sprites
+        img.src = currentBlock.sprites[0][0]
         ctx.drawImage(img, pos2.x , pos2.y , grid.size * editorCamera.zoom, grid.size* editorCamera.zoom);   
         ctx.globalAlpha = 1;
     }
@@ -277,7 +277,7 @@ function addTexturesToDiv()
         blocky.setAttribute("id", "block[" + i + "]");
         blocky.classList.add("hover-text");
         const newDiv = document.createElement("img");
-        newDiv.src = Textures[i].sprites[0]
+        newDiv.src = Textures[i].sprites[0][0]
         newDiv.setAttribute("onclick","onTextureClick("+JSON.stringify(Textures[i])+")");
         newDiv.setAttribute("id", "block[" + i + "]");
      //   newDiv.setAttribute("onclick", "selectedBlock()");
@@ -309,6 +309,7 @@ function downloadMap()
 
 canvas.addEventListener("mousedown", (e)=> 
 { 
+    selectBlocks = [];
     if(e.button == 0 && e.shiftKey)
     {   
         isSelecting = true;

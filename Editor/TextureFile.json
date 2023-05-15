@@ -1,5 +1,5 @@
 [
-    {"sprites":["../Textures/playerTexture.png"],"type":"player","text":"Hrac"},
-    {"sprites":["../Textures/blockTexture.png"],"type":"wall","text":"stena", "haveCollision":true},
-    {"sprites":["../Textures/ncBlockTexture.png"],"type":"wall","text":"stena","haveCollision":false}
+    {"sprites":[["../animations/Player/Idle1.png","../animations/Player/Idle2.png","../animations/Player/Idle3.png","../animations/Player/Idle4.png","../animations/Player/Idle5.png","../animations/Player/Idle6.png","../animations/Player/Idle7.png","../animations/Player/Idle8.png","../animations/Player/Idle9.png"]],"type":"player","text":"Hrac"},
+    {"sprites":[["../Textures/blockTexture.png"]],"type":"wall","text":"stena", "haveCollision":true},
+    {"sprites":[["../Textures/ncBlockTexture.png"]],"type":"wall","text":"stena","haveCollision":false}
 ]
