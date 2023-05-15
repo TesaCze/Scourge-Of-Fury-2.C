@@ -1,5 +1,12 @@
 [
-    {"sprites":[["../animations/Player/Idle1.png","../animations/Player/Idle2.png","../animations/Player/Idle3.png","../animations/Player/Idle4.png","../animations/Player/Idle5.png","../animations/Player/Idle6.png","../animations/Player/Idle7.png","../animations/Player/Idle8.png","../animations/Player/Idle9.png"]],"type":"player","text":"Hrac"},
-    {"sprites":[["../Textures/blockTexture.png"]],"type":"wall","text":"stena", "haveCollision":true},
-    {"sprites":[["../Textures/ncBlockTexture.png"]],"type":"wall","text":"stena","haveCollision":false}
+    {"sprites":[["../animations/Player/Idle1.png","../animations/Player/Idle2.png","../animations/Player/Idle3.png","../animations/Player/Idle4.png","../animations/Player/Idle5.png","../animations/Player/Idle6.png","../animations/Player/Idle7.png","../animations/Player/Idle8.png","../animations/Player/Idle9.png"]],"type":"player","text":"Player"},
+    {"sprites":[["../Textures/wall-classic.png"]],"type":"wall","text":"Wall", "haveCollision":true},
+    {"sprites":[["../Textures/wall-broken-1.png"]],"type":"wall","text":"Wall1", "haveCollision":true},
+    {"sprites":[["../Textures/wall-broken-2.png"]],"type":"wall","text":"Wall2", "haveCollision":true},
+    {"sprites":[["../Textures/ground-broken-1.png"]],"type":"wall","text":"Ground","haveCollision":false},
+    {"sprites":[["../Textures/ground-broken-2.png"]],"type":"wall","text":"Ground1","haveCollision":false},
+    {"sprites":[["../Textures/ground-broken-3.png"]],"type":"wall","text":"Ground2","haveCollision":false},
+    {"sprites":[["../Textures/ground-broken-4.png"]],"type":"wall","text":"Ground3","haveCollision":false},
+    {"sprites":[["../Textures/ground-broken-5.png"]],"type":"wall","text":"Ground4","haveCollision":false},
+    {"sprites":[["../Textures/ground-classic.png"]],"type":"wall","text":"Ground5","haveCollision":false}
 ]
