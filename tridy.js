@@ -1,3 +1,16 @@
+/*------------------TODO lIST-------------
+-json pripravit na animace
+-nachstat frames
+-nachstat textury
+-predelat vykreslovani
+-udelat animace (Player Death, Enemy Death - muze byt proste lebka sprite protoze to mam, Player Hit, Enemy Hit)
+-tlacitka a packy
+-menu
+-udelat grafiku pro main start hry
+
+
+-----------------------------------------*/
+
 class GameObjects{                                                                     // Pouze inicializace nezbytnych promenych
     constructor(x, y, width, height, layer, sprites,tag,id) {
         this.id = id
@@ -116,13 +129,13 @@ class PhysicGameObjects extends GameObjects //objekty s kolizemi
 
 class Player extends PhysicGameObjects{
             
-    constructor(x, y, width, height, layer, sprites,tag,id, haveCollision,isStatic,speed,hp){
+    constructor(x, y, width, height, layer, sprites,tag,id, haveCollision,isStatic,speed, hp){
         super(x, y, width, height, layer, sprites,tag,id, haveCollision,isStatic)
         this.isColliding = false;
         this.dir = {left:false, right: false, up:false, down:false}
         this.speed = 8;
         this.isAttacking = false;
-        this.hp = 100;
+        this.hp = hp;
 
         document.addEventListener("keypress", (event) => {
             switch (event.key) {
@@ -137,6 +150,9 @@ class Player extends PhysicGameObjects{
                     break;
                 case "s":
                     this.dir.down = true;
+                    break;
+                default:
+                    this.currentAnimation = 0;
                     break;
             }
         });
@@ -160,11 +176,6 @@ class Player extends PhysicGameObjects{
         })
      
     }
-    
-    AnimationSwitch() {
-        let playerAnimations = [];
-        
-    }
 
     Move() {
         this.x += this.speed * this.dir.right;
@@ -176,7 +187,35 @@ class Player extends PhysicGameObjects{
     }
 
     Health() {
+        let player;
+        let hp;
+        let enemy;
+        for(let i = 0; i < this.AllGameObjects.length; i++) {
+            if(this.AllGameObjects[i].tag == "player") {
+                player = this.AllGameObjects[i]
+                break;
+            }
+        }
+        for(let i = 0; i < this.AllGameObjects.length; i++) {
+            if(this.AllGameObjects[i].tag == "enemy") {
+                enemy = this.AllGameObjects[i]
+                break;
+            }
+        }
 
+        /*addEventListener("keyup", (event) => {
+            let nIntervId;
+            if(event.key == "p") {
+                this.hp--;
+            }
+            if (!nIntervId) {
+                nIntervId = setInterval(100);
+              }
+        });*/
+
+        hp = player.hp;
+        console.log(hp);
+        this.Kolize(enemy);
     }
 
 
@@ -203,8 +242,8 @@ class Enemy extends PhysicGameObjects{
         this.speed = 5;
         this.isAttacking = false;
         this.isSeeing = false;
-        this.traceX = x + 1;     //vubec nevim proc tam musi byt +1 ale bez toho to nefaka
-        this.traceY = y;   
+        this.traceX = this.x + 1;     //vubec nevim proc tam musi byt +1 ale bez toho to nefaka
+        this.traceY = this.y;   
 
         this.walls = [];
 
@@ -538,7 +577,7 @@ class Game{
     }    
     
     Hit() {
-        this.playerHp --;
+     //   this.playerHp --;
     }
 
 
