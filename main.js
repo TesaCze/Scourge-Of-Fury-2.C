@@ -14,7 +14,7 @@ let newGameObject;
 
 async function Start() 
 {
-    await LoadFromJson('mapa_2.json')
+    await LoadFromJson('mapa_performenc_test.json')
     setInterval(Update, 16);
 }
 

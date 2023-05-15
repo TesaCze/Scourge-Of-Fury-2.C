@@ -139,7 +139,45 @@ function DrawSelectedObjects()
 {
     if(copiedObjects.length != 0)
     {
+        let minX = copiedObjects[0].x
+        let maxX = copiedObjects[0].x
+        let minY = copiedObjects[0].y
+        let maxY = copiedObjects[0].y
 
+        copiedObjects.forEach(element => {
+            if(element.x < minX)
+            {
+                minX = element.x
+            }
+
+        }); 
+
+        copiedObjects.forEach(element => {
+            if(element.x > maxX)
+            {
+                maxX = element.x
+            }
+
+        }); 
+
+        copiedObjects.forEach(element => {
+            if(element.y < minY)
+            {
+                minY = element.y
+            }
+
+        }); 
+
+        copiedObjects.forEach(element => {
+            if(element.y > maxY)
+            {
+                maxY = element.y
+            }
+
+        }); 
+        
+
+        console.log(minX,maxX,minY,maxY)
     }
     else if(currentBlock != null)
     {
@@ -246,7 +284,7 @@ function removeBlock(x,y)
     }
 }
 
-function selectBlocks()
+function findSelectedBlocks()
 {
     selectedObjects = [];
     for(let i = 0; i < AllGameObjects.length;i++)
@@ -259,7 +297,6 @@ function selectBlocks()
             selectedObjects.push(AllGameObjects[i])
         }
     }
-    
 }
 
 function onTextureClick(obj)
@@ -309,7 +346,7 @@ function downloadMap()
 
 canvas.addEventListener("mousedown", (e)=> 
 { 
-    selectBlocks = [];
+    selectedObjects = [];
     if(e.button == 0 && e.shiftKey)
     {   
         isSelecting = true;
@@ -379,7 +416,7 @@ canvas.addEventListener("mouseup", (e) =>
         let temp = CanvasToWorld(e.offsetX,e.offsetY)
         selectPos.end.x = temp.x
         selectPos.end.y = temp.y
-        selectBlocks();
+        findSelectedBlocks();
     }
 });
 
