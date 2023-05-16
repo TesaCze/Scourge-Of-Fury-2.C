@@ -223,7 +223,7 @@ class Sword extends Player {
         super(x, y, width, height, layer, haveCollision, texture, canMove)
         this.isAttacking = false;    
     }
-    
+
     
 }
 
@@ -555,11 +555,11 @@ class Game{
             }
         });
 
-        ctx.fillStyle='#fff';
-        ctx.fillRect(canvas.width - 120, canvas.height - 75, 90, 40);  
-        ctx.font = "20px Arial";
-        ctx.fillStyle = "black"
-        ctx.fillText(this.playerHp + "/30", canvas.width - 100, canvas.height - 50);
+        this.ctx.fillStyle='#fff';
+        this.ctx.fillRect(canvas.width - 120, canvas.height - 75, 90, 40);  
+        this.ctx.font = "20px Arial";
+        this.ctx.fillStyle = "black"
+        this.ctx.fillText(this.playerHp + "/30", canvas.width - 100, canvas.height - 50);
         if(this.isColliding == true) {
             return 0;
         }
@@ -570,7 +570,7 @@ class Game{
     }
 
     Render() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        this.ctx.clearRect(0, 0, canvas.width, canvas.height);
         this.DrawLayers();
         this.PlayerHealth();
     }
