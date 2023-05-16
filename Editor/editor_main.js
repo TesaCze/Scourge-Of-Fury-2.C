@@ -142,7 +142,7 @@ function DrawSelectedObjects()
     {
         let pos = CanvasToWorld(mousePos.x,mousePos.y)
         pos.x = grid.size * Math.round(pos.x/grid.size) - grid.size/2
-        pos.y = grid.size * Math.round(pos.y/grid.size)+ grid.size/2
+        pos.y = grid.size * Math.round(pos.y/grid.size) + grid.size/2
         
         ctx.globalAlpha = 0.2;
 
@@ -202,29 +202,34 @@ function WorldToCnavas(x,y)
 }
 
 function addBlock(x,y)
-{
+{   
     if(copiedObjects.length != 0)
     {
         let pos = CanvasToWorld(mousePos.x,mousePos.y)
-        pos.x = grid.size * Math.round(pos.x/grid.size) - grid.size/2
-        pos.y = grid.size * Math.round(pos.y/grid.size)+ grid.size/2
+        pos.x = grid.size * Math.round(pos.x/grid.size) 
+        pos.y = grid.size * Math.round(pos.y/grid.size)
+        let newGameObject;
+        let temp = [];
         
-
-        for(let i = 0; i < copiedObjects.objects.length; i++)
+        for(let i = 0; i < copiedObjects.objects.length; i++) //aby se bloky neprekrivaly
         {
-            let pos2 = WorldToCnavas(copiedObjects.objects[i].x - copiedObjects.stredX + pos.x,copiedObjects.objects[i].y - copiedObjects.stredY + pos.y)
-            for(let i = 0; i < AllGameObjects.length;i++)
+            let pos2 = {x:copiedObjects.objects[i].x - copiedObjects.stredX + pos.x,y: copiedObjects.objects[i].y - copiedObjects.stredY + pos.y}
+            for(let j = 0; j < AllGameObjects.length;j++)
             {
-                if((pos2.x == AllGameObjects[i].x && pos2.y == AllGameObjects[i].y))
+                if((pos2.x == AllGameObjects[j].x && pos2.y == AllGameObjects[j].y))
                 {
                     return;
                 }
-                else if(copiedObjects.objects[i].type == "player" && AllGameObjects[i].tag == "player")
+                else if(copiedObjects.objects[i].tag == "player" && AllGameObjects[j].tag == "player")
                 {
-                    AllGameObjects.splice(i,1)
+                    AllGameObjects.splice(j,1)
                 }
             }
+        }
 
+        for(let i = 0; i < copiedObjects.objects.length; i++)
+        {
+            let pos2 = {x:copiedObjects.objects[i].x - copiedObjects.stredX + pos.x,y: copiedObjects.objects[i].y - copiedObjects.stredY + pos.y}
             switch(copiedObjects.objects[i].tag)
             {
                 case "player": //(x, y, width, height, layer, sprites,tag,id, haveCollision,isStatic,speed,hp)
@@ -235,11 +240,12 @@ function addBlock(x,y)
                 break;
             }
             
-            undoHistory = [];
+            temp.push(idCount)
             AllGameObjects.push(newGameObject);
-            history.push({type:0, objects:[idCount]}) //0 add 1 delete
             idCount++;
         }
+        history.push({type:0, objects:temp}) 
+        undoHistory = [];
     }
     else
     {
@@ -378,7 +384,7 @@ canvas.addEventListener("mousedown", (e)=>
         editorCamera.dragPosition.x = e.offsetX - editorCamera.position.x
         editorCamera.dragPosition.y = e.offsetY - editorCamera.position.y;
     }
-    else if(e.button == 0 && currentBlock != null)
+    else if(e.button == 0 && (currentBlock != null || copiedObjects.length != 0))
     {
         addBlock(e.offsetX,e.offsetY)
     }
@@ -579,12 +585,12 @@ document.addEventListener("keydown", (e) =>
         let stredX = (minX +((maxX-minX)/2));
         let stredY = (minY +((maxY-minY)/2));
 
-        if(stredX % 10 != 0)
+        if(stredX % grid.size != 0)
         {
             stredX -= grid.size/2
         }
 
-        if(stredY % 10 != 0)
+        if(stredY % grid.size != 0)
         {
             stredY -= grid.size/2
         }
