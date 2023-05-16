@@ -5,7 +5,7 @@ addEventListener("load", (event) => {Start();});
 
 let camera = new Camera(0, 0, 0);
 let game = new Game(ctx, canvas, camera);
-let enemy = new Enemy(0, 500, 75, 75, 0, [["../Textures/enemyTexture.png"]],"enemy",69,true,false)
+let enemy = new Enemy(0, 500, 75, 75, 0, [["../animations/Enemy/Idle/Idle-1.png","../animations/Enemy/Idle/Idle-2.png","../animations/Enemy/Idle/Idle-3.png","../animations/Enemy/Idle/Idle-4.png"], ["../animations/Enemy/Walk/walk-1.png","../animations/Enemy/Walk/walk-2.png","../animations/Enemy/Walk/walk-3.png","../animations/Enemy/Walk/walk-4.png"]],"enemy",69,true,false)
 let map;
 let newGameObject;
 
@@ -16,6 +16,7 @@ async function Start()
 {
     await LoadFromJson('mapa_2.json')
     setInterval(Update, 16);
+    setInterval(AnimationUpdate, 100);
 }
 
 async function LoadFromJson(path)
@@ -46,4 +47,7 @@ async function LoadFromJson(path)
 
 function Update() {
     game.Update()
+}
+function AnimationUpdate() {
+    game.AnimationUpdate()
 }

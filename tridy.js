@@ -141,15 +141,19 @@ class Player extends PhysicGameObjects{
             switch (event.key) {
                 case "a":
                     this.dir.left = true;
+                    this.currentAnimation = 1;
                     break;
                 case "w":
                     this.dir.up = true;
+                    this.currentAnimation = 1;
                     break;
                 case "d":
                     this.dir.right = true;
+                    this.currentAnimation = 1;
                     break;
                 case "s":
                     this.dir.down = true;
+                    this.currentAnimation = 1;
                     break;
                 default:
                     this.currentAnimation = 0;
@@ -160,15 +164,19 @@ class Player extends PhysicGameObjects{
             switch (event.key) {
                 case "a":
                     this.dir.left = false;
+                    this.currentAnimation = 0;
                     break;
                 case "d":
                     this.dir.right = false;
+                    this.currentAnimation = 0;
                     break;
                 case "w":
                     this.dir.up = false;
+                    this.currentAnimation = 0;
                     break;
                 case "s":
                     this.dir.down = false;
+                    this.currentAnimation = 0;
             }
         });
         document.addEventListener("click", (event) => {
@@ -328,27 +336,6 @@ class Enemy extends PhysicGameObjects{
                             }
                     }
             }
-
-           /* for(let i = 0; i < 10; i++)
-            {
-                let x = enemy.x + (dir.x/10*i)
-                let y = enemy.y + (dir.y/10*i)
-
-                
-                ctx.beginPath();
-                if(isSeeing)
-                {
-                    ctx.fillStyle = "rgba(255, 0, 0, 0.2)"
-                    //Enemy.
-                }
-                else
-                {
-                    ctx.fillStyle = "rgba(200, 200, 200, 0.1)"
-                }
-                ctx.arc(x - this.camera.x + this.canvas.width/2 , -y + this.camera.y + this.canvas.height/2 , 10, 0, Math.PI * 2);
-                ctx.fill();
-            }*/
-
         }
 
         console.log(this.isSeeing);
@@ -544,15 +531,19 @@ class Game{
         this.playerHp = 30;
     }
 
-    /*SpriteSwitch() {
-        let currSprite; 
-        for (let i = 1; i < this.AllGameObjects.currentSprite.length; i++) {
-            currSprite++;
+    AnimationUpdate() {
+        for(let i = 0; i < this.AllGameObjects.length; i++) {
+             if(this.AllGameObjects[i].currentSprite == this.AllGameObjects[i].sprites[this.AllGameObjects[i].currentAnimation].length - 1) {
+                this.AllGameObjects[i].currentSprite = 0;
+            } else {
+                this.AllGameObjects[i].currentSprite++;
+            }  
         }
-    }*/
+     
+    
+    }
 
     DrawLayers() {
-        //this.SpriteSwitch();
         for (let i = 0; i < this.AllGameObjects.length; i++) {
             let texture = new Image(75, 75);
                 texture.src = this.AllGameObjects[i].sprites[this.AllGameObjects[i].currentAnimation][this.AllGameObjects[i].currentSprite];
