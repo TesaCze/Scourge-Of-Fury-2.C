@@ -1,5 +1,12 @@
 [
-    {"sprites":[["../animations/Player/idle/idle-1.png","../animations/Player/idle/idle-2.png","../animations/Player/idle/idle-3.png","../animations/Player/idle/idle-4.png"]],"type":"player","text":"Player"},
+    {"sprites":[["../animations/Player/Idle/Idle-1.png","../animations/Player/Idle/Idle-2.png","../animations/Player/Idle/Idle-3.png","../animations/Player/Idle/Idle-4.png"], 
+    ["../animations/Player/Walk/walk-1.png","../animations/Player/Walk/walk-2.png","../animations/Player/Walk/walk-3.png","../animations/Player/Walk/walk-4.png"], 
+    ["../animations/Player/Hit/hit.png"]],"type":"player","text":"Player"},
+
+    {"sprites":[["../animations/Enemy/Idle/Idle-1.png","../animations/Enemy/Idle/Idle-2.png","../animations/Enemy/Idle/Idle-3.png","../animations/Enemy/Idle/Idle-4.png"], 
+    ["../animations/Enemy/Walk/walk-1.png","../animations/Enemy/Walk/walk-2.png","../animations/Enemy/Walk/walk-3.png","../animations/Enemy/Walk/walk-4.png"], 
+    ["../animations/Enemy/Death/Death.png"]],"type":"enemy","text":"Enemak","haveCollision":false},
+    
     {"sprites":[["../Textures/wall-classic.png"]],"type":"wall","text":"Wall", "haveCollision":true},
     {"sprites":[["../Textures/wall-broken-1.png"]],"type":"wall","text":"Wall1", "haveCollision":true},
     {"sprites":[["../Textures/wall-broken-2.png"]],"type":"wall","text":"Wall2", "haveCollision":true},

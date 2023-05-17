@@ -277,6 +277,9 @@ function addBlock(x,y)
             case "wall":    //(x, y, width, height, layer, sprites,tag,id, haveCollision,isStatic)
                 newGameObject = new PhysicGameObjects(pos.x,pos.y,grid.size,grid.size,0,currentBlock.sprites,"wall",idCount,currentBlock.haveCollision,true)
             break;
+            case "enemy":   //(x, y, width, height, layer, sprites,tag,id, haveCollision,isStatic)
+                newGameObject = new Enemy(pos.x, pos.y, grid.size, grid.size, 0 ,currentBlock.sprites,"enemy",idCount, currentBlock.haveCollision,false)
+            break;
         }
         
         undoHistory = [];
