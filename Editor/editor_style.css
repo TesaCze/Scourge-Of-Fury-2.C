@@ -184,3 +184,25 @@ h2 {
     font-family: 'VT323';
     font-size: 30px;
 }
+.btn{
+    font-size: 14px;
+    background-color: #ca9b2c;
+    padding: 0px 10px;
+    border-radius: 50px;
+    transition : 0.2s;
+    border: none;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    transform: translateY(0);
+    display: flex;
+    flex-direction:row-reverse;
+    align-items: center;
+    cursor: pointer;
+}
+
+.btn:hover{
+    padding: 0px 10px;
+    transform : translateY(-0px);
+    background-color: #f7c03f;
+    color: #f7c03f;
+}

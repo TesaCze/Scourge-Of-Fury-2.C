@@ -16,3 +16,68 @@ canvas {
     right: 0;
     border:1px solid #ffffff;
 }
+.buttons {
+    width: 12%;
+    display: flex;
+    flex-direction: row;
+    min-width: 150px;
+    
+  }
+  
+  .pixel-button {
+    top: 50%;
+    margin-top: 30px;
+    box-sizing: border-box;
+    background: #ca9b2c;
+    padding: 10px 30px;
+    position: relative;
+    border: 2px solid;
+    display: flex;
+    justify-content: center;
+    cursor: pointer;
+    height: 50px;
+  }
+  
+  .pixel-button:active span:not(:first-child) {
+    display: none;
+  }
+  
+  .pixel-button:active .text {
+    transform: translateY(2px);
+  }
+  
+  .pixel-button span:not(:first-child) {
+    position: absolute;
+    background: #f4be3e;
+  }
+  
+  .layer1 {
+    top: -4px;
+    width: 100%;
+    bottom: 0;
+    border-top: 2px solid;
+  }
+  
+  .layer2 {
+    top: -6px;
+    width: calc(100% - 4px);
+    border-top: 2px solid;
+    border-bottom: 2px solid;
+    bottom: 0;
+  }
+  
+  .layer3 {
+    top: -8px;
+    width: calc(100% - 8px);
+    border-top: 2px solid;
+    border-bottom: 2px solid;
+    bottom: 2px;
+  }
+  
+  .text {
+    z-index: 100;
+    transform: translateY(-6px);
+    color: rgb(22, 22, 22);
+    font-family: "VT323";
+    font-size: 30px;
+  }
