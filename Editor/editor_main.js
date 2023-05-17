@@ -146,11 +146,11 @@ function DrawSelectedObjects()
         
         ctx.globalAlpha = 0.2;
 
-        for(let i = 0; i < copiedObjects.objects.length; i++)
+        for(let i = 0; i < copiedObjects.length; i++)
         {
-            let pos2 = WorldToCnavas(copiedObjects.objects[i].x - copiedObjects.stredX + pos.x,copiedObjects.objects[i].y - copiedObjects.stredY + pos.y)
+            let pos2 = WorldToCnavas(copiedObjects[i].x + pos.x,copiedObjects[i].y + pos.y)
             let img = new Image(grid.size,grid.size)
-            img.src = copiedObjects.objects[i].sprites[0][0]
+            img.src = copiedObjects[i].sprites[0][0]
             ctx.drawImage(img,  pos2.x ,  pos2.y , grid.size * editorCamera.zoom, grid.size* editorCamera.zoom);   
         }
         ctx.globalAlpha = 1;
@@ -211,32 +211,32 @@ function addBlock(x,y)
         let newGameObject;
         let temp = [];
         
-        for(let i = 0; i < copiedObjects.objects.length; i++) //aby se bloky neprekrivaly
+        for(let i = 0; i < copiedObjects.length; i++) //aby se bloky neprekrivaly
         {
-            let pos2 = {x:copiedObjects.objects[i].x - copiedObjects.stredX + pos.x,y: copiedObjects.objects[i].y - copiedObjects.stredY + pos.y}
+            let pos2 = {x:copiedObjects[i].x + pos.x,y: copiedObjects[i].y + pos.y}
             for(let j = 0; j < AllGameObjects.length;j++)
             {
                 if((pos2.x == AllGameObjects[j].x && pos2.y == AllGameObjects[j].y))
                 {
                     return;
                 }
-                else if(copiedObjects.objects[i].tag == "player" && AllGameObjects[j].tag == "player")
+                else if(copiedObjects[i].tag == "player" && AllGameObjects[j].tag == "player")
                 {
                     AllGameObjects.splice(j,1)
                 }
             }
         }
 
-        for(let i = 0; i < copiedObjects.objects.length; i++)
+        for(let i = 0; i < copiedObjects.length; i++)
         {
-            let pos2 = {x:copiedObjects.objects[i].x - copiedObjects.stredX + pos.x,y: copiedObjects.objects[i].y - copiedObjects.stredY + pos.y}
-            switch(copiedObjects.objects[i].tag)
+            let pos2 = {x:copiedObjects[i].x + pos.x,y: copiedObjects[i].y + pos.y}
+            switch(copiedObjects[i].tag)
             {
                 case "player": //(x, y, width, height, layer, sprites,tag,id, haveCollision,isStatic,speed,hp)
-                    newGameObject = new Player(pos2.x,pos2.y,grid.size,grid.size,0,copiedObjects.objects[i].sprites,"player",idCount,true,false,7)
+                    newGameObject = new Player(pos2.x,pos2.y,grid.size,grid.size,0,copiedObjects[i].sprites,"player",idCount,true,false,7)
                 break;
                 case "wall":    //(x, y, width, height, layer, sprites,tag,id, haveCollision,isStatic)
-                    newGameObject = new PhysicGameObjects(pos2.x,pos2.y,grid.size,grid.size,0,copiedObjects.objects[i].sprites,"wall",idCount,copiedObjects.objects[i].haveCollision,true)
+                    newGameObject = new PhysicGameObjects(pos2.x,pos2.y,grid.size,grid.size,0,copiedObjects[i].sprites,"wall",idCount,copiedObjects[i].haveCollision,true)
                 break;
             }
             
@@ -595,8 +595,12 @@ document.addEventListener("keydown", (e) =>
             stredY -= grid.size/2
         }
 
-        copiedObjects = {stredX: stredX,stredY: stredY, objects:selectedObjects}
-        
+        selectedObjects.forEach(el =>
+        {
+            copiedObjects.push(JSON.parse(JSON.stringify(el))) //kvuli referenci
+            copiedObjects[copiedObjects.length-1].x -= stredX
+            copiedObjects[copiedObjects.length-1].y -= stredY
+        })
     }
 })
 
