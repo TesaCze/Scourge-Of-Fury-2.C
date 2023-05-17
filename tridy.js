@@ -224,6 +224,7 @@ class Sword extends PhysicGameObjects {
         this.isAttacking = false; 
         this.isFlipped = false;
         this.canAttack = true;
+        this.haveCollision = false;
 
         document.addEventListener("click", (event) => {
             if(this.canAttack == true) {
