@@ -1,5 +1,6 @@
 let canvas = document.getElementById("kanvas");
 let ctx = canvas.getContext("2d");
+ctx.imageSmoothingEnabled = false;
 
 addEventListener("load", (event) => {Start();});
 
