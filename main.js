@@ -5,9 +5,9 @@ addEventListener("load", (event) => {Start();});
 
 let camera = new Camera(0, 0, 0);
 let game = new Game(ctx, canvas, camera);
-let enemy = new Enemy(0, 500, 75, 75, 0, [["../animations/Enemy/Idle/Idle-1.png","../animations/Enemy/Idle/Idle-2.png","../animations/Enemy/Idle/Idle-3.png","../animations/Enemy/Idle/Idle-4.png"], ["../animations/Enemy/Walk/walk-1.png","../animations/Enemy/Walk/walk-2.png","../animations/Enemy/Walk/walk-3.png","../animations/Enemy/Walk/walk-4.png"]],"enemy",69,true,false)
-let sword = new Sword(0, 0, 75, 75, 0, [["../animations/Sword/Idle/hit.png"],["../animations/Sword/Attack/hit.png","../animations/Sword/Attack/hit1.png","../animations/Sword/Attack/hit2.png"]],"sword",68,false,false);
-let map;            //x, y, width, height, layer, haveCollision, texture, canMove
+let enemy = new Enemy(0, 500, 75, 75, 0, [["../animations/Enemy/Idle/Idle-1.png","../animations/Enemy/Idle/Idle-2.png","../animations/Enemy/Idle/Idle-3.png","../animations/Enemy/Idle/Idle-4.png"], ["../animations/Enemy/Walk/walk-1.png","../animations/Enemy/Walk/walk-2.png","../animations/Enemy/Walk/walk-3.png","../animations/Enemy/Walk/walk-4.png"], ["../animations/Enemy/Death/Death.png"]],"enemy",69,true,false)
+let sword = new Sword(-10, -75, 75, 75, 0, [["../animations/Sword/Idle/hit.png"],["../animations/Sword/Attack/hit.png","../animations/Sword/Attack/hit1.png","../animations/Sword/Attack/hit2.png"]],"sword");
+let map;         
 let newGameObject;
 
 
@@ -42,10 +42,10 @@ async function LoadFromJson(path)
         game.AllGameObjects.push(newGameObject)
 
     }
-    enemy.AllGameObjects = game.AllGameObjects; //natvrdo pridany
-    game.AllGameObjects.push(enemy)
     sword.AllGameObjects = game.AllGameObjects;
     game.AllGameObjects.push(sword)
+    enemy.AllGameObjects = game.AllGameObjects; //natvrdo pridany
+    game.AllGameObjects.push(enemy)
 }
 
 function Update() {

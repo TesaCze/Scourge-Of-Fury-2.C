@@ -218,12 +218,79 @@ class Player extends PhysicGameObjects{
     }
 }
 
-class Sword extends Player {
+class Sword extends PhysicGameObjects {
     constructor(x, y, width, height, layer, haveCollision, texture, canMove) {
         super(x, y, width, height, layer, haveCollision, texture, canMove)
-        this.isAttacking = false;    
+        this.isAttacking = false; 
+        this.isFlipped = false;
+        this.canAttack = true;
+
+        document.addEventListener("click", (event) => {
+            if(this.canAttack == true) {
+                this.Attack();
+                this.canAttack = false;
+                setTimeout(() => {
+                    this.canAttack = true;
+                }, 370);
+            }          
+            
+        })
+        document.addEventListener("keypress", (event) => {
+            switch (event.key) {
+                case "a":
+                    this.isFlipped = true;
+                    break;
+                case "d":
+                    this.isFlipped = false;
+                    break;
+            }
+        });
     }
 
+    Move() {
+        
+        let player;
+        for(let i = 0; i < this.AllGameObjects.length; i++) {
+                if(this.AllGameObjects[i].tag == "player") {
+                    player = this.AllGameObjects[i]
+                    break;
+                }
+            }
+
+
+        this.y = player.y + 10;
+
+        if(this.isFlipped == false) {
+            this.x = player.x + 50;
+            
+        } else {
+            this.x = player.x-50;
+        }
+
+    }
+
+    Attack() {
+
+        let enemy;
+        for(let i = 0; i < this.AllGameObjects.length; i++) {
+                if(this.AllGameObjects[i].tag == "enemy") {
+                    enemy = this.AllGameObjects[i]
+                    break;
+                }
+            }  
+        this.currentSprite = 0;
+        this.currentAnimation = 1;
+
+        setTimeout(() => {
+            this.currentAnimation = 0;
+        }, 360);
+
+    }
+  
+
+    Update() {
+        this.Move();
+    }
     
 }
 
@@ -277,14 +344,14 @@ class Enemy extends PhysicGameObjects{
             }
         }
 
-        if(Math.floor(this.lastX) == Math.floor(this.x) && Math.floor(this.lastY) == Math.floor(this.y)) {
+        if(this.currentAnimation != 2) {
+            if(Math.floor(this.lastX) == Math.floor(this.x) && Math.floor(this.lastY) == Math.floor(this.y)) {
             this.currentAnimation = 0;
-        } else {
-            this.currentAnimation = 1;
+            } else {
+                this.currentAnimation = 1;
+            }
         }
-
-                //console.log("X: " + Math.floor(this.lastX) + " " + Math.floor(this.x))
-                //console.log("Y: " + this.y + " " + this.lastY)
+        
 
         }
     //--------------Toban------------
@@ -478,11 +545,39 @@ class Enemy extends PhysicGameObjects{
         this.y -= dir.y * (this.speed / 1.5); */
     }
 
+    Hit() {
+        let sword;
+        for(let i = 0; i < this.AllGameObjects.length; i++) {
+            if(this.AllGameObjects[i].tag == "sword") {
+                sword = this.AllGameObjects[i]
+                break;
+            }
+        }
+
+        if(sword.currentAnimation == 1) {
+            if (
+                this.y + this.height / 2 > sword.y - sword.height / 2 &&
+                this.y - this.height / 2 < sword.y + sword.height / 2 &&
+                this.x - this.width / 2 < sword.x + sword.width / 2 &&
+                this.x + this.width / 2 > sword.x - sword.width / 2
+                ) 
+            {
+                this.currentSprite = 0;
+                this.currentAnimation = 2;
+                this.haveCollision = false;
+            }    
+        }
+    }
+
     Update() {
-        this.Move();
-        this.WallCollision();
-        this.FindPlayer();
-        this.PhysicCollider();
+        if(this.currentAnimation != 2) {
+            this.Move();
+            this.Hit();
+            this.WallCollision();
+            this.FindPlayer();
+            this.PhysicCollider();
+        }
+
     }
     
 }
@@ -566,7 +661,7 @@ class Game{
     }    
     
     Hit() {
-     //   this.playerHp --;
+       this.playerHp --;
     }
 
     Render() {
