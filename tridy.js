@@ -1,13 +1,7 @@
 /*------------------TODO lIST-------------
--json pripravit na animace
--nachstat frames
--nachstat textury
 -predelat vykreslovani
 -udelat animace (Player Death, Enemy Death - muze byt proste lebka sprite protoze to mam, Player Hit, Enemy Hit)
 -tlacitka a packy
--menu
--udelat grafiku pro main start hry
-
 
 -----------------------------------------*/
 
@@ -28,15 +22,6 @@ class GameObjects{                                                              
 
     GetObjectstByTag(tag) //vrati pole objektu s tagem
     {
-        /*let playerDetection;
-        for(let i = 0; i < this.AllGameObjects.length; i++) {
-            if(this.AllGameObjects[i].tag == "player") {
-                playplayerDetectioner = this.AllGameObjects[i]
-                break;
-            }
-        }*/
-        
-
 
     }    
 
@@ -136,27 +121,23 @@ class Player extends PhysicGameObjects{
         this.speed = 8;
         this.isAttacking = false;
         this.hp = hp;
+        this.isFlipped = false;
 
         document.addEventListener("keypress", (event) => {
             switch (event.key) {
                 case "a":
                     this.dir.left = true;
-                    this.currentAnimation = 1;
+                    this.isFlipped = true;
                     break;
                 case "w":
                     this.dir.up = true;
-                    this.currentAnimation = 1;
                     break;
                 case "d":
                     this.dir.right = true;
-                    this.currentAnimation = 1;
+                    this.isFlipped = false;
                     break;
                 case "s":
                     this.dir.down = true;
-                    this.currentAnimation = 1;
-                    break;
-                default:
-                    this.currentAnimation = 0;
                     break;
             }
         });
@@ -164,21 +145,18 @@ class Player extends PhysicGameObjects{
             switch (event.key) {
                 case "a":
                     this.dir.left = false;
-                    this.currentAnimation = 0;
                     break;
                 case "d":
                     this.dir.right = false;
-                    this.currentAnimation = 0;
                     break;
                 case "w":
                     this.dir.up = false;
-                    this.currentAnimation = 0;
                     break;
                 case "s":
                     this.dir.down = false;
-                    this.currentAnimation = 0;
             }
         });
+
         document.addEventListener("click", (event) => {
             return 0;
         })
@@ -191,6 +169,11 @@ class Player extends PhysicGameObjects{
         this.y -= this.speed * this.dir.down;
         this.y += this.speed * this.dir.up;
         
+        if(this.dir.up == true || this.dir.right == true || this.dir.down == true || this.dir.left == true) {
+            this.currentAnimation = 1;
+        } else {
+            this.currentAnimation = 0;
+        }
     }
 
     Health() {
@@ -221,7 +204,6 @@ class Player extends PhysicGameObjects{
         });*/
 
         hp = player.hp;
-        console.log(hp);
         this.Kolize(enemy);
     }
 
@@ -236,7 +218,7 @@ class Player extends PhysicGameObjects{
     }
 }
 
-class Sword extends GameObjects {
+class Sword extends Player {
     constructor(x, y, width, height, layer, haveCollision, texture, canMove) {
         super(x, y, width, height, layer, haveCollision, texture, canMove)
         this.isAttacking = false;    
@@ -253,11 +235,10 @@ class Enemy extends PhysicGameObjects{
         this.isSeeing = false;
         this.traceX = this.x + 1;     //vubec nevim proc tam musi byt +1 ale bez toho to nefaka
         this.traceY = this.y;   
-
         this.walls = [];
-
         this.lastX = x;
         this.lastY = y;
+        this.isFlipped = false;
     }
 
 
@@ -275,10 +256,36 @@ class Enemy extends PhysicGameObjects{
 
             this.x += dir.x * this.speed;
             this.y += dir.y * this.speed; 
+
+
+            if(dir.x < 0) {
+                this.isFlipped = true;
+            } else {
+                this.isFlipped = false;
+            }
+
         } else {
-            this.RerurnToLocation();
+            let dir = this.RetDirection()
+
+            this.x += dir.x * (this.speed / 1.5);
+            this.y += dir.y * (this.speed / 1.5); 
+
+            if(dir.x < 0) {
+                this.isFlipped = true;
+            } else {
+                this.isFlipped = false;
+            }
         }
-                   
+
+        if(Math.floor(this.lastX) == Math.floor(this.x) && Math.floor(this.lastY) == Math.floor(this.y)) {
+            this.currentAnimation = 0;
+        } else {
+            this.currentAnimation = 1;
+        }
+
+                //console.log("X: " + Math.floor(this.lastX) + " " + Math.floor(this.x))
+                //console.log("Y: " + this.y + " " + this.lastY)
+
         }
     //--------------Toban------------
 
@@ -338,19 +345,8 @@ class Enemy extends PhysicGameObjects{
             }
         }
 
-        console.log(this.isSeeing);
-
     }
     
-    RerurnToLocation() {                    //vrati enemy na pozici na spawnu            
-        let dir = this.RetDirection()
-
-        this.x += dir.x * (this.speed / 1.5);
-        this.y += dir.y * (this.speed / 1.5); 
-
-        
-    }
-
     RetMagnitude(pos){
         return Math.sqrt((pos.x * pos.x) + (pos.y * pos.y));
     }
@@ -371,6 +367,9 @@ class Enemy extends PhysicGameObjects{
 
     WallCollision(dir) { //kontroluje zda hrac narazi do sten kdyz se vraci
 
+        this.lastX = this.x;
+        this.lastY = this.y;
+
         this.walls = [];
         for(let i = 0; i < this.AllGameObjects.length; i++) {
             if(this.AllGameObjects[i].tag == "wall" && this.AllGameObjects[i].haveCollision == true) {
@@ -386,9 +385,6 @@ class Enemy extends PhysicGameObjects{
                 let down = this.walls[y].y + this.walls[y].height / 2 - (this.y - this.height / 2);
                 let right = this.walls[y].x - this.walls[y].width / 2 - (this.x + this.width / 2);
                 let left = this.walls[y].x + this.walls[y].width / 2 - (this.x - this.width / 2);
-
-                this.lastX = this.x;
-                this.lastY = this.y;
 
                 let currX;
                 let currY;
@@ -439,7 +435,6 @@ class Enemy extends PhysicGameObjects{
     }
 
     DodgeLeft(dir) {
-        console.log("dodgeL")
         this.x += 1;
         this.y -= 1;
         /*dir = this.RetDirection()
@@ -451,7 +446,6 @@ class Enemy extends PhysicGameObjects{
     }
 
     DodgeRight(dir) {
-        console.log("dodgeR")
         this.x -= 1;
         this.y -= 1;
         /*dir = this.RetDirection()
@@ -463,7 +457,6 @@ class Enemy extends PhysicGameObjects{
     }
 
     DodgeTop(dir) {
-        console.log("dodgeT")
         this.x -= 1;
         this.y -= 1;
         /*dir = this.RetDirection()
@@ -475,7 +468,6 @@ class Enemy extends PhysicGameObjects{
     }
 
     DodgeDown(dir) {
-        console.log("dodgeD")
         this.x += 1;
         this.y += 1;
         /*dir = this.RetDirection()
@@ -539,15 +531,20 @@ class Game{
                 this.AllGameObjects[i].currentSprite++;
             }  
         }
-     
-    
     }
 
     DrawLayers() {
         for (let i = 0; i < this.AllGameObjects.length; i++) {
             let texture = new Image(75, 75);
                 texture.src = this.AllGameObjects[i].sprites[this.AllGameObjects[i].currentAnimation][this.AllGameObjects[i].currentSprite];
-                this.ctx.drawImage(texture, this.canvasPos(this.AllGameObjects[i]).x - this.camera.x, this.canvasPos(this.AllGameObjects[i]).y + this.camera.y, 75, 75);        
+                if(this.AllGameObjects[i].isFlipped == false) {
+                    ctx.drawImage(texture, this.canvasPos(this.AllGameObjects[i]).x - this.camera.x, this.canvasPos(this.AllGameObjects[i]).y + this.camera.y, 75, 75); 
+                } else {
+                    ctx.scale(-1, 1);
+                    ctx.drawImage(texture, -(this.canvasPos(this.AllGameObjects[i]).x - this.camera.x) - texture.width, this.canvasPos(this.AllGameObjects[i]).y + this.camera.y, 75, 75);   
+                    ctx.scale(-1,1);
+                }
+            
         }
     }
 
@@ -571,8 +568,6 @@ class Game{
     Hit() {
      //   this.playerHp --;
     }
-
-
 
     Render() {
         this.ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -605,10 +600,6 @@ class Game{
         }
         this.SortLayers();
         this.Render();
-    }
- 
-    SpawnObjects() {
-        
     }
 
     SortLayers() {
