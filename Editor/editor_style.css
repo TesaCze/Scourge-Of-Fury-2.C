@@ -187,7 +187,7 @@ h2 {
 .btn{
     font-size: 14px;
     background-color: #ca9b2c;
-    padding: 0px 10px;
+    padding: 10px 10px;
     border-radius: 50px;
     transition : 0.2s;
     border: none;
@@ -201,8 +201,37 @@ h2 {
 }
 
 .btn:hover{
-    padding: 0px 10px;
+    padding: 10px 10px;
     transform : translateY(-0px);
     background-color: #f7c03f;
-    color: #f7c03f;
+}
+
+.tools {
+    display: flex;
+}
+
+.tooltip {
+    position: relative;
+    display: flex;
+}
+  
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 50px;
+    background-color: rgb(255, 255, 255);
+    color: #000000;
+    text-align: center;
+    padding: 5px 0;
+    border-radius: 6px;
+    position: absolute;
+    z-index: 1;
+    bottom: 100%;
+    left: 50%;
+    margin-left: -25px;
+    font-family: 'VT323';
+}
+  
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+
 }
