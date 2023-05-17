@@ -219,8 +219,8 @@ class Player extends PhysicGameObjects{
 }
 
 class Sword extends PhysicGameObjects {
-    constructor(x, y, width, height, layer, haveCollision, texture, canMove) {
-        super(x, y, width, height, layer, haveCollision, texture, canMove)
+    constructor(x, y, width, height, layer, sprites,tag,id, haveCollision,isStatic) {
+        super(x, y, width, height, layer, sprites,tag,id, haveCollision,isStatic)
         this.isAttacking = false; 
         this.isFlipped = false;
         this.canAttack = true;
