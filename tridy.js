@@ -382,24 +382,18 @@ class Enemy extends PhysicGameObjects{
                 break;
             }
         }
-        for(let i = 0; i < this.AllGameObjects.length; i++) {
-            if(this.AllGameObjects[i].tag == "enemy") {
-                enemy = this.AllGameObjects[i]
-                break;
-            }
-        }
-
-            let dir = {x:player.x-enemy.x, y: player.y - enemy.y}
+             
+            let dir = {x:player.x-this.x, y: player.y - this.y}
             this.isSeeing = true;
             for(let i = 0; i < 10; i++)
             {
-                let x = enemy.x + (dir.x/10*i)
-                let y = enemy.y + (dir.y/10*i)
+                let x = this.x + (dir.x/10*i)
+                let y = this.y + (dir.y/10*i)
               
                 for(let i = 0; i < this.AllGameObjects.length; i++) {
                     if(this.AllGameObjects[i].haveCollision == true && this.AllGameObjects[i].tag == "wall") {
                         let wallCollide = this.AllGameObjects[i]
-                        if(this.Distance(enemy, player) > 600 || (
+                        if(this.Distance(player) > 600 || (
                             y < wallCollide.y +wallCollide.height /2 &&
                             y > wallCollide.y - wallCollide.height /2 &&
                             x > wallCollide.x - wallCollide.width /2  &&
@@ -429,8 +423,8 @@ class Enemy extends PhysicGameObjects{
         return (this.RetNormalized(dir))
     }
 
-    Distance(enemmy, player) {
-        return Math.sqrt((player.x - enemmy.x)* (player.x - enemmy.x) + (player.y - enemmy.y) *(player.y - enemmy.y))
+    Distance(player) {
+        return Math.sqrt((player.x - this.x)* (player.x - this.x) + (player.y - this.y) *(player.y - this.y))
     }
 
     WallCollision(dir) { //kontroluje zda hrac narazi do sten kdyz se vraci
