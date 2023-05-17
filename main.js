@@ -15,7 +15,7 @@ let newGameObject;
 
 async function Start() 
 {
-    await LoadFromJson('mapa_2.json')
+    await LoadFromJson('enemaci_test.json')
     setInterval(Update, 16);
     setInterval(AnimationUpdate, 120);
 }
@@ -37,6 +37,9 @@ async function LoadFromJson(path)
             case "wall":                     //(x, y, width, height, layer, sprites,tag,id, haveCollision,isStatic)
                 newGameObject = new PhysicGameObjects(map[i].x,map[i].y,map[i].width,map[i].height,2,map[i].sprites,map[i].tag,i,map[i].haveCollision,true)
             break;
+            case "enemy":                   //(x, y, width, height, layer, sprites,tag,id, haveCollision,isStatic)
+                newGameObject = new Enemy(map[i].x,map[i].y,map[i].width,map[i].height,2,map[i].sprites,map[i].tag,i,map[i].haveCollision,true)
+            break;
         }
         newGameObject.AllGameObjects = game.AllGameObjects;
         game.AllGameObjects.push(newGameObject)
@@ -44,8 +47,6 @@ async function LoadFromJson(path)
     }
     sword.AllGameObjects = game.AllGameObjects;
     game.AllGameObjects.push(sword)
-    enemy.AllGameObjects = game.AllGameObjects; //natvrdo pridany
-    game.AllGameObjects.push(enemy)
 }
 
 function Update() {
