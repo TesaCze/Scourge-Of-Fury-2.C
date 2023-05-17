@@ -416,7 +416,7 @@ canvas.addEventListener("mousemove", (e) =>
     }
 
 
-    if(e.buttons == 1 && currentBlock != null && !e.shiftKey)
+    if(e.buttons == 1 && (currentBlock != null || copiedObjects.length != 0) && !e.shiftKey)
     {
         addBlock(e.offsetX,e.offsetY)
     }
@@ -444,7 +444,6 @@ canvas.addEventListener("mouseup", (e) =>
 
 document.addEventListener("keydown", (e) => 
 {
-  //  console.log(e)
     switch(e.code)
     {
         case "Space":
@@ -468,6 +467,18 @@ document.addEventListener("keydown", (e) =>
                 }
                 history.push({type: 1, objects: selectedObjects});
                 selectedObjects = [];
+            }
+        break;
+
+        case "KeyR":
+            if(copiedObjects.length != 0)
+            {
+                copiedObjects.forEach(el =>
+                {
+                    let temp = el.x;
+                    el.x = el.y;
+                    el.y = -temp;
+                })
             }
         break;
     }
@@ -553,6 +564,7 @@ document.addEventListener("keydown", (e) =>
             return;
         
         currentBlock = null;;
+        copiedObjects = [];
 
         let minX = selectedObjects[0].x
         let maxX = selectedObjects[0].x
@@ -634,11 +646,10 @@ canvas.addEventListener("wheel", (e)=>
         }
         else
         {
-        endPos.x = startPos.x * (editorCamera.zoomSpeed + 1);
-        endPos.y = startPos.y * (editorCamera.zoomSpeed + 1);
-   
-        editorCamera.position.x -=  startPos.x - endPos.x + editorCamera.position.x * editorCamera.zoomSpeed;
-        editorCamera.position.y -=  startPos.y - endPos.y + editorCamera.position.y * editorCamera.zoomSpeed;
+            endPos.x = startPos.x * (editorCamera.zoomSpeed + 1);
+            endPos.y = startPos.y * (editorCamera.zoomSpeed + 1);
+            editorCamera.position.x -=  startPos.x - endPos.x + editorCamera.position.x * editorCamera.zoomSpeed;
+            editorCamera.position.y -=  startPos.y - endPos.y + editorCamera.position.y * editorCamera.zoomSpeed;
         }
     }
    
