@@ -192,17 +192,6 @@ class Player extends PhysicGameObjects{
                 break;
             }
         }
-
-        /*addEventListener("keyup", (event) => {
-            let nIntervId;
-            if(event.key == "p") {
-                this.hp--;
-            }
-            if (!nIntervId) {
-                nIntervId = setInterval(100);
-              }
-        });*/
-
         hp = player.hp;
         this.Kolize(enemy);
     }
@@ -347,7 +336,8 @@ class Enemy extends PhysicGameObjects{
 
         if(this.currentAnimation != 2) {
             if(Math.floor(this.lastX) == Math.floor(this.x) && Math.floor(this.lastY) == Math.floor(this.y)) {
-            this.currentAnimation = 0;
+                this.currentSprite = 0;
+                this.currentAnimation = 0;
             } else {
                 this.currentAnimation = 1;
             }
@@ -496,48 +486,24 @@ class Enemy extends PhysicGameObjects{
         }
     }
 
-    DodgeLeft(dir) {
+    DodgeLeft() {
         this.x += 1;
         this.y -= 1;
-        /*dir = this.RetDirection()
-
-        console.log(dir)                    //ja jsem pica a nevim co delam
-
-        this.x -= dir.x * (this.speed / 1.5);
-        this.y -= dir.y * (this.speed / 1.5); */
     }
 
-    DodgeRight(dir) {
+    DodgeRight() {
         this.x -= 1;
         this.y -= 1;
-        /*dir = this.RetDirection()
-
-        console.log(dir)                    //ja jsem pica a nevim co delam
-
-        this.x -= dir.x * (this.speed / 1.5);
-        this.y -= dir.y * (this.speed / 1.5); */
     }
 
-    DodgeTop(dir) {
+    DodgeTop() {
         this.x -= 1;
         this.y -= 1;
-        /*dir = this.RetDirection()
-
-        console.log(dir)                    //ja jsem pica a nevim co delam
-
-        this.x -= dir.x * (this.speed / 1.5);
-        this.y -= dir.y * (this.speed / 1.5); */
     }
 
-    DodgeDown(dir) {
+    DodgeDown() {
         this.x += 1;
         this.y += 1;
-        /*dir = this.RetDirection()
-
-        console.log(dir)                    //ja jsem pica a nevim co delam
-
-        this.x -= dir.x * (this.speed / 1.5);
-        this.y -= dir.y * (this.speed / 1.5); */
     }
 
     Hit() {
