@@ -345,7 +345,6 @@ function addTexturesToDiv()
         newDiv.src = Textures[i].sprites[0][0]
         newDiv.setAttribute("onclick","onTextureClick("+JSON.stringify(Textures[i])+")");
         newDiv.setAttribute("id", "block[" + i + "]");
-     //   newDiv.setAttribute("onclick", "selectedBlock()");
         document.getElementById("block[" + i + "]").appendChild(newDiv) 
         const popisDivu = document.createElement("span");
         document.getElementById("block[" + i + "]").appendChild(popisDivu)
@@ -353,14 +352,6 @@ function addTexturesToDiv()
         popisDivu.classList.add("visible");
 
     }
-
-    var slider = document.getElementById("rozsah");
-    var output = document.getElementById("value");
-    output.innerHTML = slider.value;
-
-    slider.oninput = function() {
-    output.innerHTML = this.value;
-}
 }
 
 function downloadMap() 
@@ -659,3 +650,48 @@ canvas.addEventListener("wheel", (e)=>
         }
     }
 });
+
+//------------------- cssko lmao-----------
+let brushBtn = document.getElementById("brush");
+let moveBtn = document.getElementById("move");
+let layerBtn = document.getElementById("layer");
+let layerValue = document.getElementById("layerValues");
+
+let brushActive = false;
+let moveActive = false;
+let layerActive = false;
+
+
+function BrushActive() {
+    brushActive = true;
+    moveActive = false;
+    layerActive = false
+    brushBtn.style.backgroundColor = "#fff";
+    moveBtn.style.backgroundColor = "#ca9b2c";
+    layerBtn.style.backgroundColor = "#ca9b2c";
+    
+}
+function MoveActive() {
+    brushActive = true;
+    moveActive = false;
+    layerActive = false
+    brushBtn.style.backgroundColor = "#ca9b2c";
+    moveBtn.style.backgroundColor = "#fff";
+    layerBtn.style.backgroundColor = "#ca9b2c";
+}
+function LayerActive() {
+    brushActive = true;
+    moveActive = false;
+    layerActive = false
+    brushBtn.style.backgroundColor = "#ca9b2c";
+    moveBtn.style.backgroundColor = "#ca9b2c";
+    layerBtn.style.backgroundColor = "#fff";
+    if(layerValue.style.visibility == "visible") {
+        layerValue.style.visibility = "hidden";
+    } else {
+        layerValue.style.visibility = "visible";
+    }
+    
+}
+
+//-----------------------------------------

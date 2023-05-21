@@ -120,11 +120,13 @@ class Player extends PhysicGameObjects{
         this.dir = {left:false, right: false, up:false, down:false}
         this.speed = 8;
         this.isAttacking = false;
-        this.hp = hp;
+        this.hp = 10;
         this.isFlipped = false;
+        this.isAlive = true;
 
         document.addEventListener("keypress", (event) => {
-            switch (event.key) {
+            if(this.isAlive == true) {
+                switch (event.key) {
                 case "a":
                     this.dir.left = true;
                     this.isFlipped = true;
@@ -140,6 +142,7 @@ class Player extends PhysicGameObjects{
                     this.dir.down = true;
                     break;
             }
+        }
         });
         document.addEventListener("keyup", (event) => {
             switch (event.key) {
@@ -177,7 +180,7 @@ class Player extends PhysicGameObjects{
     }
 
     Health() {
-        let player;
+     /*   let player;
         let hp;
         let enemy;
         for(let i = 0; i < this.AllGameObjects.length; i++) {
@@ -193,17 +196,40 @@ class Player extends PhysicGameObjects{
             }
         }
         hp = player.hp;
-        this.Kolize(enemy);
+        this.Kolize(enemy);*/
+
+        let enemy;
+        for(let i = 0; i < this.AllGameObjects.length; i++) {
+            if(this.AllGameObjects[i].tag == "enemy") {
+                enemy = this.AllGameObjects[i]
+                break;
+            }
+        }
+
+        if (
+            (this.y + this.height / 2) + 10 >= (enemy.y - enemy.height / 2) - 10 &&
+            (this.y - this.height / 2) - 10 <= (enemy.y + enemy.height / 2) + 10&&
+            (this.x - this.width / 2) - 10 <= (enemy.x + enemy.width / 2) + 10 &&
+            (this.x + this.width / 2) + 10 >= (enemy.x - enemy.width / 2) - 10
+            ) 
+        {
+            console.log("penis");
+            this.currentAnimation = 3;
+        }    
+
+        if(this.isAlive == false) {
+            this.currentAnimation = 3;
+        } 
     }
 
-
-    Update() 
-    {
-        this.Move() 
+    Update() {
+        this.Health();
+        if(this.isAlive == true) {
+            this.Move() 
+        }
         this.PhysicCollider();
         camera.x = this.x;
         camera.y = this.y;
-        this.Health();
     }
 }
 
@@ -217,12 +243,12 @@ class Sword extends PhysicGameObjects {
 
         document.addEventListener("click", (event) => {
             if(this.canAttack == true) {
-                this.Attack();
-                this.canAttack = false;
-                setTimeout(() => {
-                    this.canAttack = true;
-                }, 370);
-            }          
+            this.Attack();
+            this.canAttack = false;
+            setTimeout(() => {
+                this.canAttack = true;
+            }, 370);
+        }      
             
         })
         document.addEventListener("keypress", (event) => {
@@ -237,8 +263,7 @@ class Sword extends PhysicGameObjects {
         });
     }
 
-    Move() {
-        
+    Move() { 
         let player;
         for(let i = 0; i < this.AllGameObjects.length; i++) {
                 if(this.AllGameObjects[i].tag == "player") {
@@ -260,21 +285,28 @@ class Sword extends PhysicGameObjects {
     }
 
     Attack() {
-
-        let enemy;
+        let player;
         for(let i = 0; i < this.AllGameObjects.length; i++) {
-                if(this.AllGameObjects[i].tag == "enemy") {
-                    enemy = this.AllGameObjects[i]
+                if(this.AllGameObjects[i].tag == "player") {
+                    player = this.AllGameObjects[i]
                     break;
                 }
-            }  
-        this.currentSprite = 0;
-        this.currentAnimation = 1;
+            }
+            if (player.isAlive == true) {
+                let enemy;
+                for(let i = 0; i < this.AllGameObjects.length; i++) {
+                        if(this.AllGameObjects[i].tag == "enemy") {
+                            enemy = this.AllGameObjects[i]
+                            break;
+                        }
+                    }  
+                this.currentSprite = 0;
+                this.currentAnimation = 1;
 
-        setTimeout(() => {
-            this.currentAnimation = 0;
-        }, 360);
-
+                setTimeout(() => {
+                    this.currentAnimation = 0;
+                }, 360);
+            }
     }
   
 
@@ -336,7 +368,6 @@ class Enemy extends PhysicGameObjects{
 
         if(this.currentAnimation != 2) {
             if(Math.floor(this.lastX) == Math.floor(this.x) && Math.floor(this.lastY) == Math.floor(this.y)) {
-                this.currentSprite = 0;
                 this.currentAnimation = 0;
             } else {
                 this.currentAnimation = 1;
@@ -605,20 +636,27 @@ class Game{
     }
 
     PlayerHealth() {
+        let player;
+        for(let i = 0; i < this.AllGameObjects.length; i++) {
+            if(this.AllGameObjects[i].tag == "player") {
+                player = this.AllGameObjects[i]
+                break;
+            }
+        }
+
+        let fullHp = "../animations/Hp/full.png";
+
+
+        //ctx.drawImage(fullHp, 75, 75, 75, 75);
+
+        //console.log(player.hp);
+
         addEventListener("keyup", (event) => {
             if(event.key == "p") {
                 this.Hit();
             }
         });
 
-        this.ctx.fillStyle='#fff';
-        this.ctx.fillRect(canvas.width - 120, canvas.height - 75, 90, 40);  
-        this.ctx.font = "20px Arial";
-        this.ctx.fillStyle = "black"
-        this.ctx.fillText(this.playerHp + "/30", canvas.width - 100, canvas.height - 50);
-        if(this.isColliding == true) {
-            return 0;
-        }
     }    
     
     Hit() {
@@ -654,6 +692,7 @@ class Game{
                 this.AllGameObjects[i].Update(this.AllGameObjects);
             }
         }
+        this.PlayerHealth();
         this.SortLayers();
         this.Render();
     }
@@ -663,3 +702,18 @@ class Game{
         {return a.layer - b.layer});
     }
 }
+
+
+
+/*draw(context, x, y) {
+    context.drawImage(this.image, this.frameX, this.frameY, this.spriteWidth, this.spriteHeight, 
+        x, y, this.spriteWidth * 2.5, this.spriteHeight * 2.5);
+}
+setToHalf() {
+    this.type = 'half';
+    this.tile = this.game.tileObjects[`ui_heart_${this.type}`];
+    this.frameX = this.tile.Position.X;
+    this.frameY = this.tile.Position.Y;
+    this.spriteWidth = this.tile.Width;
+    this.spriteHeight = this.tile.Height;
+}*/
