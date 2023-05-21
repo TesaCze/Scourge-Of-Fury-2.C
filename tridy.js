@@ -180,27 +180,16 @@ class Player extends PhysicGameObjects{
     }
 
     Health() {
-     /*   let player;
-        let hp;
         let enemy;
-        for(let i = 0; i < this.AllGameObjects.length; i++) {
-            if(this.AllGameObjects[i].tag == "player") {
-                player = this.AllGameObjects[i]
-                break;
-            }
-        }
         for(let i = 0; i < this.AllGameObjects.length; i++) {
             if(this.AllGameObjects[i].tag == "enemy") {
                 enemy = this.AllGameObjects[i]
                 break;
             }
         }
-        hp = player.hp;
-        this.Kolize(enemy);*/
-
 
         for(let i = 0; i < this.AllGameObjects.length; i++) {
-            if(this.AllGameObjects[i].tag == "enemy") {
+            if(this.AllGameObjects[i].tag == "enemy" && enemy.canAttack == true) {
                 if (
                     (this.y + this.height / 2) + 10 >= (this.AllGameObjects[i].y - this.AllGameObjects[i].height / 2) - 10 &&
                     (this.y - this.height / 2) - 10 <= (this.AllGameObjects[i].y + this.AllGameObjects[i].height / 2) + 10&&
@@ -208,9 +197,15 @@ class Player extends PhysicGameObjects{
                     (this.x + this.width / 2) + 10 >= (this.AllGameObjects[i].x - this.AllGameObjects[i].width / 2) - 10
                     ) 
                 {
-                    console.log("penis");
-                    this.currentAnimation = 3;
-                }    
+                    enemy.canAttack = false;
+                    setTimeout(() => {
+                        this.hp--;
+                        enemy.canAttack = true;
+                        this.currentSprite = 0;
+                        this.currentAnimation = 2;
+                    }, 1000);
+                console.log(this.hp);
+            }    
         
                 if(this.isAlive == false) {
                     this.currentAnimation = 3;
@@ -327,6 +322,7 @@ class Enemy extends PhysicGameObjects{
         this.lastX = x;
         this.lastY = y;
         this.isFlipped = false;
+        this.canAttack = true;
     }
 
 
@@ -395,7 +391,6 @@ class Enemy extends PhysicGameObjects{
 
     FindPlayer() {                      // kontroluje zda enemy vidi hrace
         let player;
-        let enemy;
         for(let i = 0; i < this.AllGameObjects.length; i++) {
             if(this.AllGameObjects[i].tag == "player") {
                 player = this.AllGameObjects[i]
@@ -556,6 +551,8 @@ class Enemy extends PhysicGameObjects{
                 this.currentSprite = 0;
                 this.currentAnimation = 2;
                 this.haveCollision = false;
+                this.canAttack = false;
+                console.log(this.canAttack)
             }    
         }
     }
@@ -606,11 +603,7 @@ class Game{
         this.ctx = ctx,
         this.canvas = canvas,
         this.camera = camera
-        this.playerHp = 20; //20 je max 
-        
-
-
-
+        this.playerHp = 10; 
 
         addEventListener("keyup", (event) => {
             if(event.key == "p") {
@@ -647,38 +640,30 @@ class Game{
     PlayerHealth() {
         let yOffset = 20;
         let xOffset = 20;
-        let nevimProsteMezeraMeziSrdicky = 30;
-        let velikostSrdickaPico = 30;
+        let space = 30;
+        let HeartSize = 30;
 
-        let player;
-        for(let i = 0; i < this.AllGameObjects.length; i++) {
-            if(this.AllGameObjects[i].tag == "player") {
-                player = this.AllGameObjects[i]
-                break;
-            }
-        }
-
-        let fullHp = new Image(velikostSrdickaPico,velikostSrdickaPico);
+        let fullHp = new Image(HeartSize,HeartSize);
         fullHp.src = "../animations/Hp/full.png"
-        let empty = new Image(velikostSrdickaPico,velikostSrdickaPico);
+        let empty = new Image(HeartSize,HeartSize);
         empty.src = "../animations/Hp/emptyl.png"
-        let half = new Image(velikostSrdickaPico,velikostSrdickaPico);
+        let half = new Image(HeartSize,HeartSize);
         half.src = "../animations/Hp/half.png"
     
 
-        for(let i = 0; i < 10; i++)
+        for(let i = 0; i < 5; i++)
         {
             if(this.playerHp >= i*2 +2)
             {
-                this.ctx.drawImage(fullHp,xOffset + i * nevimProsteMezeraMeziSrdicky,yOffset,velikostSrdickaPico,velikostSrdickaPico)
+                this.ctx.drawImage(fullHp,xOffset + i * space,yOffset,HeartSize,HeartSize)
             }
             else if(this.playerHp >= i*2 +1)
             {
-                this.ctx.drawImage(half,xOffset + i * nevimProsteMezeraMeziSrdicky,yOffset,velikostSrdickaPico,velikostSrdickaPico)
+                this.ctx.drawImage(half,xOffset + i * space,yOffset,HeartSize,HeartSize)
             }
             else
             {
-                this.ctx.drawImage(empty,xOffset + i * nevimProsteMezeraMeziSrdicky,yOffset,velikostSrdickaPico,velikostSrdickaPico)
+                this.ctx.drawImage(empty,xOffset + i * space,yOffset,HeartSize,HeartSize)
             }
         }
 
@@ -688,8 +673,15 @@ class Game{
    
 
     Hit() {
-        if(this.playerHp > 0)
-        {
+        let player;
+        for(let i = 0; i < this.AllGameObjects.length; i++) {
+            if(this.AllGameObjects[i].tag == "player") {
+                player = this.AllGameObjects[i]
+                break;
+            }
+        }
+
+        if(this.playerHp > 0) {
             this.playerHp --;
         }
         console.log(this.playerHp)
@@ -734,18 +726,3 @@ class Game{
         {return a.layer - b.layer});
     }
 }
-
-
-
-/*draw(context, x, y) {
-    context.drawImage(this.image, this.frameX, this.frameY, this.spriteWidth, this.spriteHeight, 
-        x, y, this.spriteWidth * 2.5, this.spriteHeight * 2.5);
-}
-setToHalf() {
-    this.type = 'half';
-    this.tile = this.game.tileObjects[`ui_heart_${this.type}`];
-    this.frameX = this.tile.Position.X;
-    this.frameY = this.tile.Position.Y;
-    this.spriteWidth = this.tile.Width;
-    this.spriteHeight = this.tile.Height;
-}*/
