@@ -198,28 +198,27 @@ class Player extends PhysicGameObjects{
         hp = player.hp;
         this.Kolize(enemy);*/
 
-        let enemy;
+
         for(let i = 0; i < this.AllGameObjects.length; i++) {
             if(this.AllGameObjects[i].tag == "enemy") {
-                enemy = this.AllGameObjects[i]
-                break;
+                if (
+                    (this.y + this.height / 2) + 10 >= (AllGameObjects[i].y - AllGameObjects[i].height / 2) - 10 &&
+                    (this.y - this.height / 2) - 10 <= (AllGameObjects[i].y + AllGameObjects[i].height / 2) + 10&&
+                    (this.x - this.width / 2) - 10 <= (AllGameObjects[i].x + AllGameObjects[i].width / 2) + 10 &&
+                    (this.x + this.width / 2) + 10 >= (AllGameObjects[i].x - AllGameObjects[i].width / 2) - 10
+                    ) 
+                {
+                    console.log("penis");
+                    this.currentAnimation = 3;
+                }    
+        
+                if(this.isAlive == false) {
+                    this.currentAnimation = 3;
+                } 
             }
         }
 
-        if (
-            (this.y + this.height / 2) + 10 >= (enemy.y - enemy.height / 2) - 10 &&
-            (this.y - this.height / 2) - 10 <= (enemy.y + enemy.height / 2) + 10&&
-            (this.x - this.width / 2) - 10 <= (enemy.x + enemy.width / 2) + 10 &&
-            (this.x + this.width / 2) + 10 >= (enemy.x - enemy.width / 2) - 10
-            ) 
-        {
-            console.log("penis");
-            this.currentAnimation = 3;
-        }    
-
-        if(this.isAlive == false) {
-            this.currentAnimation = 3;
-        } 
+       
     }
 
     Update() {
