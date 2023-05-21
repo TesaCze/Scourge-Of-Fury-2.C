@@ -5,7 +5,7 @@
 
     {"sprites":[["../animations/Enemy/Idle/Idle-1.png","../animations/Enemy/Idle/Idle-2.png","../animations/Enemy/Idle/Idle-3.png","../animations/Enemy/Idle/Idle-4.png"], 
     ["../animations/Enemy/Walk/walk-1.png","../animations/Enemy/Walk/walk-2.png","../animations/Enemy/Walk/walk-3.png","../animations/Enemy/Walk/walk-4.png"], 
-    ["../animations/Enemy/Death/Death.png"]],"type":"enemy","text":"Enemak","haveCollision":true},
+    ["../animations/Enemy/Death/Death.png"]],"type":"enemy","text":"Enemak"},
 
     {"sprites":[["../Textures/wall-classic.png"]],"type":"wall","text":"Wall", "haveCollision":true},
     {"sprites":[["../Textures/wall-broken-1.png"]],"type":"wall","text":"Wall1", "haveCollision":true},

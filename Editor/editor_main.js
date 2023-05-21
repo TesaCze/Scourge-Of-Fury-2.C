@@ -27,6 +27,9 @@ let Textures;
 
 let mousePos = {x:0,y:0};
 
+let buttons;
+let currentTool = 0; //1-paint 2-move;
+
 addEventListener("load", (event) => {Start();});
 
 async function Start()
@@ -36,6 +39,7 @@ async function Start()
     .then((json) => Textures = json);
 
     addTexturesToDiv();
+    buttons = {paint: document.getElementById("btn1"),move:document.getElementById("btn2")};
 
     setInterval(Update,16)
 }
@@ -138,6 +142,9 @@ function DrawSelect()
 
 function DrawSelectedObjects()
 {
+    if(currentTool != 1 )
+        return
+
     if(copiedObjects.length != 0)
     {
         let pos = CanvasToWorld(mousePos.x,mousePos.y)
@@ -203,7 +210,10 @@ function WorldToCnavas(x,y)
 
 function addBlock(x,y)
 {   
-    if(copiedObjects.length != 0)
+    if(currentTool != 1 )
+        return
+
+    if(copiedObjects.length != 0 )
     {
         let pos = CanvasToWorld(mousePos.x,mousePos.y)
         pos.x = grid.size * Math.round(pos.x/grid.size) 
@@ -239,7 +249,7 @@ function addBlock(x,y)
                     newGameObject = new PhysicGameObjects(pos2.x,pos2.y,grid.size,grid.size,0,copiedObjects[i].sprites,"wall",idCount,copiedObjects[i].haveCollision,true)
                 break;
                 case "enemy":   //(x, y, width, height, layer, sprites,tag,id, haveCollision,isStatic)
-                newGameObject = new Enemy(pos.x, pos.y, grid.size, grid.size, 0 ,currentBlock.sprites,"enemy",idCount, currentBlock.haveCollision,false)
+                    newGameObject = new Enemy(pos2.x, pos2.y, grid.size, grid.size, 0 ,copiedObjects[i].sprites,"enemy",idCount,true,false)
                 break;
             }
             
@@ -281,7 +291,7 @@ function addBlock(x,y)
                 newGameObject = new PhysicGameObjects(pos.x,pos.y,grid.size,grid.size,0,currentBlock.sprites,"wall",idCount,currentBlock.haveCollision,true)
             break;
             case "enemy":   //(x, y, width, height, layer, sprites,tag,id, haveCollision,isStatic)
-                newGameObject = new Enemy(pos.x, pos.y, grid.size, grid.size, 0 ,currentBlock.sprites,"enemy",idCount, currentBlock.haveCollision,false)
+                newGameObject = new Enemy(pos.x, pos.y, grid.size, grid.size, 0 ,currentBlock.sprites,"enemy",idCount, true,false)
             break;
         }
         
@@ -370,6 +380,36 @@ function downloadMap()
     a.href = URL.createObjectURL(file);
     a.download = "mapa.json";
     a.click();
+}
+
+function paintTool()
+{
+    if(currentTool == 1)
+    {
+        buttons.paint.style.color = "rgba(24, 24, 24, 0.79)"
+        currentTool = 0;
+    }
+    else
+    {
+        buttons.move.style.color = "rgba(24, 24, 24, 0.79)"
+        buttons.paint.style.color = "rgba(255,255,255,1)"
+        currentTool = 1;
+    }
+}
+
+function moveTool()
+{
+    if(currentTool == 2)
+    {
+        buttons.move.style.color = "rgba(24, 24, 24, 0.79)"
+        currentTool = 0;
+    }
+    else
+    {
+        buttons.move.style.color = "rgba(255,255,255,1)"
+        buttons.paint.style.color = "rgba(24, 24, 24, 0.79)"
+        currentTool = 2;
+    }
 }
 
 canvas.addEventListener("mousedown", (e)=> 
@@ -619,6 +659,14 @@ document.addEventListener("keydown", (e) =>
             copiedObjects[copiedObjects.length-1].x -= stredX
             copiedObjects[copiedObjects.length-1].y -= stredY
         })
+    }
+    else if(e.code == "KeyA" && e.ctrlKey)
+    {
+        AllGameObjects.forEach(el => 
+        {
+            selectedObjects.push(el)
+        })
+        
     }
 })
 
