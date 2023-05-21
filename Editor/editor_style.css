@@ -51,8 +51,13 @@ h2 {
     margin-right: 0px;
     width: 270px;
     background-color: rgba(45, 45, 45, 0.79);
-    height: 1080px;
-    position: relative;
+    height: 100%;
+    right: -250px;
+    position: absolute;
+    transition: 0.3s;
+}
+.editor:hover {
+    right: 0;
 }
 .textury {
     text-align: center;
@@ -87,13 +92,16 @@ h2 {
 .parametry {
     background-color: rgba(24, 24, 24, 0.79);
     width: 270px;
-    height: 500px;
+    height: 60%;
     margin-top: 20px;
+    bottom: 0;
+}
 
+.layerValues {
+    visibility: hidden;
 }
 
 .download {
-    height: 30%;
     border-collapse: collapse;
 }
 
@@ -104,18 +112,31 @@ h2 {
     justify-content: space-around;
     margin-right: 10%;
     width: 80%;
-    height: 400px;
+
 }
 
 #rozsah {
     border: 1px solid gold;
     width: 100%;
 }
-.value {
-    border: 1px solid beige;
+
+.layerSet {
+    background-color: rgb(56, 56, 56);
+    width: 50px;
+    border: none;
+    color: white;
+    font-family: 'VT323';
+    font-size: 30px;
+    padding: 5px 15px 5px 15px;
+    margin-top: 5px;  
+}
+
+.allLayers {
+    width: 30px;
     height: 30px;
-    display: inline-flex;
-    gap: 15px;
+}
+.allLayers:checked {
+    background-color: #ca9b2c;
 }
 
 .buttons {
