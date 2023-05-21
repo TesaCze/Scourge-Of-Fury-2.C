@@ -202,10 +202,10 @@ class Player extends PhysicGameObjects{
         for(let i = 0; i < this.AllGameObjects.length; i++) {
             if(this.AllGameObjects[i].tag == "enemy") {
                 if (
-                    (this.y + this.height / 2) + 10 >= (AllGameObjects[i].y - AllGameObjects[i].height / 2) - 10 &&
-                    (this.y - this.height / 2) - 10 <= (AllGameObjects[i].y + AllGameObjects[i].height / 2) + 10&&
-                    (this.x - this.width / 2) - 10 <= (AllGameObjects[i].x + AllGameObjects[i].width / 2) + 10 &&
-                    (this.x + this.width / 2) + 10 >= (AllGameObjects[i].x - AllGameObjects[i].width / 2) - 10
+                    (this.y + this.height / 2) + 10 >= (this.AllGameObjects[i].y - this.AllGameObjects[i].height / 2) - 10 &&
+                    (this.y - this.height / 2) - 10 <= (this.AllGameObjects[i].y + this.AllGameObjects[i].height / 2) + 10&&
+                    (this.x - this.width / 2) - 10 <= (this.AllGameObjects[i].x + this.AllGameObjects[i].width / 2) + 10 &&
+                    (this.x + this.width / 2) + 10 >= (this.AllGameObjects[i].x - this.AllGameObjects[i].width / 2) - 10
                     ) 
                 {
                     console.log("penis");
@@ -606,7 +606,17 @@ class Game{
         this.ctx = ctx,
         this.canvas = canvas,
         this.camera = camera
-        this.playerHp = 30;
+        this.playerHp = 20; //20 je max 
+        
+
+
+
+
+        addEventListener("keyup", (event) => {
+            if(event.key == "p") {
+                this.Hit();
+            }
+        });
     }
 
     AnimationUpdate() {
@@ -635,6 +645,11 @@ class Game{
     }
 
     PlayerHealth() {
+        let yOffset = 20;
+        let xOffset = 20;
+        let nevimProsteMezeraMeziSrdicky = 30;
+        let velikostSrdickaPico = 30;
+
         let player;
         for(let i = 0; i < this.AllGameObjects.length; i++) {
             if(this.AllGameObjects[i].tag == "player") {
@@ -643,23 +658,41 @@ class Game{
             }
         }
 
-        let fullHp = "../animations/Hp/full.png";
-
-
-        //ctx.drawImage(fullHp, 75, 75, 75, 75);
-
-        //console.log(player.hp);
-
-        addEventListener("keyup", (event) => {
-            if(event.key == "p") {
-                this.Hit();
-            }
-        });
-
-    }    
+        let fullHp = new Image(velikostSrdickaPico,velikostSrdickaPico);
+        fullHp.src = "../animations/Hp/full.png"
+        let empty = new Image(velikostSrdickaPico,velikostSrdickaPico);
+        empty.src = "../animations/Hp/emptyl.png"
+        let half = new Image(velikostSrdickaPico,velikostSrdickaPico);
+        half.src = "../animations/Hp/half.png"
     
+
+        for(let i = 0; i < 10; i++)
+        {
+            if(this.playerHp >= i*2 +2)
+            {
+                this.ctx.drawImage(fullHp,xOffset + i * nevimProsteMezeraMeziSrdicky,yOffset,velikostSrdickaPico,velikostSrdickaPico)
+            }
+            else if(this.playerHp >= i*2 +1)
+            {
+                this.ctx.drawImage(half,xOffset + i * nevimProsteMezeraMeziSrdicky,yOffset,velikostSrdickaPico,velikostSrdickaPico)
+            }
+            else
+            {
+                this.ctx.drawImage(empty,xOffset + i * nevimProsteMezeraMeziSrdicky,yOffset,velikostSrdickaPico,velikostSrdickaPico)
+            }
+        }
+
+
+      
+    }    
+   
+
     Hit() {
-       this.playerHp --;
+        if(this.playerHp > 0)
+        {
+            this.playerHp --;
+        }
+        console.log(this.playerHp)
     }
 
     Render() {
