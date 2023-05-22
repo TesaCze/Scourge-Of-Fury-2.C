@@ -566,46 +566,7 @@ class Game{
         this.playerHp = 20; //20 je max 
         this.enemyCount = 0;
 
-        //load all images
-        this.sprites = {player: {idle:[new Image(),new Image(),new Image(),new Image()],
-                                 walk:[new Image(),new Image(),new Image(),new Image()],
-                                 death:[new Image(),new Image(),new Image(),new Image()],
-                                 hit:[new Image()]},
-
-                        enemy:{ idle:[new Image(),new Image(),new Image(),new Image()],
-                                walk:[new Image(),new Image(),new Image(),new Image()],
-                                death:[new Image()]}};
         
-        //-------------------------------Player--------------------------------   
-        this.sprites.player.idle[0].src = "../animations/Player/idle/idle-1.png"
-        this.sprites.player.idle[1].src = "../animations/Player/idle/idle-2.png"
-        this.sprites.player.idle[2].src = "../animations/Player/idle/idle-3.png"
-        this.sprites.player.idle[3].src = "../animations/Player/idle/idle-4.png"
-
-        this.sprites.player.walk[0].src = "../animations/Player/walk/walk-1.png"
-        this.sprites.player.walk[1].src = "../animations/Player/walk/walk-2.png"
-        this.sprites.player.walk[2].src = "../animations/Player/walk/walk-3.png"
-        this.sprites.player.walk[3].src = "../animations/Player/walk/walk-4.png"
-
-        this.sprites.player.death[0].src = "../animations/Player/Death/death-1.png"
-        this.sprites.player.death[1].src = "../animations/Player/Death/death-2.png"
-        this.sprites.player.death[2].src = "../animations/Player/Death/death-3.png"
-        this.sprites.player.death[3].src = "../animations/Player/Death/death-4.png"
-
-        this.sprites.player.hit[0].src = "../animations/Player/Hit/hit.png"
-
-        //-------------------------------Enemy-------------------------------- 
-        this.sprites.enemy.idle[0].src = "../animations/Enemy/Idle/idle-1.png"
-        this.sprites.enemy.idle[1].src = "../animations/Enemy/Idle/idle-2.png"
-        this.sprites.enemy.idle[2].src = "../animations/Enemy/Idle/idle-3.png"
-        this.sprites.enemy.idle[3].src = "../animations/Enemy/Idle/idle-4.png"
-
-        this.sprites.enemy.walk[0].src = "../animations/Enemy/Walk/walk-1.png"
-        this.sprites.enemy.walk[1].src = "../animations/Enemy/Walk/walk-2.png"
-        this.sprites.enemy.walk[2].src = "../animations/Enemy/Walk/walk-3.png"
-        this.sprites.enemy.walk[3].src = "../animations/Enemy/Walk/walk-4.png"
-
-        this.sprites.enemy.death[0].src = "../animations/Enemy/Death/death.png"
 
         this.playerHp = 10; 
 
