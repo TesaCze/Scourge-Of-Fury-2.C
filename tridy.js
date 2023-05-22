@@ -607,9 +607,47 @@ class Game{
         this.canvas = canvas,
         this.camera = camera
         this.playerHp = 20; //20 je max 
+
+        //load all images
+        this.sprites = {player: {idle:[new Image(),new Image(),new Image(),new Image()],
+                                 walk:[new Image(),new Image(),new Image(),new Image()],
+                                 death:[new Image(),new Image(),new Image(),new Image()],
+                                 hit:[new Image()]},
+
+                        enemy:{ idle:[new Image(),new Image(),new Image(),new Image()],
+                                walk:[new Image(),new Image(),new Image(),new Image()],
+                                death:[new Image()]}};
         
+        //-------------------------------Player--------------------------------   
+        this.sprites.player.idle[0].src = "../animations/Player/idle/idle-1.png"
+        this.sprites.player.idle[1].src = "../animations/Player/idle/idle-2.png"
+        this.sprites.player.idle[2].src = "../animations/Player/idle/idle-3.png"
+        this.sprites.player.idle[3].src = "../animations/Player/idle/idle-4.png"
 
+        this.sprites.player.walk[0].src = "../animations/Player/walk/walk-1.png"
+        this.sprites.player.walk[1].src = "../animations/Player/walk/walk-2.png"
+        this.sprites.player.walk[2].src = "../animations/Player/walk/walk-3.png"
+        this.sprites.player.walk[3].src = "../animations/Player/walk/walk-4.png"
 
+        this.sprites.player.death[0].src = "../animations/Player/Death/death-1.png"
+        this.sprites.player.death[1].src = "../animations/Player/Death/death-2.png"
+        this.sprites.player.death[2].src = "../animations/Player/Death/death-3.png"
+        this.sprites.player.death[3].src = "../animations/Player/Death/death-4.png"
+
+        this.sprites.player.hit[0].src = "../animations/Player/Hit/hit.png"
+
+        //-------------------------------Enemy-------------------------------- 
+        this.sprites.enemy.idle[0].src = "../animations/Enemy/Idle/idle-1.png"
+        this.sprites.enemy.idle[1].src = "../animations/Enemy/Idle/idle-2.png"
+        this.sprites.enemy.idle[2].src = "../animations/Enemy/Idle/idle-3.png"
+        this.sprites.enemy.idle[3].src = "../animations/Enemy/Idle/idle-4.png"
+
+        this.sprites.enemy.walk[0].src = "../animations/Enemy/Walk/walk-1.png"
+        this.sprites.enemy.walk[1].src = "../animations/Enemy/Walk/walk-2.png"
+        this.sprites.enemy.walk[2].src = "../animations/Enemy/Walk/walk-3.png"
+        this.sprites.enemy.walk[3].src = "../animations/Enemy/Walk/walk-4.png"
+
+        this.sprites.enemy.death[0].src = "../animations/Enemy/Death/death.png"
 
 
         addEventListener("keyup", (event) => {
@@ -631,16 +669,29 @@ class Game{
 
     DrawLayers() {
         for (let i = 0; i < this.AllGameObjects.length; i++) {
-            let texture = new Image(75, 75);
-                texture.src = this.AllGameObjects[i].sprites[this.AllGameObjects[i].currentAnimation][this.AllGameObjects[i].currentSprite];
-                if(this.AllGameObjects[i].isFlipped == false) {
-                    ctx.drawImage(texture, this.canvasPos(this.AllGameObjects[i]).x - this.camera.x, this.canvasPos(this.AllGameObjects[i]).y + this.camera.y, 75, 75); 
-                } else {
-                    ctx.scale(-1, 1);
-                    ctx.drawImage(texture, -(this.canvasPos(this.AllGameObjects[i]).x - this.camera.x) - texture.width, this.canvasPos(this.AllGameObjects[i]).y + this.camera.y, 75, 75);   
-                    ctx.scale(-1,1);
-                }
-            
+
+            switch( this.AllGameObjects[i].tag)
+            {
+                case "Player":
+
+                break;
+
+                default:
+                    let texture = new Image(75, 75);
+                    texture.src = this.AllGameObjects[i].sprites[this.AllGameObjects[i].currentAnimation][this.AllGameObjects[i].currentSprite];
+            }
+
+
+            if(this.AllGameObjects[i].isFlipped == false) 
+            {
+                ctx.drawImage(texture, this.canvasPos(this.AllGameObjects[i]).x - this.camera.x, this.canvasPos(this.AllGameObjects[i]).y + this.camera.y, 75, 75); 
+            }
+            else 
+            {
+                ctx.scale(-1, 1);
+                ctx.drawImage(texture, -(this.canvasPos(this.AllGameObjects[i]).x - this.camera.x) - texture.width, this.canvasPos(this.AllGameObjects[i]).y + this.camera.y, 75, 75);   
+                ctx.scale(-1,1);
+            }
         }
     }
 
@@ -681,9 +732,6 @@ class Game{
                 this.ctx.drawImage(empty,xOffset + i * nevimProsteMezeraMeziSrdicky,yOffset,velikostSrdickaPico,velikostSrdickaPico)
             }
         }
-
-
-      
     }    
    
 
