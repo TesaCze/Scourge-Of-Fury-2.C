@@ -12,16 +12,6 @@ class GameObjects{                                                              
         this.currentSprite = 0;     //Sprite z animace ktery ma vykreslit
         this.AllGameObjects;        //Vsechny objekty ve hre - pro ruzne scripty v updatu
     }
-
-    GetObjectstByTag(tag) //vrati pole objektu s tagem
-    {
-
-    }    
-
-    GetObjecttById(id) //vrati Objekt podle id
-    {
-        
-    }  
 }
 
 class PhysicGameObjects extends GameObjects //objekty s kolizemi
@@ -39,12 +29,6 @@ class PhysicGameObjects extends GameObjects //objekty s kolizemi
         for (let i = 0; i < this.AllGameObjects.length; i++) {
             this.Kolize(this.AllGameObjects[i]) 
         }
-    }
-    
-
-    CollideWith() //vrati array id se kteryma ma kolizi
-    {
-                   
     }
 
     Update() //kazdy snimek
@@ -158,7 +142,6 @@ class Player extends PhysicGameObjects{
         document.addEventListener("click", (event) => {
             return 0;
         })
-     
     }
 
     Move() {
@@ -195,7 +178,6 @@ class Player extends PhysicGameObjects{
                     enemy.canAttack = false;
                     this.hp--;
                     setTimeout(() => {
-                      
                         enemy.canAttack = true;
                         this.currentSprite = 0;
                         this.currentAnimation = 2;
@@ -265,7 +247,6 @@ class Sword extends PhysicGameObjects {
                 }
             }
 
-
         this.y = player.y + 10;
 
         if(this.isFlipped == false) {
@@ -274,7 +255,6 @@ class Sword extends PhysicGameObjects {
         } else {
             this.x = player.x-50;
         }
-
     }
 
     Attack() {
@@ -301,7 +281,6 @@ class Sword extends PhysicGameObjects {
                 }, 360);
             }
     }
-  
 
     Update() {
         this.Move();
@@ -568,25 +547,6 @@ class Enemy extends PhysicGameObjects{
 
     }
     
-}
-
-class Button extends PhysicGameObjects{
-
-    Pressed() {
-
-    }
-}
-
-class MovableBlocks extends PhysicGameObjects{
-
-    Move() {
-
-    }
-
-    Slide() {
-
-    }
-   
 }
 
 class Camera {
