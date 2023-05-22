@@ -184,7 +184,7 @@ class Player extends PhysicGameObjects{
         }
 
         for(let i = 0; i < this.AllGameObjects.length; i++) {
-            if(this.AllGameObjects[i].tag == "enemy" && enemy.canAttack == true) {
+            if(this.AllGameObjects[i].tag == "enemy" && enemy.canAttack == true && this.AllGameObjects[i].currentAnimation != 2) {
                 if (
                     (this.y + this.height / 2) + 10 >= (this.AllGameObjects[i].y - this.AllGameObjects[i].height / 2) - 10 &&
                     (this.y - this.height / 2) - 10 <= (this.AllGameObjects[i].y + this.AllGameObjects[i].height / 2) + 10&&
