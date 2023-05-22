@@ -193,8 +193,9 @@ class Player extends PhysicGameObjects{
                     ) 
                 {
                     enemy.canAttack = false;
+                    this.hp--;
                     setTimeout(() => {
-                        this.hp--;
+                      
                         enemy.canAttack = true;
                         this.currentSprite = 0;
                         this.currentAnimation = 2;
