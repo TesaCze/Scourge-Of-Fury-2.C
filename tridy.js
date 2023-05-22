@@ -677,7 +677,7 @@ class Game{
     DrawLayers() {
         for (let i = 0; i < this.AllGameObjects.length; i++) {
 
-            switch( this.AllGameObjects[i].tag)
+          /*  switch( this.AllGameObjects[i].tag)
             {
                 case "Player":
 
@@ -686,7 +686,7 @@ class Game{
                 default:
                     let texture = new Image(75, 75);
                     texture.src = this.AllGameObjects[i].sprites[this.AllGameObjects[i].currentAnimation][this.AllGameObjects[i].currentSprite];
-            }
+            }*/
 
             let texture = new Image(75, 75);
             texture.src = this.AllGameObjects[i].sprites[this.AllGameObjects[i].currentAnimation][this.AllGameObjects[i].currentSprite];
