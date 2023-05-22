@@ -18,7 +18,8 @@ canvas {
 }
 
 .tlacitka {
-  display: inline-block;
+  display: flex;
+  width: 400px;
   margin-left: 20px;
 }
 
@@ -40,7 +41,8 @@ canvas {
   display: flex;
   justify-content: center;
   cursor: pointer;
-  height: 50px;
+  height: 40px;
+  width: 180px;
 }
 
 .pixel-button:active span:not(:first-child) {
@@ -81,10 +83,10 @@ canvas {
 
 .text {
   z-index: 50;
-  transform: translateY(-6px);
+  transform: translateY(-15px);
   color: rgb(22, 22, 22);
   font-family: "VT323";
-  font-size: 30px;
+  font-size: 25px;
 }
 
 .modal {

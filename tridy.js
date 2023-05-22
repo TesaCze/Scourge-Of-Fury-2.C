@@ -1,10 +1,3 @@
-/*------------------TODO lIST-------------
--predelat vykreslovani
--udelat animace (Player Death, Enemy Death - muze byt proste lebka sprite protoze to mam, Player Hit, Enemy Hit)
--tlacitka a packy
-
------------------------------------------*/
-
 class GameObjects{                                                                     // Pouze inicializace nezbytnych promenych
     constructor(x, y, width, height, layer, sprites,tag,id) {
         this.id = id
@@ -123,6 +116,8 @@ class Player extends PhysicGameObjects{
         this.hp = 10;
         this.isFlipped = false;
         this.isAlive = true;
+        this.lost = false;
+        this.won = false;
 
         document.addEventListener("keypress", (event) => {
             if(this.isAlive == true) {
@@ -180,27 +175,16 @@ class Player extends PhysicGameObjects{
     }
 
     Health() {
-     /*   let player;
-        let hp;
         let enemy;
-        for(let i = 0; i < this.AllGameObjects.length; i++) {
-            if(this.AllGameObjects[i].tag == "player") {
-                player = this.AllGameObjects[i]
-                break;
-            }
-        }
         for(let i = 0; i < this.AllGameObjects.length; i++) {
             if(this.AllGameObjects[i].tag == "enemy") {
                 enemy = this.AllGameObjects[i]
                 break;
             }
         }
-        hp = player.hp;
-        this.Kolize(enemy);*/
-
 
         for(let i = 0; i < this.AllGameObjects.length; i++) {
-            if(this.AllGameObjects[i].tag == "enemy") {
+            if(this.AllGameObjects[i].tag == "enemy" && enemy.canAttack == true) {
                 if (
                     (this.y + this.height / 2) + 10 >= (this.AllGameObjects[i].y - this.AllGameObjects[i].height / 2) - 10 &&
                     (this.y - this.height / 2) - 10 <= (this.AllGameObjects[i].y + this.AllGameObjects[i].height / 2) + 10&&
@@ -208,17 +192,26 @@ class Player extends PhysicGameObjects{
                     (this.x + this.width / 2) + 10 >= (this.AllGameObjects[i].x - this.AllGameObjects[i].width / 2) - 10
                     ) 
                 {
-                    console.log("penis");
-                    this.currentAnimation = 3;
-                }    
-        
+                    enemy.canAttack = false;
+                    setTimeout(() => {
+                        this.hp--;
+                        enemy.canAttack = true;
+                        this.currentSprite = 0;
+                        this.currentAnimation = 2;
+                    }, 1000);
+                    console.log(this.hp);
+            }    
+            if(this.hp <= 0) {
+                this.isAlive = false;
+                this.hp = 0;
+                this.lost = true;
+            }
+
                 if(this.isAlive == false) {
-                    this.currentAnimation = 3;
+                    this.currentAnimation = 3;                   
                 } 
             }
-        }
-
-       
+        }       
     }
 
     Update() {
@@ -327,6 +320,8 @@ class Enemy extends PhysicGameObjects{
         this.lastX = x;
         this.lastY = y;
         this.isFlipped = false;
+        this.canAttack = true;
+        this.isDead = false;
     }
 
 
@@ -395,7 +390,6 @@ class Enemy extends PhysicGameObjects{
 
     FindPlayer() {                      // kontroluje zda enemy vidi hrace
         let player;
-        let enemy;
         for(let i = 0; i < this.AllGameObjects.length; i++) {
             if(this.AllGameObjects[i].tag == "player") {
                 player = this.AllGameObjects[i]
@@ -556,6 +550,8 @@ class Enemy extends PhysicGameObjects{
                 this.currentSprite = 0;
                 this.currentAnimation = 2;
                 this.haveCollision = false;
+                this.canAttack = false;
+                this.isDead = true;
             }    
         }
     }
@@ -649,6 +645,7 @@ class Game{
 
         this.sprites.enemy.death[0].src = "../animations/Enemy/Death/death.png"
 
+        this.playerHp = 10; 
 
         addEventListener("keyup", (event) => {
             if(event.key == "p") {
@@ -696,11 +693,6 @@ class Game{
     }
 
     PlayerHealth() {
-        let yOffset = 20;
-        let xOffset = 20;
-        let nevimProsteMezeraMeziSrdicky = 30;
-        let velikostSrdickaPico = 30;
-
         let player;
         for(let i = 0; i < this.AllGameObjects.length; i++) {
             if(this.AllGameObjects[i].tag == "player") {
@@ -709,35 +701,111 @@ class Game{
             }
         }
 
-        let fullHp = new Image(velikostSrdickaPico,velikostSrdickaPico);
+        let yOffset = 20;
+        let xOffset = 20;
+        let space = 30;
+        let HeartSize = 30;
+
+        let fullHp = new Image(HeartSize,HeartSize);
         fullHp.src = "../animations/Hp/full.png"
-        let empty = new Image(velikostSrdickaPico,velikostSrdickaPico);
+        let empty = new Image(HeartSize,HeartSize);
         empty.src = "../animations/Hp/emptyl.png"
-        let half = new Image(velikostSrdickaPico,velikostSrdickaPico);
+        let half = new Image(HeartSize,HeartSize);
         half.src = "../animations/Hp/half.png"
     
 
-        for(let i = 0; i < 10; i++)
+        for(let i = 0; i < 5; i++)
         {
-            if(this.playerHp >= i*2 +2)
+            if(player.hp >= i*2 +2)
             {
-                this.ctx.drawImage(fullHp,xOffset + i * nevimProsteMezeraMeziSrdicky,yOffset,velikostSrdickaPico,velikostSrdickaPico)
+                this.ctx.drawImage(fullHp,xOffset + i * space,yOffset,HeartSize,HeartSize)
             }
-            else if(this.playerHp >= i*2 +1)
+            else if(player.hp >= i*2 +1)
             {
-                this.ctx.drawImage(half,xOffset + i * nevimProsteMezeraMeziSrdicky,yOffset,velikostSrdickaPico,velikostSrdickaPico)
+                this.ctx.drawImage(half,xOffset + i * space,yOffset,HeartSize,HeartSize)
             }
             else
             {
-                this.ctx.drawImage(empty,xOffset + i * nevimProsteMezeraMeziSrdicky,yOffset,velikostSrdickaPico,velikostSrdickaPico)
+                this.ctx.drawImage(empty,xOffset + i * space,yOffset,HeartSize,HeartSize)
             }
         }
     }    
-   
+    
+    YouDied() {
+        let player;
+        for(let i = 0; i < this.AllGameObjects.length; i++) {
+            if(this.AllGameObjects[i].tag == "player") {
+                player = this.AllGameObjects[i]
+                break;
+            }
+        }
+
+        if(player.lost == true) {
+            ctx.beginPath();
+            this.ctx.fillStyle = "rgba(150, 0, 0, 0.2)";
+            ctx.fillRect(0, 0, canvas.width, this.canvas.height);
+            ctx.stroke();
+            this.ctx.font = "50px VT323"
+            ctx.fillStyle = "white";
+            ctx.textAlign = "center";
+            ctx.fillText("You died", canvas.width/2, canvas.height/2);
+            this.ctx.font = "25px VT323"
+            ctx.fillStyle = "white";
+            ctx.fillText("Press Ctrl + R to play again", canvas.width/2 + 100, canvas.height/2 + 30); 
+        }
+        
+    }
+
+    YouWon() {
+        let player;
+        for(let i = 0; i < this.AllGameObjects.length; i++) {
+            if(this.AllGameObjects[i].tag == "player") {
+                player = this.AllGameObjects[i]
+                break;
+            }
+        }
+
+        if(player.won == true) {
+            ctx.beginPath();
+            this.ctx.fillStyle = "rgba(0, 190, 0, 0.1)";
+            ctx.fillRect(0, 0, canvas.width, this.canvas.height);
+            ctx.stroke();
+            this.ctx.font = "50px VT323"
+            ctx.fillStyle = "white";
+            ctx.textAlign = "center";
+            ctx.fillText("You Won!", canvas.width/2, canvas.height/2);
+            this.ctx.font = "25px VT323"
+            ctx.fillStyle = "white";
+            ctx.fillText("Press Ctrl + R to play again", canvas.width/2 + 100, canvas.height/2 + 30);
+        }
+    }
+
+    EnemyCount() {
+        let enemyCount = 0;
+        let startCount = 0;
+        for(let i = 0; i < this.AllGameObjects.length; i++) {
+            if(this.AllGameObjects[i].tag == "enemy") {
+                startCount++;
+                enemyCount++;
+            }
+        }
+
+        this.ctx.font = "25px VT323"
+        ctx.fillStyle = "white";
+        ctx.fillText("Enemy count: " + enemyCount + " / " + startCount, 25, 80); 
+        
+    }
 
     Hit() {
-        if(this.playerHp > 0)
-        {
+        let player;
+        for(let i = 0; i < this.AllGameObjects.length; i++) {
+            if(this.AllGameObjects[i].tag == "player") {
+                player = this.AllGameObjects[i]
+                break;
+            }
+        }
+
+        if(this.playerHp > 0) {
             this.playerHp --;
         }
         console.log(this.playerHp)
@@ -748,21 +816,12 @@ class Game{
         this.DrawLayers();
         this.PlayerHealth();
     }
-    
-    ToCanvas() {
-
-    }
 
     canvasPos(GameObjects) {
         return {
             x: GameObjects.x + canvas.width / 2 - GameObjects.width / 2,
             y: -GameObjects.y + canvas.height / 2 - GameObjects.height / 2,
         };
-    }
-
-
-    Start() {
-
     }
 
     Update() {
@@ -775,6 +834,9 @@ class Game{
         this.PlayerHealth();
         this.SortLayers();
         this.Render();
+        this.EnemyCount();
+        this.YouWon();
+        this.YouDied();
     }
 
     SortLayers() {
@@ -782,18 +844,3 @@ class Game{
         {return a.layer - b.layer});
     }
 }
-
-
-
-/*draw(context, x, y) {
-    context.drawImage(this.image, this.frameX, this.frameY, this.spriteWidth, this.spriteHeight, 
-        x, y, this.spriteWidth * 2.5, this.spriteHeight * 2.5);
-}
-setToHalf() {
-    this.type = 'half';
-    this.tile = this.game.tileObjects[`ui_heart_${this.type}`];
-    this.frameX = this.tile.Position.X;
-    this.frameY = this.tile.Position.Y;
-    this.spriteWidth = this.tile.Width;
-    this.spriteHeight = this.tile.Height;
-}*/
