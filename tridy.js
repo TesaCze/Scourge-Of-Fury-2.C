@@ -598,11 +598,12 @@ class Camera {
 
 class Game{
     constructor(ctx, canvas, camera, playerHp) {
-        this.AllGameObjects = [],
-        this.ctx = ctx,
-        this.canvas = canvas,
+        this.AllGameObjects = [];
+        this.ctx = ctx;
+        this.canvas = canvas;
         this.camera = camera
         this.playerHp = 20; //20 je max 
+        this.enemyCount = 0;
 
         //load all images
         this.sprites = {player: {idle:[new Image(),new Image(),new Image(),new Image()],
@@ -654,6 +655,15 @@ class Game{
         });
     }
 
+    EnemyStartCount()
+    {
+        for(let i = 0; i < this.AllGameObjects.length; i++) {
+            if(this.AllGameObjects[i].tag == "enemy") {
+                this.enemyCount++;
+            }
+        }
+    }
+
     AnimationUpdate() {
         for(let i = 0; i < this.AllGameObjects.length; i++) {
              if(this.AllGameObjects[i].currentSprite == this.AllGameObjects[i].sprites[this.AllGameObjects[i].currentAnimation].length - 1) {
@@ -678,6 +688,8 @@ class Game{
                     texture.src = this.AllGameObjects[i].sprites[this.AllGameObjects[i].currentAnimation][this.AllGameObjects[i].currentSprite];
             }
 
+            let texture = new Image(75, 75);
+            texture.src = this.AllGameObjects[i].sprites[this.AllGameObjects[i].currentAnimation][this.AllGameObjects[i].currentSprite];
 
             if(this.AllGameObjects[i].isFlipped == false) 
             {
@@ -781,18 +793,16 @@ class Game{
     }
 
     EnemyCount() {
-        let enemyCount = 0;
-        let startCount = 0;
+        let currCount = 0;
         for(let i = 0; i < this.AllGameObjects.length; i++) {
-            if(this.AllGameObjects[i].tag == "enemy") {
-                startCount++;
-                enemyCount++;
+            if(this.AllGameObjects[i].tag == "enemy" && this.AllGameObjects[i].currentAnimation != 2) {
+                currCount++;
             }
         }
 
         this.ctx.font = "25px VT323"
         ctx.fillStyle = "white";
-        ctx.fillText("Enemy count: " + enemyCount + " / " + startCount, 25, 80); 
+        ctx.fillText("Enemy count: " + currCount + " / " + this.enemyCount, 25, 80); 
         
     }
 

@@ -14,6 +14,7 @@ let currentLvl;
 async function Start() 
 {
     await LoadFromJson("enemaci_test.json")
+    game.EnemyStartCount();
     setInterval(Update, 16);
     setInterval(AnimationUpdate, 120);
 }
