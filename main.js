@@ -6,14 +6,14 @@ addEventListener("load", (event) => {Start();});
 
 let camera = new Camera(0, 0, 0);
 let game = new Game(ctx, canvas, camera);
-let sword = new Sword(-10, -75, 75, 75, 0, [["../animations/Sword/Idle/hit.png"],["../animations/Sword/Attack/hit.png","../animations/Sword/Attack/hit1.png","../animations/Sword/Attack/hit2.png"]],"sword");
+let sword = new Sword(-10, -75, 75, 75, 0,3,"sword");
 let map;         
 let newGameObject;
 let currentLvl;
 
 async function Start() 
 {
-    await LoadFromJson("enemaci_test.json")
+    await LoadFromJson("../Maps/testMap.json")
     game.EnemyStartCount();
     setInterval(Update, 16);
     setInterval(AnimationUpdate, 120);

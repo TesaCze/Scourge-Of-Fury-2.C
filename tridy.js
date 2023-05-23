@@ -595,7 +595,7 @@ class Game{
                 let currTemp = []
                 for(let k = 0; k < temp[i][j].length; k++)
                 {
-                    let imgTemp = new Image()
+                    let imgTemp = new Image(75,75)
                     imgTemp.src = temp[i][j][k]
                     currTemp.push(imgTemp)
                 }
@@ -616,7 +616,6 @@ class Game{
 
     AnimationUpdate() {
         for(let i = 0; i < this.AllGameObjects.length; i++) {
-            console.log(this.AllGameObjects[i].sprites)
              if(this.AllGameObjects[i].currentSprite == this.sprites[this.AllGameObjects[i].sprites][this.AllGameObjects[i].currentAnimation].length - 1) {
                 this.AllGameObjects[i].currentSprite = 0;
             } else {
@@ -628,19 +627,8 @@ class Game{
     DrawLayers() {
         for (let i = 0; i < this.AllGameObjects.length; i++) {
 
-          /*  switch( this.AllGameObjects[i].tag)
-            {
-                case "Player":
-
-                break;
-
-                default:
-                    let texture = new Image(75, 75);
-                    texture.src = this.AllGameObjects[i].sprites[this.AllGameObjects[i].currentAnimation][this.AllGameObjects[i].currentSprite];
-            }*/
-
             let texture = this.sprites[this.AllGameObjects[i].sprites][this.AllGameObjects[i].currentAnimation][this.AllGameObjects[i].currentSprite];
-
+            
             if(this.AllGameObjects[i].isFlipped == false) 
             {
                 ctx.drawImage(texture, this.canvasPos(this.AllGameObjects[i]).x - this.camera.x, this.canvasPos(this.AllGameObjects[i]).y + this.camera.y, 75, 75); 
@@ -668,15 +656,15 @@ class Game{
         let space = 30;
         let HeartSize = 30;
 
-        let fullHp = new Image(HeartSize,HeartSize);
-        fullHp.src = "../animations/Hp/full.png"
-        let empty = new Image(HeartSize,HeartSize);
-        empty.src = "../animations/Hp/emptyl.png"
-        let half = new Image(HeartSize,HeartSize);
-        half.src = "../animations/Hp/half.png"
+        let fullHp = this.sprites[2][0][0];
+
+        let empty = this.sprites[2][2][0];
+
+        let half = this.sprites[2][1][0];
+
     
 
-        for(let i = 0; i < 5; i++)
+       for(let i = 0; i < 5; i++)
         {
             if(player.hp >= i*2 +2)
             {
@@ -788,12 +776,11 @@ class Game{
         for (let i = 0; i < this.AllGameObjects.length; i++) {
             if(this.AllGameObjects[i].Update != undefined)
             {
-              //  this.AllGameObjects[i].Update(this.AllGameObjects);
+                this.AllGameObjects[i].Update(this.AllGameObjects);
             }
         }
-       // this.PlayerHealth();
         this.SortLayers();
-        //this.Render();
+        this.Render();
         this.EnemyCount();
         this.YouWon();
         this.YouDied();
