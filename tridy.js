@@ -102,6 +102,8 @@ class Player extends PhysicGameObjects{
         this.isAlive = true;
         this.lost = false;
         this.won = false;
+        this.walkingSoundIsPlaying = false;
+        this.timeoutCheckerBcsUzFaktNevim = false;
 
         document.addEventListener("keypress", (event) => {
             if(this.isAlive == true) {
@@ -204,7 +206,23 @@ class Player extends PhysicGameObjects{
         let walk = new Audio("../Sounds/walk.wav")
         walk.volume = 0.8;
         if(this.dir.left == true || this.dir.right == true || this.dir.up == true || this.dir.down == true) {
-            walk.play();
+
+            if(this.walkingSoundIsPlaying  == false)
+            {
+                this.walkingSoundIsPlaying = true
+                walk.play();
+            }
+
+            if(this.walkingSoundIsPlaying && !this.timeoutCheckerBcsUzFaktNevim)
+            {
+                this.timeoutCheckerBcsUzFaktNevim = true;
+                setTimeout(()=>{
+                    console.log('penis')
+                    this.timeoutCheckerBcsUzFaktNevim = false;
+                    this.walkingSoundIsPlaying = false
+                },200)
+            }
+            
         }
 
         this.Health();
