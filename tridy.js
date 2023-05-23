@@ -102,6 +102,7 @@ class Player extends PhysicGameObjects{
         this.isAlive = true;
         this.lost = false;
         this.won = false;
+        this.walkingSoundIsPlaying = false;
 
         document.addEventListener("keypress", (event) => {
             if(this.isAlive == true) {
@@ -201,15 +202,14 @@ class Player extends PhysicGameObjects{
     }
 
     Update() {
-        //let walk = new Audio("../Sounds/walk.wav")
-        //walk.volume = 0.8;
-        if(this.dir.left == true || this.dir.right == true || this.dir.up == true || this.dir.down == true) {
-            setTimeout(() => {
-                //let playerDamage = new Audio("../Sounds/playerDamage.wav")
-                let walk = new Audio("../Sounds/walk.wav")
-                walk.volume = 0.1;
-                walk.play();
-            }, 1000);
+        let walk = new Audio("../Sounds/walk.wav")
+        walk.volume = 0.8;
+        if((this.dir.left == true || this.dir.right == true || this.dir.up == true || this.dir.down == true) && this.walkingSoundIsPlaying  == false) {
+            this.walkingSoundIsPlaying = true
+            walk.play();
+            setTimeout(()=>{
+                this.walkingSoundIsPlaying = false
+            },200)
         }
 
         this.Health();
