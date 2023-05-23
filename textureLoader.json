@@ -1,39 +1,38 @@
-{
-    "player":
-    {
-        "idle":["../Sprites/Player/idle/idle-1.png","../Sprites/Player/idle/idle-2.png","../Sprites/Player/idle/idle-3.png","../Sprites/Player/idle/idle-4.png"],
-        "walk":["../Sprites/Player/walk/walk-1.png","../Sprites/Player/walk/walk-2.png","../Sprites/Player/walk/walk-3.png","../Sprites/Player/walk/walk-4.png"],
-        "death":["../Sprites/Player/Death/death-1.png","../Sprites/Player/Death/death-2.png","../Sprites/Player/Death/death-3.png","../Sprites/Player/Death/death-4.png"],
-        "hit":["../Sprites/Player/Hit/hit.png"]
-    },
+[
 
-    "enemy":
-    {
-        "idle":["../Sprites/Enemy/Idle/idle-1.png","../Sprites/Enemy/Idle/idle-2.png","../Sprites/Enemy/Idle/idle-3.png","../Sprites/Enemy/Idle/idle-4.png"],
-        "walk":["../Sprites/Enemy/Walk/walk-1.png","../Sprites/Enemy/Walk/walk-2.png","../Sprites/Enemy/Walk/walk-3.png","../Sprites/Enemy/Walk/walk-4.png"],
-        "death":["../Sprites/Enemy/Death/death.png"]
-    },
+    [
+        ["../Sprites/Player/idle/idle-1.png","../Sprites/Player/idle/idle-2.png","../Sprites/Player/idle/idle-3.png","../Sprites/Player/idle/idle-4.png"], 
+        ["../Sprites/Player/walk/walk-1.png","../Sprites/Player/walk/walk-2.png","../Sprites/Player/walk/walk-3.png","../Sprites/Player/walk/walk-4.png"],
+        ["../Sprites/Player/Death/death-1.png","../Sprites/Player/Death/death-2.png","../Sprites/Player/Death/death-3.png","../Sprites/Player/Death/death-4.png"],
+        ["../Sprites/Player/Hit/hit.png"]
+    ],
 
-    "hp":
-    {
-        "full": "../Sprites/Hp/full.png",
-        "half": "../Sprites/Hp/half.png",
-        "empty": "../Sprites/Hp/empty.png"
-    },
+    [
+        ["../Sprites/Enemy/Idle/idle-1.png","../Sprites/Enemy/Idle/idle-2.png","../Sprites/Enemy/Idle/idle-3.png","../Sprites/Enemy/Idle/idle-4.png"],
+        ["../Sprites/Enemy/Walk/walk-1.png","../Sprites/Enemy/Walk/walk-2.png","../Sprites/Enemy/Walk/walk-3.png","../Sprites/Enemy/Walk/walk-4.png"],
+        ["../Sprites/Enemy/Death/death.png"]
+    ],
 
-    "sword":
-    {
-        "idle":["../Sprites/Sword/Idle/hit.png"],
-        "attack":["../Sprites/Sword/Attack/hit.png","../Sprites/Sword/Attack/hit1.png","../Sprites/Sword/Attack/hit2.png"]
-    },
 
-    "tiles":["../Sprites/Tiles/ground-broken-1.png",
-    "../Sprites/Tiles/ground-broken-2.png",
-    "../Sprites/Tiles/ground-broken-3.png",
-    "../Sprites/Tiles/ground-broken-4.png",
-    "../Sprites/Tiles/ground-broken-5.png",
-    "../Sprites/Tiles/ground-classic.png",
-    "../Sprites/Tiles/wall-broken-1.png",
-    "../Sprites/Tiles/wall-broken-2.png",
-    "../Sprites/Tiles/wall-classic.png"]
-}
+    [
+        ["../Sprites/Hp/full.png"],
+        ["../Sprites/Hp/half.png"],
+        ["../Sprites/Hp/empty.png"]
+    ],
+
+
+    [
+        ["../Sprites/Sword/Idle/hit.png"],
+        ["../Sprites/Sword/Attack/hit.png","../Sprites/Sword/Attack/hit1.png","../Sprites/Sword/Attack/hit2.png"]
+    ],
+
+    [["../Sprites/Tiles/ground-broken-1.png"]],
+    [["../Sprites/Tiles/ground-broken-2.png"]],
+    [["../Sprites/Tiles/ground-broken-3.png"]],
+    [["../Sprites/Tiles/ground-broken-4.png"]],
+    [["../Sprites/Tiles/ground-broken-5.png"]],
+    [["../Sprites/Tiles/ground-classic.png"]],
+    [["../Sprites/Tiles/wall-broken-1.png"]],
+    [["../Sprites/Tiles/wall-broken-2.png"]],
+    [["../Sprites/Tiles/wall-classic.png"]]
+]

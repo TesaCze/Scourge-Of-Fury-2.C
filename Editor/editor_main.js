@@ -10,6 +10,7 @@ let grid = {lineColor:"#bfbfbf",lineWidth:0.5,size:75}
 let editorCamera = {zoom:1, zoomSpeed: 0.1,zoomMin: 0.2,zoomMax: 4,position:{x:0,y:0},dragPosition:{x:0,y:0}}
 let isDraging = false;
 let AllGameObjects = [];
+let sprites = [];
 let currentBlock = null;
 
 let history = []; //ctrl z
@@ -37,6 +38,8 @@ async function Start()
     await fetch('TextureFile.json')
     .then((response) => response.json())
     .then((json) => Textures = json);
+
+    await loadSprites();
 
     addTexturesToDiv();
     buttons = {paint: document.getElementById("btn1"),move:document.getElementById("btn2")};
@@ -77,8 +80,7 @@ function DrawObjects()
     for(let i = 0; i < AllGameObjects.length;i++)
     {
         let pos = WorldToCnavas(AllGameObjects[i].x,AllGameObjects[i].y)
-        let img = new Image(grid.size,grid.size)
-        img.src = AllGameObjects[i].sprites[0][0]
+        let img = sprites[AllGameObjects[i].sprites][0][0]
         ctx.drawImage(img, pos.x - AllGameObjects[i].width/2 * editorCamera.zoom, pos.y - AllGameObjects[i].height/2* editorCamera.zoom, grid.size * editorCamera.zoom, grid.size* editorCamera.zoom);        
     }
 }
@@ -156,8 +158,7 @@ function DrawSelectedObjects()
         for(let i = 0; i < copiedObjects.length; i++)
         {
             let pos2 = WorldToCnavas(copiedObjects[i].x + pos.x,copiedObjects[i].y + pos.y)
-            let img = new Image(grid.size,grid.size)
-            img.src = copiedObjects[i].sprites[0][0]
+            let img = sprites[copiedObjects[i].sprites][0][0]
             ctx.drawImage(img,  pos2.x ,  pos2.y , grid.size * editorCamera.zoom, grid.size* editorCamera.zoom);   
         }
         ctx.globalAlpha = 1;
@@ -169,8 +170,7 @@ function DrawSelectedObjects()
         pos.y = grid.size * Math.round(pos.y/grid.size)+ grid.size/2
         let pos2 = WorldToCnavas(pos.x,pos.y)
         ctx.globalAlpha = 0.2;
-        let img = new Image(grid.size,grid.size)
-        img.src = currentBlock.sprites[0][0]
+        let img = sprites[currentBlock.sprites][0][0]
         ctx.drawImage(img, pos2.x , pos2.y , grid.size * editorCamera.zoom, grid.size* editorCamera.zoom);   
         ctx.globalAlpha = 1;
     }
@@ -352,7 +352,7 @@ function addTexturesToDiv()
         blocky.setAttribute("id", "block[" + i + "]");
         blocky.classList.add("hover-text");
         const newDiv = document.createElement("img");
-        newDiv.src = Textures[i].sprites[0][0]
+        newDiv.src = sprites[Textures[i].sprites][0][0].src
         newDiv.setAttribute("onclick","onTextureClick("+JSON.stringify(Textures[i])+")");
         newDiv.setAttribute("id", "block[" + i + "]");
         document.getElementById("block[" + i + "]").appendChild(newDiv) 
@@ -372,6 +372,33 @@ function downloadMap()
     a.download = "mapa.json";
     a.click();
 }
+
+async function loadSprites() 
+{
+    let temp;
+    await fetch("../textureLoader.json")
+    .then((response) => response.json())
+    .then((json) => temp = json);
+
+
+    for(let i = 0; i < temp.length; i++)
+    {
+        let animTemp = []
+        for(let j = 0; j < temp[i].length; j++)
+        {
+            let currTemp = []
+            for(let k = 0; k < temp[i][j].length; k++)
+            {
+                let imgTemp = new Image()
+                imgTemp.src = temp[i][j][k]
+                currTemp.push(imgTemp)
+            }
+            animTemp.push(currTemp)
+        }
+        sprites.push(animTemp);
+    }
+}
+
 
 function paintTool()
 {

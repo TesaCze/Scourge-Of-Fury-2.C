@@ -565,16 +565,44 @@ class Game{
         this.camera = camera
         this.playerHp = 20; //20 je max 
         this.enemyCount = 0;
-
-        
+        this.sprites = []; //0 - hrac, 1 - enemy, 2 - hp, 3 - sword, // 4...12 - tiles
+  
 
         this.playerHp = 10; 
+    
 
+        this.LoadSprites()
         addEventListener("keyup", (event) => {
             if(event.key == "p") {
                 this.Hit();
             }
         });
+    }
+
+    async LoadSprites() //nevim jak to udelat jinak a vim ze je to strasne spatne ake bude to tak
+    {
+        let temp;
+        await fetch("../textureLoader.json")
+        .then((response) => response.json())
+        .then((json) => temp = json);
+
+
+        for(let i = 0; i < temp.length; i++)
+        {
+            let animTemp = []
+            for(let j = 0; j < temp[i].length; j++)
+            {
+                let currTemp = []
+                for(let k = 0; k < temp[i][j].length; k++)
+                {
+                    let imgTemp = new Image()
+                    imgTemp.src = temp[i][j][k]
+                    currTemp.push(imgTemp)
+                }
+                animTemp.push(currTemp)
+            }
+            this.sprites.push(animTemp);
+        }
     }
 
     EnemyStartCount()
@@ -588,7 +616,8 @@ class Game{
 
     AnimationUpdate() {
         for(let i = 0; i < this.AllGameObjects.length; i++) {
-             if(this.AllGameObjects[i].currentSprite == this.AllGameObjects[i].sprites[this.AllGameObjects[i].currentAnimation].length - 1) {
+            console.log(this.AllGameObjects[i].sprites)
+             if(this.AllGameObjects[i].currentSprite == this.sprites[this.AllGameObjects[i].sprites][this.AllGameObjects[i].currentAnimation].length - 1) {
                 this.AllGameObjects[i].currentSprite = 0;
             } else {
                 this.AllGameObjects[i].currentSprite++;
@@ -610,8 +639,7 @@ class Game{
                     texture.src = this.AllGameObjects[i].sprites[this.AllGameObjects[i].currentAnimation][this.AllGameObjects[i].currentSprite];
             }*/
 
-            let texture = new Image(75, 75);
-            texture.src = this.AllGameObjects[i].sprites[this.AllGameObjects[i].currentAnimation][this.AllGameObjects[i].currentSprite];
+            let texture = this.sprites[this.AllGameObjects[i].sprites][this.AllGameObjects[i].currentAnimation][this.AllGameObjects[i].currentSprite];
 
             if(this.AllGameObjects[i].isFlipped == false) 
             {
@@ -760,12 +788,12 @@ class Game{
         for (let i = 0; i < this.AllGameObjects.length; i++) {
             if(this.AllGameObjects[i].Update != undefined)
             {
-                this.AllGameObjects[i].Update(this.AllGameObjects);
+              //  this.AllGameObjects[i].Update(this.AllGameObjects);
             }
         }
-        this.PlayerHealth();
+       // this.PlayerHealth();
         this.SortLayers();
-        this.Render();
+        //this.Render();
         this.EnemyCount();
         this.YouWon();
         this.YouDied();

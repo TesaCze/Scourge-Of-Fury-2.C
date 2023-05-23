@@ -1,19 +1,15 @@
 [
-    {"sprites":[["../animations/Player/Idle/Idle-1.png","../animations/Player/Idle/Idle-2.png","../animations/Player/Idle/Idle-3.png","../animations/Player/Idle/Idle-4.png"], 
-    ["../animations/Player/Walk/walk-1.png","../animations/Player/Walk/walk-2.png","../animations/Player/Walk/walk-3.png","../animations/Player/Walk/walk-4.png"], 
-    ["../animations/Player/Hit/hit.png"]],"type":"player","text":"Player"},
+    {"sprites":0,"type":"player","text":"Player"},
 
-    {"sprites":[["../animations/Enemy/Idle/Idle-1.png","../animations/Enemy/Idle/Idle-2.png","../animations/Enemy/Idle/Idle-3.png","../animations/Enemy/Idle/Idle-4.png"], 
-    ["../animations/Enemy/Walk/walk-1.png","../animations/Enemy/Walk/walk-2.png","../animations/Enemy/Walk/walk-3.png","../animations/Enemy/Walk/walk-4.png"], 
-    ["../animations/Enemy/Death/Death.png"]],"type":"enemy","text":"Enemak"},
+    {"sprites":1,"type":"enemy","text":"Enemak"},
 
-    {"sprites":[["../Textures/wall-classic.png"]],"type":"wall","text":"Wall", "haveCollision":true},
-    {"sprites":[["../Textures/wall-broken-1.png"]],"type":"wall","text":"Wall1", "haveCollision":true},
-    {"sprites":[["../Textures/wall-broken-2.png"]],"type":"wall","text":"Wall2", "haveCollision":true},
-    {"sprites":[["../Textures/ground-broken-1.png"]],"type":"wall","text":"Ground","haveCollision":false},
-    {"sprites":[["../Textures/ground-broken-2.png"]],"type":"wall","text":"Ground1","haveCollision":false},
-    {"sprites":[["../Textures/ground-broken-3.png"]],"type":"wall","text":"Ground2","haveCollision":false},
-    {"sprites":[["../Textures/ground-broken-4.png"]],"type":"wall","text":"Ground3","haveCollision":false},
-    {"sprites":[["../Textures/ground-broken-5.png"]],"type":"wall","text":"Ground4","haveCollision":false},
-    {"sprites":[["../Textures/ground-classic.png"]],"type":"wall","text":"Ground5","haveCollision":false}
+    {"sprites":10,"type":"wall","text":"Wall1", "haveCollision":true},
+    {"sprites":12,"type":"wall","text":"Wall", "haveCollision":true},
+    {"sprites":11,"type":"wall","text":"Wall2", "haveCollision":true},
+    {"sprites":9,"type":"wall","text":"Ground","haveCollision":false},
+    {"sprites":4,"type":"wall","text":"Ground1","haveCollision":false},
+    {"sprites":5,"type":"wall","text":"Ground2","haveCollision":false},
+    {"sprites":6,"type":"wall","text":"Ground3","haveCollision":false},
+    {"sprites":7,"type":"wall","text":"Ground4","haveCollision":false},
+    {"sprites":8,"type":"wall","text":"Ground5","haveCollision":false}
 ]
