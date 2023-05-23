@@ -104,27 +104,21 @@ class Player extends PhysicGameObjects{
         this.won = false;
 
         document.addEventListener("keypress", (event) => {
-            let walk = new Audio("../Sounds/walk.wav")
-            walk.volume = 0.8;
             if(this.isAlive == true) {
                 switch (event.key) {
                 case "a":
                     this.dir.left = true;
                     this.isFlipped = true;
-                    //walk.play();
                     break;
                 case "w":
                     this.dir.up = true;
-                    //walk.play();
                     break;
                 case "d":
                     this.dir.right = true;
                     this.isFlipped = false;
-                    //walk.play();
                     break;
                 case "s":
                     this.dir.down = true;
-                    //walk.play();
                     break;
             }
         }
@@ -207,6 +201,12 @@ class Player extends PhysicGameObjects{
     }
 
     Update() {
+        let walk = new Audio("../Sounds/walk.wav")
+        walk.volume = 0.8;
+        if(this.dir.left == true || this.dir.right == true || this.dir.up == true || this.dir.down == true) {
+            walk.play();
+        }
+
         this.Health();
         if(this.isAlive == true) {
             this.Move() 
