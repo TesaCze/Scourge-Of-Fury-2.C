@@ -104,21 +104,27 @@ class Player extends PhysicGameObjects{
         this.won = false;
 
         document.addEventListener("keypress", (event) => {
+            let walk = new Audio("../Sounds/walk.wav")
+            walk.volume = 0.8;
             if(this.isAlive == true) {
                 switch (event.key) {
                 case "a":
                     this.dir.left = true;
                     this.isFlipped = true;
+                    //walk.play();
                     break;
                 case "w":
                     this.dir.up = true;
+                    //walk.play();
                     break;
                 case "d":
                     this.dir.right = true;
                     this.isFlipped = false;
+                    //walk.play();
                     break;
                 case "s":
                     this.dir.down = true;
+                    //walk.play();
                     break;
             }
         }
@@ -181,6 +187,9 @@ class Player extends PhysicGameObjects{
                         enemy.canAttack = true;
                         this.currentSprite = 0;
                         this.currentAnimation = 2;
+                        let playerDamage = new Audio("../Sounds/playerDamage.wav")
+                        playerDamage.volume = 0.1;
+                        playerDamage.play();
                     }, 1000);
                     console.log(this.hp);
             }    
@@ -217,12 +226,15 @@ class Sword extends PhysicGameObjects {
         this.haveCollision = false;
 
         document.addEventListener("click", (event) => {
+            let swordHit = new Audio("../Sounds/swordHit.wav")
             if(this.canAttack == true) {
-            this.Attack();
-            this.canAttack = false;
-            setTimeout(() => {
-                this.canAttack = true;
-            }, 370);
+                swordHit.volume = 0.3;
+                swordHit.play();
+                this.Attack();
+                this.canAttack = false;
+                setTimeout(() => {
+                    this.canAttack = true;
+                }, 370);
         }      
             
         })
