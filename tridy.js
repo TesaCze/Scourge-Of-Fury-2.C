@@ -201,10 +201,15 @@ class Player extends PhysicGameObjects{
     }
 
     Update() {
-        let walk = new Audio("../Sounds/walk.wav")
-        walk.volume = 0.8;
+        //let walk = new Audio("../Sounds/walk.wav")
+        //walk.volume = 0.8;
         if(this.dir.left == true || this.dir.right == true || this.dir.up == true || this.dir.down == true) {
-            walk.play();
+            setTimeout(() => {
+                //let playerDamage = new Audio("../Sounds/playerDamage.wav")
+                let walk = new Audio("../Sounds/walk.wav")
+                walk.volume = 0.1;
+                walk.play();
+            }, 1000);
         }
 
         this.Health();
