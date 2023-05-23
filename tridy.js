@@ -208,7 +208,6 @@ class Player extends PhysicGameObjects{
             this.walkingSoundIsPlaying = true
             walk.play();
             setTimeout(()=>{
-                console.log('penis')
                 this.walkingSoundIsPlaying = false
             },200)
         }
