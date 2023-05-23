@@ -103,6 +103,7 @@ class Player extends PhysicGameObjects{
         this.lost = false;
         this.won = false;
         this.walkingSoundIsPlaying = false;
+        this.isHit = false;
 
         document.addEventListener("keypress", (event) => {
             if(this.isAlive == true) {
@@ -146,16 +147,23 @@ class Player extends PhysicGameObjects{
     }
 
     Move() {
-        this.x += this.speed * this.dir.right;
-        this.x -= this.speed * this.dir.left;
-        this.y -= this.speed * this.dir.down;
-        this.y += this.speed * this.dir.up;
-        
-        if(this.dir.up == true || this.dir.right == true || this.dir.down == true || this.dir.left == true) {
-            this.currentAnimation = 1;
-        } else {
-            this.currentAnimation = 0;
+        if(this.isHit == false) {
+            this.x += this.speed * this.dir.right;
+            this.x -= this.speed * this.dir.left;
+            this.y -= this.speed * this.dir.down;
+            this.y += this.speed * this.dir.up;
+            
+            if(this.dir.up == true || this.dir.right == true || this.dir.down == true || this.dir.left == true) {
+                if(this.isHit == false) {
+                    this.currentAnimation = 1;
+                }
+            } else {
+                if(this.isHit == false) {
+                    this.currentAnimation = 0;
+                }
+            } 
         }
+        
     }
 
     Health() {
@@ -177,17 +185,23 @@ class Player extends PhysicGameObjects{
                     ) 
                 {
                     enemy.canAttack = false;
+                    this.isHit = true;
                     this.hp--;
                     setTimeout(() => {
                         enemy.canAttack = true;
-                        this.currentSprite = 0;
-                        this.currentAnimation = 2;
-                        let playerDamage = new Audio("../Sounds/playerDamage.wav")
-                        playerDamage.volume = 0.1;
-                        playerDamage.play();
                     }, 1000);
-                    console.log(this.hp);
-            }    
+                    setTimeout(() => {
+                        this.isHit = false;
+                    }, 300);
+
+                    let playerDamage = new Audio("../Sounds/playerDamage.wav")
+                    playerDamage.volume = 0.1;
+                    playerDamage.play();
+            }
+            if(this.isHit == true) {
+                this.currentSprite = 0;
+                this.currentAnimation = 3;
+            }
             if(this.hp <= 0) {
                 this.isAlive = false;
                 this.hp = 0;
@@ -209,7 +223,7 @@ class Player extends PhysicGameObjects{
             walk.play();
             setTimeout(()=>{
                 this.walkingSoundIsPlaying = false
-            },200)
+            },480)
         }
 
         this.Health();
@@ -231,8 +245,15 @@ class Sword extends PhysicGameObjects {
         this.haveCollision = false;
 
         document.addEventListener("click", (event) => {
+            let player;
+        for(let i = 0; i < this.AllGameObjects.length; i++) {
+                if(this.AllGameObjects[i].tag == "player") {
+                    player = this.AllGameObjects[i]
+                    break;
+                }
+            }
             let swordHit = new Audio("../Sounds/swordHit.wav")
-            if(this.canAttack == true) {
+            if(this.canAttack == true && player.isHit == false) {
                 swordHit.volume = 0.3;
                 swordHit.play();
                 this.Attack();
