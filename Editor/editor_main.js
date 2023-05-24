@@ -388,7 +388,23 @@ function downloadMap()
 
 function importMap()
 {
-    
+    let input = document.createElement('input');
+    input.type = 'file';
+    input.accept = ".json"
+
+    input.onchange = _ => {
+        let file = input.files[0];
+        let reader = new FileReader();
+        reader.readAsText(file);
+
+        reader.addEventListener('load', (event) => {
+          let jsonData = event.target.result;
+          AllGameObjects = JSON.parse(jsonData);
+        });
+       
+    };
+
+    input.click();
 }
 
 async function loadSprites() 
