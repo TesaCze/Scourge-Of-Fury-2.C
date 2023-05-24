@@ -16,6 +16,7 @@ canvas {
     left: 0;
     right: 0;
     border:1px solid #ffffff;
+    z-index: -1;
 }
 h2 {
     font-size: 18px;
@@ -106,10 +107,6 @@ h2 {
     height: 60%;
     margin-top: 20px;
     bottom: 0;
-}
-
-.layerValues {
-    visibility: hidden;
 }
 
 .download {
