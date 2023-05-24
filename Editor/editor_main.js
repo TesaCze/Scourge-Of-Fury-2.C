@@ -483,6 +483,7 @@ function LayerActive() {
 function layerChange(value)
 {
     currentLayer = value;
+    selectedObjects = [];
 }
 
 function updateLayerInput()
@@ -494,6 +495,7 @@ function updateLayerInput()
 function AllLayersChange()
 {
     AllLayers = !AllLayers;
+    selectedObjects = [];
 }
 
 //----- MODAL ---------

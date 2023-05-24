@@ -14,6 +14,7 @@ let levels = ["../Maps/testMap.json", "../Maps/moshpit.json"]
 let updateInterval
 let animationInterval
 
+
 async function LoadLevel() 
 {
     modal.style.display = "none";
