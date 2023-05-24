@@ -335,7 +335,7 @@ function findSelectedBlocks()
     selectedObjects = [];
     for(let i = 0; i < AllGameObjects.length;i++)
     {
-        if((currentLayer == AllGameObjects[i].layer) && (((AllGameObjects[i].x + AllGameObjects[i].width/2 > selectPos.strart.x && AllGameObjects[i].x - AllGameObjects[i].width/2 < selectPos.end.x ) || 
+        if((AllLayers || (currentLayer == AllGameObjects[i].layer)) && (((AllGameObjects[i].x + AllGameObjects[i].width/2 > selectPos.strart.x && AllGameObjects[i].x - AllGameObjects[i].width/2 < selectPos.end.x ) || 
         (AllGameObjects[i].x - AllGameObjects[i].width/2 < selectPos.strart.x && AllGameObjects[i].x + AllGameObjects[i].width/2 > selectPos.end.x))&&
         ((AllGameObjects[i].y - AllGameObjects[i].height/2 < selectPos.strart.y && AllGameObjects[i].y + AllGameObjects[i].height/2 > selectPos.end.y ) || 
         (AllGameObjects[i].y + AllGameObjects[i].height/2 > selectPos.strart.y && AllGameObjects[i].y - AllGameObjects[i].height/2 < selectPos.end.y))))
@@ -483,6 +483,12 @@ function LayerActive() {
 function layerChange(value)
 {
     currentLayer = value;
+}
+
+function updateLayerInput()
+{
+    let input = document.getElementById("LayerInput");
+    input.value = currentLayer;
 }
 
 function AllLayersChange()
@@ -728,6 +734,52 @@ document.addEventListener("keydown", (e) =>
                 })
             }
         break;
+
+        case "KeyB":
+            if(currentTool != 1)
+            {
+                paintTool();
+            }
+        break;
+
+        case "KeyM":
+            if(currentTool != 2)
+            {
+                moveTool()
+            } 
+        break;
+
+        case "ArrowUp":
+            if(currentLayer != 10)
+            {
+                currentLayer++
+                updateLayerInput()
+            }
+        break;
+
+        case "ArrowDown":
+            if(currentLayer != -10)
+            {
+                currentLayer--
+                updateLayerInput()
+            }
+        break;
+
+        case "KeyW":
+            if(currentLayer != 10)
+            {
+                currentLayer++
+                updateLayerInput()
+            }
+        break;
+
+        case "KeyS":
+            if(currentLayer != -10)
+            {
+                currentLayer--
+                updateLayerInput()
+            }
+        break;
     }
 
     if(e.code == "KeyZ" && e.ctrlKey) //Undo
@@ -861,11 +913,14 @@ document.addEventListener("keydown", (e) =>
             copiedObjects[copiedObjects.length-1].y -= stredY
         })
     }
-    else if(e.code == "KeyA" && e.ctrlKey)
+    else if(e.code == "KeyA" && e.shiftKey)
     {
         AllGameObjects.forEach(el => 
         {
-            selectedObjects.push(el)
+            if(AllLayers || (el.layer == currentLayer))
+            {
+                selectedObjects.push(el)
+            }
         })
         
     }
