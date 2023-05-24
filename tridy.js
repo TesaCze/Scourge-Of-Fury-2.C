@@ -106,7 +106,7 @@ class Player extends PhysicGameObjects{
         this.isHit = false;
 
         document.addEventListener("keypress", (event) => {
-            if(this.isAlive == true) {
+            if(this.isAlive == true && this.won == false && this.lost == false) {
                 switch (event.key) {
                 case "a":
                     this.dir.left = true;
@@ -147,7 +147,7 @@ class Player extends PhysicGameObjects{
     }
 
     Move() {
-        if(this.isHit == false) {
+        if(this.isHit == false && this.won == false && this.lost == false) {
             this.x += this.speed * this.dir.right;
             this.x -= this.speed * this.dir.left;
             this.y -= this.speed * this.dir.down;
@@ -194,9 +194,12 @@ class Player extends PhysicGameObjects{
                         this.isHit = false;
                     }, 300);
 
-                    let playerDamage = new Audio("../Sounds/playerDamage.wav")
-                    playerDamage.volume = 0.1;
-                    playerDamage.play();
+                    if(this.isAlive == true) {
+                        let playerDamage = new Audio("../Sounds/playerDamage.wav")
+                        playerDamage.volume = 0.1;
+                        playerDamage.play();
+                    }
+                    
             }
             if(this.isHit == true) {
                 this.currentSprite = 0;
@@ -217,8 +220,8 @@ class Player extends PhysicGameObjects{
 
     Update() {
         let walk = new Audio("../Sounds/walk.wav")
-        walk.volume = 0.8;
-        if((this.dir.left == true || this.dir.right == true || this.dir.up == true || this.dir.down == true) && this.walkingSoundIsPlaying  == false) {
+        walk.volume = 0.3;
+        if((this.dir.left == true || this.dir.right == true || this.dir.up == true || this.dir.down == true) && this.walkingSoundIsPlaying  == false && this.won == false) {
             this.walkingSoundIsPlaying = true
             walk.play();
             setTimeout(()=>{
@@ -232,8 +235,8 @@ class Player extends PhysicGameObjects{
         }
         this.PhysicCollider();
         camera.x = this.x;
-        camera.y = this.y;
-    }
+        camera.y = this.y; 
+}
 }
 
 class Sword extends PhysicGameObjects {
@@ -253,7 +256,7 @@ class Sword extends PhysicGameObjects {
                 }
             }
             let swordHit = new Audio("../Sounds/swordHit.wav")
-            if(this.canAttack == true && player.isHit == false) {
+            if(this.canAttack == true && player.isHit == false && player.isAlive == true && player.won == false) {
                 swordHit.volume = 0.3;
                 swordHit.play();
                 this.Attack();
@@ -265,13 +268,22 @@ class Sword extends PhysicGameObjects {
             
         })
         document.addEventListener("keypress", (event) => {
-            switch (event.key) {
-                case "a":
-                    this.isFlipped = true;
-                    break;
-                case "d":
-                    this.isFlipped = false;
-                    break;
+            let player;
+            for(let i = 0; i < this.AllGameObjects.length; i++) {
+                    if(this.AllGameObjects[i].tag == "player") {
+                        player = this.AllGameObjects[i]
+                        break;
+                    }
+                }
+            if(player.isAlive == true) {          
+                switch (event.key) {
+                    case "a":
+                        this.isFlipped = true;
+                        break;
+                    case "d":
+                        this.isFlipped = false;
+                        break;
+                }
             }
         });
     }
@@ -700,8 +712,6 @@ class Game{
 
         let half = this.sprites[2][1][0];
 
-    
-
        for(let i = 0; i < 5; i++)
         {
             if(player.hp >= i*2 +2)
@@ -769,6 +779,13 @@ class Game{
     }
 
     EnemyCount() {
+        let player;
+        for(let i = 0; i < this.AllGameObjects.length; i++) {
+            if(this.AllGameObjects[i].tag == "player") {
+                player = this.AllGameObjects[i]
+                break;
+            }
+        }
         let currCount = 0;
         for(let i = 0; i < this.AllGameObjects.length; i++) {
             if(this.AllGameObjects[i].tag == "enemy" && this.AllGameObjects[i].currentAnimation != 2) {
@@ -779,22 +796,15 @@ class Game{
         this.ctx.font = "25px VT323"
         ctx.fillStyle = "white";
         ctx.fillText("Enemy count: " + currCount + " / " + this.enemyCount, 25, 80); 
-        
+        if(currCount == 0) {
+            player.won = true;
+        }
     }
 
     Hit() {
-        let player;
-        for(let i = 0; i < this.AllGameObjects.length; i++) {
-            if(this.AllGameObjects[i].tag == "player") {
-                player = this.AllGameObjects[i]
-                break;
-            }
-        }
-
         if(this.playerHp > 0) {
             this.playerHp --;
         }
-        console.log(this.playerHp)
     }
 
     Render() {
