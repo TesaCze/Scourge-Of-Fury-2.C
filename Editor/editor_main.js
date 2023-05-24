@@ -436,21 +436,6 @@ function moveTool()
 }
 
 //------------- nesahej na to uz ffs ---------------
-let layerBtn = document.getElementById("btn3");
-let layerValue = document.getElementById("layerValues");
-
-function LayerActive() {
-
-    if(layerValue.style.visibility == "visible") {
-        layerValue.style.visibility = "hidden";
-        layerBtn.style.color = "black"
-    } else {
-        layerValue.style.visibility = "visible";
-        layerBtn.style.color = "white"
-    }
-    
-}
-
 //----- MODAL ---------
 var modal = document.getElementById("myModal");
 
