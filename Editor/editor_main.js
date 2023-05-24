@@ -578,6 +578,35 @@ canvas.addEventListener("mousemove", (e) =>
         let startX = grid.size * Math.round(movingPos.x/grid.size) 
         let startY = grid.size * Math.round(movingPos.y/grid.size)
 
+        for(let j = 0; j < selectedObjects.length; j++)
+        {
+            for(let i = 0; i < movingObjectsStartPos.length; i++) //kontrola pro prekriti (optimalizace neni idealni chtelo by to opravit)
+            {
+                if(selectedObjects[j].id == movingObjectsStartPos[i].id)
+                {
+                    for(let k = 0; k < AllGameObjects.length; k++)
+                        {
+                            let isInArr = false;
+                            for(let l = 0; l < selectedObjects.length; l++) 
+                            {
+                                if(selectedObjects[l].id == AllGameObjects[k].id)
+                                {
+                                    isInArr = true;
+                                    break;
+                                }
+                            }
+                            
+                            if(!isInArr && ((AllGameObjects[k].x == (movingObjectsStartPos[i].x + (currX - startX))) && (AllGameObjects[k].y == (movingObjectsStartPos[i].y + (currY - startY)))))
+                            {
+                                return                              
+                            }
+                        }
+                        
+                    }
+                }      
+            }
+
+
         selectedObjects.forEach(el =>
         {
             for(let i = 0; i < movingObjectsStartPos.length; i++) //fro loop kvuli moznosti pouziti break
