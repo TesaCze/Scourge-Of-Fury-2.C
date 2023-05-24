@@ -306,7 +306,7 @@ function addBlock(x,y)
         
         undoHistory = [];
         AllGameObjects.push(newGameObject);
-        history.push({type:0, objects:[idCount]}) //0 add 1 delete
+        history.push({type:0, objects:[idCount]}) //0 add 1 delete 2 move
         idCount++;
     }
 }

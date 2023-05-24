@@ -57,12 +57,13 @@ async function LoadFromJson()
         {
             case "player":              //(x, y, width, height, layer, sprites,tag,id, haveCollision,isStatic,speed,hp)
                 newGameObject = new Player(map[i].x,map[i].y,map[i].width,map[i].height,map[i].layer,map[i].sprites,map[i].tag,i,map[i].haveCollision,false,map[i].speed,100) 
+                sword.layer = map[i].layer;
             break;
             case "wall":                     //(x, y, width, height, layer, sprites,tag,id, haveCollision,isStatic)
-                newGameObject = new PhysicGameObjects(map[i].x,map[i].y,map[i].width,map[i].height,2,map[i].sprites,map[i].tag,i,map[i].haveCollision,true)
+                newGameObject = new PhysicGameObjects(map[i].x,map[i].y,map[i].width,map[i].height,map[i].layer,map[i].sprites,map[i].tag,i,map[i].haveCollision,true)
             break;
-            case "enemy":                   //(x, y, width, height, layer, sprites,tag,id, haveCollision,isStatic)
-                newGameObject = new Enemy(map[i].x,map[i].y,map[i].width,map[i].height,2,map[i].sprites,map[i].tag,i,map[i].haveCollision,true)
+            case "enemy":                       //(x, y, width, height, layer, sprites,tag,id, haveCollision,isStatic)
+                newGameObject = new Enemy(map[i].x,map[i].y,map[i].width,map[i].height,map[i].layer,map[i].sprites,map[i].tag,i,map[i].haveCollision,true)
             break;
         }
         newGameObject.AllGameObjects = game.AllGameObjects;
