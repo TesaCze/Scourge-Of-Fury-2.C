@@ -435,6 +435,45 @@ function moveTool()
     }
 }
 
+//------------- nesahej na to uz ffs ---------------
+let layerBtn = document.getElementById("btn3");
+let layerValue = document.getElementById("layerValues");
+
+function LayerActive() {
+
+    if(layerValue.style.visibility == "visible") {
+        layerValue.style.visibility = "hidden";
+        layerBtn.style.color = "black"
+    } else {
+        layerValue.style.visibility = "visible";
+        layerBtn.style.color = "white"
+    }
+    
+}
+
+//----- MODAL ---------
+var modal = document.getElementById("myModal");
+
+var btn = document.getElementById("myBtn");
+
+var span = document.getElementsByClassName("close")[0];
+
+btn.onclick = function() {
+  modal.style.display = "block";
+}
+
+span.onclick = function() {
+  modal.style.display = "none";
+}
+
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+}
+//---------------------
+//--------------------------------------------------
+
 canvas.addEventListener("mousedown", (e)=> 
 { 
     if(currentTool != 2)
@@ -802,26 +841,3 @@ canvas.addEventListener("wheel", (e)=>
         }
     }
 });
-
-//------------------- cssko lmao-----------
-let layerBtn = document.getElementById("layer");
-let layerValue = document.getElementById("layerValues");
-
-let layerActive = false;
-
-function LayerActive() {
-    brushActive = true;
-    moveActive = false;
-    layerActive = false
-    brushBtn.style.backgroundColor = "#ca9b2c";
-    moveBtn.style.backgroundColor = "#ca9b2c";
-    layerBtn.style.backgroundColor = "#fff";
-    if(layerValue.style.visibility == "visible") {
-        layerValue.style.visibility = "hidden";
-    } else {
-        layerValue.style.visibility = "visible";
-    }
-    
-}
-
-//-----------------------------------------
