@@ -55,7 +55,6 @@ h2 {
     right: -250px;
     position: absolute;
     transition: 0.3s;
-    border-left: 10px solid ;
 }
 .editor:hover {
     right: 0;
@@ -293,6 +292,13 @@ h2 {
     font-size: 30px;
 }
 
+.tlacitka {
+    display: flex;
+    width: 400px;
+    margin-left: 10px;
+    margin-top: -40px;
+}
+
 .close {
     color: #aaa;
     float: right;
@@ -307,11 +313,6 @@ h2 {
     cursor: pointer; 
 }
 
-.help {
-    left: 0;
-    position: absolute;
-    margin-left: 30px;
-}
 .texty-help {
     text-align: center;
     margin-top: 2%;

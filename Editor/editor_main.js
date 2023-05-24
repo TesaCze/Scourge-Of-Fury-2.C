@@ -466,7 +466,6 @@ window.onclick = function(event) {
     modal.style.display = "none";
   }
 }
-//---------------------
 //--------------------------------------------------
 
 canvas.addEventListener("mousedown", (e)=> 
