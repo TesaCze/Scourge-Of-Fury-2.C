@@ -12,6 +12,8 @@ let isDraging = false;
 let AllGameObjects = [];
 let sprites = [];
 let currentBlock = null;
+let currentLayer = 0;
+let AllLayers = false;
 
 let history = []; //ctrl z
 let undoHistory = []; //ctrl x
@@ -83,9 +85,12 @@ function DrawObjects()
 
     for(let i = 0; i < AllGameObjects.length;i++)
     {
-        let pos = WorldToCnavas(AllGameObjects[i].x,AllGameObjects[i].y)
-        let img = sprites[AllGameObjects[i].sprites][0][0]
-        ctx.drawImage(img, pos.x - AllGameObjects[i].width/2 * editorCamera.zoom, pos.y - AllGameObjects[i].height/2* editorCamera.zoom, grid.size * editorCamera.zoom, grid.size* editorCamera.zoom);        
+        if(AllLayers || (currentBlock == AllGameObjectsp[i].layer))
+        {
+            let pos = WorldToCnavas(AllGameObjects[i].x,AllGameObjects[i].y)
+            let img = sprites[AllGameObjects[i].sprites][0][0]
+            ctx.drawImage(img, pos.x - AllGameObjects[i].width/2 * editorCamera.zoom, pos.y - AllGameObjects[i].height/2* editorCamera.zoom, grid.size * editorCamera.zoom, grid.size* editorCamera.zoom);        
+        }
     }
 }
 
@@ -230,7 +235,7 @@ function addBlock(x,y)
             let pos2 = {x:copiedObjects[i].x + pos.x,y: copiedObjects[i].y + pos.y}
             for(let j = 0; j < AllGameObjects.length;j++)
             {
-                if((pos2.x == AllGameObjects[j].x && pos2.y == AllGameObjects[j].y))
+                if((currentLayer == AllGameObjects[i].layer) && (pos2.x == AllGameObjects[j].x && pos2.y == AllGameObjects[j].y))
                 {
                     return;
                 }
@@ -247,13 +252,13 @@ function addBlock(x,y)
             switch(copiedObjects[i].tag)
             {
                 case "player": //(x, y, width, height, layer, sprites,tag,id, haveCollision,isStatic,speed,hp)
-                    newGameObject = new Player(pos2.x,pos2.y,grid.size,grid.size,0,copiedObjects[i].sprites,"player",idCount,true,false,7)
+                    newGameObject = new Player(pos2.x,pos2.y,grid.size,grid.size,currentLayer,copiedObjects[i].sprites,"player",idCount,true,false,7)
                 break;
                 case "wall":    //(x, y, width, height, layer, sprites,tag,id, haveCollision,isStatic)
-                    newGameObject = new PhysicGameObjects(pos2.x,pos2.y,grid.size,grid.size,0,copiedObjects[i].sprites,"wall",idCount,copiedObjects[i].haveCollision,true)
+                    newGameObject = new PhysicGameObjects(pos2.x,pos2.y,grid.size,grid.size,currentLayer,copiedObjects[i].sprites,"wall",idCount,copiedObjects[i].haveCollision,true)
                 break;
                 case "enemy":   //(x, y, width, height, layer, sprites,tag,id, haveCollision,isStatic)
-                    newGameObject = new Enemy(pos2.x, pos2.y, grid.size, grid.size, 0 ,copiedObjects[i].sprites,"enemy",idCount,true,false)
+                    newGameObject = new Enemy(pos2.x, pos2.y, grid.size, grid.size, currentLayer ,copiedObjects[i].sprites,"enemy",idCount,true,false)
                 break;
             }
             
@@ -275,7 +280,7 @@ function addBlock(x,y)
         
         for(let i = 0; i < AllGameObjects.length;i++)
         {
-            if((pos.x == AllGameObjects[i].x && pos.y == AllGameObjects[i].y))
+            if((currentLayer == AllGameObjects[i].layer) && (pos.x == AllGameObjects[i].x && pos.y == AllGameObjects[i].y))
             {
                 return;
             }
@@ -289,13 +294,13 @@ function addBlock(x,y)
         switch(currentBlock.type)
         {
             case "player": //(x, y, width, height, layer, sprites,tag,id, haveCollision,isStatic,speed,hp)
-                newGameObject = new Player(pos.x,pos.y,grid.size,grid.size,0,currentBlock.sprites,"player",idCount,true,false,7)
+                newGameObject = new Player(pos.x,pos.y,grid.size,grid.size,currentLayer,currentBlock.sprites,"player",idCount,true,false,7)
             break;
             case "wall":    //(x, y, width, height, layer, sprites,tag,id, haveCollision,isStatic)
-                newGameObject = new PhysicGameObjects(pos.x,pos.y,grid.size,grid.size,0,currentBlock.sprites,"wall",idCount,currentBlock.haveCollision,true)
+                newGameObject = new PhysicGameObjects(pos.x,pos.y,grid.size,grid.size,currentLayer,currentBlock.sprites,"wall",idCount,currentBlock.haveCollision,true)
             break;
             case "enemy":   //(x, y, width, height, layer, sprites,tag,id, haveCollision,isStatic)
-                newGameObject = new Enemy(pos.x, pos.y, grid.size, grid.size, 0 ,currentBlock.sprites,"enemy",idCount, true,false)
+                newGameObject = new Enemy(pos.x, pos.y, grid.size, grid.size, currentLayer ,currentBlock.sprites,"enemy",idCount, true,false)
             break;
         }
         
@@ -317,7 +322,7 @@ function removeBlock(x,y)
     for(let i = 0; i < AllGameObjects.length;i++)
     {
         
-       if((pos.x == AllGameObjects[i].x && pos.y == AllGameObjects[i].y))
+       if((currentLayer == AllGameObjects[i].layer) && (pos.x == AllGameObjects[i].x && pos.y == AllGameObjects[i].y))
        {
             history.push({type:1, objects: [AllGameObjects[i]]})
             AllGameObjects.splice(i,1)
@@ -330,10 +335,10 @@ function findSelectedBlocks()
     selectedObjects = [];
     for(let i = 0; i < AllGameObjects.length;i++)
     {
-        if(((AllGameObjects[i].x + AllGameObjects[i].width/2 > selectPos.strart.x && AllGameObjects[i].x - AllGameObjects[i].width/2 < selectPos.end.x ) || 
+        if((currentLayer == AllGameObjects[i].layer) && (((AllGameObjects[i].x + AllGameObjects[i].width/2 > selectPos.strart.x && AllGameObjects[i].x - AllGameObjects[i].width/2 < selectPos.end.x ) || 
         (AllGameObjects[i].x - AllGameObjects[i].width/2 < selectPos.strart.x && AllGameObjects[i].x + AllGameObjects[i].width/2 > selectPos.end.x))&&
         ((AllGameObjects[i].y - AllGameObjects[i].height/2 < selectPos.strart.y && AllGameObjects[i].y + AllGameObjects[i].height/2 > selectPos.end.y ) || 
-        (AllGameObjects[i].y + AllGameObjects[i].height/2 > selectPos.strart.y && AllGameObjects[i].y - AllGameObjects[i].height/2 < selectPos.end.y)))
+        (AllGameObjects[i].y + AllGameObjects[i].height/2 > selectPos.strart.y && AllGameObjects[i].y - AllGameObjects[i].height/2 < selectPos.end.y))))
         {
             selectedObjects.push(AllGameObjects[i])
         }
@@ -345,7 +350,10 @@ function onTextureClick(obj)
     currentBlock = obj
     selectedObjects = [];
     copiedObjects = [];
-    paintTool()
+    if(currentTool != 1)
+    {
+        paintTool()
+    }
 }
 
 function addTexturesToDiv()
@@ -449,6 +457,11 @@ function LayerActive() {
         layerBtn.style.color = "white"
     }
     
+}
+
+function layerChange(value)
+{
+    currentLayer = value;
 }
 
 //----- MODAL ---------
