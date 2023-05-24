@@ -505,16 +505,20 @@ var btn = document.getElementById("myBtn");
 
 var span = document.getElementsByClassName("close")[0];
 
-btn.onclick = function() {
+btn.onclick = function() 
+{
   modal.style.display = "block";
 }
 
-span.onclick = function() {
+span.onclick = function() 
+{
   modal.style.display = "none";
 }
 
-window.onclick = function(event) {
-  if (event.target == modal) {
+window.onclick = function(event) 
+{
+  if (event.target == modal) 
+  {
     modal.style.display = "none";
   }
 }
@@ -693,6 +697,10 @@ canvas.addEventListener("mouseup", (e) =>
     }
     else if(isMoving)
     {
+        if(selectedObjects.length != 0)
+        {
+            history.push({type:2,objects:movingObjectsStartPos})
+        }
         isMoving = false;
     }
 });
@@ -807,7 +815,7 @@ document.addEventListener("keydown", (e) =>
                 undoHistory.push({type:0,objects: temp});
                 history.pop()
             }
-            else
+            else if(history[history.length-1].type == 1)
             {
                 let temp = []
                 for(let i = 0; i < history[history.length-1].objects.length;i++)
@@ -819,7 +827,24 @@ document.addEventListener("keydown", (e) =>
                 undoHistory.push({type:1,objects: temp});
                 history.pop();
             }
-            
+            else if(history[history.length-1].type == 2)
+            {
+                let temp = [];
+                history[history.length-1].objects.forEach(obj =>
+                {
+                    for(let i = 0; i < AllGameObjects.length;i++)
+                    {
+                        if(obj.id == AllGameObjects[i].id)
+                        {
+                            temp.push({id:obj.id,x:AllGameObjects[i].x,y:AllGameObjects[i].y})
+                            AllGameObjects[i].x = obj.x;
+                            AllGameObjects[i].y = obj.y;
+                        }
+                    }
+                })
+                undoHistory.push({type: 2, objects: temp})
+                history.pop();
+            }
         }
     }
     else if(e.code == "KeyX" && e.ctrlKey) //Redo
@@ -839,7 +864,7 @@ document.addEventListener("keydown", (e) =>
                 history.push({type:0,objects: temp});
                 undoHistory.pop();
             }
-            else
+            else if(undoHistory[undoHistory.length-1].type == 1)
             {
                 let temp = [];
                 for(let i = 0; i < AllGameObjects.length; i++)
@@ -856,6 +881,24 @@ document.addEventListener("keydown", (e) =>
                 }
                 history.push({type:1,objects: temp});
                 undoHistory.pop()
+            }
+            else if(undoHistory[undoHistory.length-1].type == 2)
+            {
+                let temp = [];
+                undoHistory[undoHistory.length-1].objects.forEach(obj =>
+                {
+                    for(let i = 0; i < AllGameObjects.length;i++)
+                    {
+                        if(obj.id == AllGameObjects[i].id)
+                        {
+                            temp.push({id:obj.id,x:AllGameObjects[i].x,y:AllGameObjects[i].y})
+                            AllGameObjects[i].x = obj.x;
+                            AllGameObjects[i].y = obj.y;
+                        }
+                    }
+                })
+                history.push({type: 2, objects: temp})
+                undoHistory.pop();
             }
         }
     }
