@@ -85,7 +85,7 @@ function DrawObjects()
 
     for(let i = 0; i < AllGameObjects.length;i++)
     {
-        if(AllLayers || (currentBlock == AllGameObjectsp[i].layer))
+        if(AllLayers || (currentLayer == AllGameObjects[i].layer))
         {
             let pos = WorldToCnavas(AllGameObjects[i].x,AllGameObjects[i].y)
             let img = sprites[AllGameObjects[i].sprites][0][0]
@@ -386,6 +386,11 @@ function downloadMap()
     a.click();
 }
 
+function importMap()
+{
+    
+}
+
 async function loadSprites() 
 {
     let temp;
@@ -462,6 +467,11 @@ function LayerActive() {
 function layerChange(value)
 {
     currentLayer = value;
+}
+
+function AllLayersChange()
+{
+    AllLayers = !AllLayers;
 }
 
 //----- MODAL ---------
