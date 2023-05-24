@@ -613,13 +613,9 @@ class Game{
         this.ctx = ctx;
         this.canvas = canvas;
         this.camera = camera
-        this.playerHp = 20; //20 je max 
         this.enemyCount = 0;
         this.sprites = []; //0 - hrac, 1 - enemy, 2 - hp, 3 - sword, // 4...12 - tiles
-  
-
         this.playerHp = 10; 
-    
 
         this.LoadSprites()
         addEventListener("keyup", (event) => {
