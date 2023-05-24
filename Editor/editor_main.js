@@ -5,7 +5,6 @@ ctx.imageSmoothingEnabled = false;
 //----------------------------------Tady se muze cokoliv nastavit--------------------------
 let grid = {lineColor:"#bfbfbf",lineWidth:0.5,size:75}
 
-
 //-----------------------------------------Nesahat-----------------------------------------
 let editorCamera = {zoom:1, zoomSpeed: 0.1,zoomMin: 0.2,zoomMax: 4,position:{x:0,y:0},dragPosition:{x:0,y:0}}
 let isDraging = false;
