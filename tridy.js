@@ -608,7 +608,7 @@ class Camera {
 }
 
 class Game{
-    constructor(ctx, canvas, camera, playerHp) {
+    constructor(ctx, canvas, camera) {
         this.AllGameObjects = [];
         this.ctx = ctx;
         this.canvas = canvas;

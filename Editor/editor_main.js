@@ -31,6 +31,10 @@ let mousePos = {x:0,y:0};
 let buttons;
 let currentTool = 0; //1-paint 2-move;
 
+let isMoving = false;
+let movingPos = {x:0,y:0}
+let movingObjectsStartPos = [];
+
 addEventListener("load", (event) => {Start();});
 
 async function Start()
@@ -341,6 +345,7 @@ function onTextureClick(obj)
     currentBlock = obj
     selectedObjects = [];
     copiedObjects = [];
+    paintTool()
 }
 
 function addTexturesToDiv()
@@ -470,7 +475,32 @@ window.onclick = function(event) {
 
 canvas.addEventListener("mousedown", (e)=> 
 { 
-    selectedObjects = [];
+    if(currentTool != 2)
+    {
+        selectedObjects = [];
+    }
+    else
+    {
+        let temp = CanvasToWorld(e.offsetX,e.offsetY)
+        let posX = grid.size * Math.round(temp.x/grid.size) 
+        let posY = grid.size * Math.round(temp.y/grid.size)
+
+        let onPos = false;
+        
+        selectedObjects.forEach(el => 
+        {
+            if(el.x == posX && el.y == posY)
+            {
+                onPos = true;
+            }
+        })
+
+        if(!onPos)
+        {
+            selectedObjects = []; 
+        }
+    }
+
     if(e.button == 0 && e.shiftKey)
     {   
         isSelecting = true;
@@ -486,9 +516,32 @@ canvas.addEventListener("mousedown", (e)=>
         editorCamera.dragPosition.x = e.offsetX - editorCamera.position.x
         editorCamera.dragPosition.y = e.offsetY - editorCamera.position.y;
     }
-    else if(e.button == 0 && (currentBlock != null || copiedObjects.length != 0))
+    else if(e.button == 0 && (currentBlock != null || copiedObjects.length != 0) && currentTool == 1)
     {
         addBlock(e.offsetX,e.offsetY)
+    }
+    else if(e.button == 0 && currentTool == 2)
+    {  
+        let temp = CanvasToWorld(e.offsetX,e.offsetY)
+
+        if(selectedObjects.length == 0)
+        {
+            selectPos.strart.x = temp.x
+            selectPos.strart.y = temp.y
+            selectPos.end.x = temp.x
+            selectPos.end.y = temp.y
+            findSelectedBlocks();
+        }
+
+        movingPos.x = temp.x;
+        movingPos.y = temp.y
+        isMoving = true;
+        movingObjectsStartPos = [];
+
+        selectedObjects.forEach(el =>
+        {
+            movingObjectsStartPos.push({id:el.id,x:el.x,y:el.y})
+        })
     }
     else if(e.button == 2)
     {
@@ -516,7 +569,27 @@ canvas.addEventListener("mousemove", (e) =>
         selectPos.end.x = temp.x
         selectPos.end.y = temp.y
     }
+    else if(isMoving)
+    {
+        let CurrentPos = CanvasToWorld(e.offsetX,e.offsetY)
+        let currX = grid.size * Math.round(CurrentPos.x/grid.size) 
+        let currY = grid.size * Math.round(CurrentPos.y/grid.size)
+        let startX = grid.size * Math.round(movingPos.x/grid.size) 
+        let startY = grid.size * Math.round(movingPos.y/grid.size)
 
+        selectedObjects.forEach(el =>
+        {
+            for(let i = 0; i < movingObjectsStartPos.length; i++) //fro loop kvuli moznosti pouziti break
+            {
+                if(el.id == movingObjectsStartPos[i].id)
+                {
+                    el.x = movingObjectsStartPos[i].x + (currX - startX)
+                    el.y = movingObjectsStartPos[i].y + (currY - startY)
+                    break;
+                }
+            }
+        })
+    }
 
     if(e.buttons == 1 && (currentBlock != null || copiedObjects.length != 0) && !e.shiftKey)
     {
@@ -541,6 +614,10 @@ canvas.addEventListener("mouseup", (e) =>
         selectPos.end.x = temp.x
         selectPos.end.y = temp.y
         findSelectedBlocks();
+    }
+    else if(isMoving)
+    {
+        isMoving = false;
     }
 });
 
