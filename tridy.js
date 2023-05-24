@@ -247,7 +247,7 @@ class Sword extends PhysicGameObjects {
         this.canAttack = true;
         this.haveCollision = false;
 
-        document.addEventListener("click", (event) => {
+        canvas.addEventListener("click", (event) => {
             let player;
         for(let i = 0; i < this.AllGameObjects.length; i++) {
                 if(this.AllGameObjects[i].tag == "player") {

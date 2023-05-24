@@ -2,34 +2,59 @@ let canvas = document.getElementById("kanvas");
 let ctx = canvas.getContext("2d");
 ctx.imageSmoothingEnabled = false;
 
-addEventListener("load", (event) => {Start();});
+addEventListener("load", (event) => {selectLevel(0);});
 
 let camera = new Camera(0, 0, 0);
-let game = new Game(ctx, canvas, camera);
+let game;
 let sword = new Sword(-10, -75, 75, 75, 0,3,"sword");
 let map;         
 let newGameObject;
 let currentLvl;
+let levels = ["../Maps/testMap.json"]
+let updateInterval
+let animationInterval
 
-async function Start() 
+async function LoadLevel() 
 {
-    await LoadFromJson("../Maps/testMap.json")
-    game.EnemyStartCount();
-    setInterval(Update, 16);
-    setInterval(AnimationUpdate, 120);
+    modal.style.display = "none";
+
+    if(clearInterval(updateInterval) != undefined)
+        clearInterval(updateInterval);
+
+    if(clearInterval(animationInterval) != undefined)
+        clearInterval(animationInterval);
+     
+        LoadFromJson()
+        game.EnemyStartCount();
+        updateInterval = setInterval(Update, 16);
+        animationInterval = setInterval(AnimationUpdate, 120);
+    
 }
 
-async function LoadFromJson(path)
+async function selectLevel(level)
+{
+    if(level <= levels.length-1)
+    {
+        await LoadJson(levels[level])
+        LoadLevel();
+    }
+}
+
+async function LoadJson(path)
 {
     await fetch(path)
     .then((response) => response.json())
     .then((json) => map = json);
+}
+
+async function LoadFromJson()
+{
+    game = new Game(ctx, canvas, camera);
 
     for (let i = 0; i < map.length; i++) {
 
         switch(map[i].tag)
         {
-            
             case "player":              //(x, y, width, height, layer, sprites,tag,id, haveCollision,isStatic,speed,hp)
                 newGameObject = new Player(map[i].x,map[i].y,map[i].width,map[i].height,map[i].layer,map[i].sprites,map[i].tag,i,map[i].haveCollision,false,map[i].speed,100) 
             break;
@@ -53,8 +78,29 @@ function Update() {
 }
 function AnimationUpdate() {
     game.AnimationUpdate()
+    
 }
 
+function importMap() {
+    let input = document.createElement('input');
+    input.type = 'file';
+    input.accept = ".json"
+
+    input.onchange = _ => {
+        let file = input.files[0];
+        let reader = new FileReader();
+        reader.readAsText(file);
+
+        reader.addEventListener('load', (event) => {
+          let jsonData = event.target.result;
+          map = JSON.parse(jsonData);
+          LoadLevel();
+        });
+       
+    };
+
+    input.click();
+  }
 
 //----- MODAL ---------
 var modal = document.getElementById("myModal");
