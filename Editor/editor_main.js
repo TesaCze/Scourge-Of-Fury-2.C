@@ -1,63 +1,63 @@
-let canvas = document.getElementById("kanvas");
-let ctx = canvas.getContext("2d");
-ctx.imageSmoothingEnabled = false;
+let canvas = document.getElementById("kanvas"); //inicializace canvasu
+let ctx = canvas.getContext("2d");  //inicializace contextu z canvasu pro vykreslování
+ctx.imageSmoothingEnabled = false;  //vypnutí vyhlazování kvůli neostrím hranám v pixelArtu
 
-//----------------------------------Tady se muze cokoliv nastavit--------------------------
-let grid = {lineColor:"#bfbfbf",lineWidth:0.5,size:75}
+let grid = {lineColor:"#bfbfbf",lineWidth:0.5,size:75}  //velikost mrizky a bloku
 
-//-----------------------------------------Nesahat-----------------------------------------
-let editorCamera = {zoom:1, zoomSpeed: 0.1,zoomMin: 0.2,zoomMax: 4,position:{x:0,y:0},dragPosition:{x:0,y:0}}
-let isDraging = false;
-let AllGameObjects = [];
-let sprites = [];
-let currentBlock = null;
-let currentLayer = 0;
-let AllLayers = false;
+let editorCamera = {zoom:1, zoomSpeed: 0.1,zoomMin: 0.2,zoomMax: 4,position:{x:0,y:0},dragPosition:{x:0,y:0}}   //proměné pro kameru
 
-let history = []; //ctrl z
-let undoHistory = []; //ctrl x
+let isDraging = false;      //bool který se zapne pokud uživatel hýbe s kamerou
+let AllGameObjects = [];    //všechny objekty ve scéně
+let sprites = [];           //pole kam se načtou všechny textury
+let currentBlock = null;    //právě zvolený blok
+let currentLayer = 0;       //momentální vrstva
+let AllLayers = false;      //bool pro zobrazení všech vrstev
 
-let idCount = 0
+let history = [];           //historie pro pouziti undo - ctrl z
+let undoHistory = [];       //historie pro pouziti redu - ctrl x
 
-let selectedObjects = [];
-let isSelecting = false;
-let selectPos = {strart:{x:0,y:0},end:{x:0,y:0}}
+let idCount = 0             //počítadlo id pro objekty
 
-let copiedObjects = [];
+let selectedObjects = [];   //pole objektů které jsou právě označeny
+let isSelecting = false;    //bool který je zaplý pokud uživatel právě označuje
+let selectPos = {strart:{x:0,y:0},end:{x:0,y:0}}    //pozice označení
 
-let Textures;
+let copiedObjects = [];     //pole zkopírovaných objektů
 
-let mousePos = {x:0,y:0};
+let Textures;   //proměná do které se načtou možné textury
 
-let buttons;
-let currentTool = 0; //1-paint 2-move;
+let mousePos = {x:0,y:0};   //pozice myši
 
-let isMoving = false;
-let movingPos = {x:0,y:0}
-let movingObjectsStartPos = [];
+let buttons = {paint: document.getElementById("btn1"),move:document.getElementById("btn2")};  //proměná kde jsou uložené elementy tlačítek 
+let currentTool = 0;            //momentálně vybraný nástroj 0-nic 1-paint 2-move;
 
-addEventListener("load", (event) => {Start();});
+let isMoving = false;           //bool který se zapne pokud uživatel hýbe s objektem
+let movingPos = {x:0,y:0}       //puvodní pozice myši při pohybu s objekty
+let movingObjectsStartPos = []; //původní pozice pohybujících se objektu
 
-async function Start()
+let layerBtn = document.getElementById("btn3"); //tlacitko pro vrstvy
+let layerValue = document.getElementById("layerValues");  
+
+addEventListener("load", (event) => {Start();}); //event který při načtení spustí funkci start()
+
+async function Start()  //načte možné textury a přidá je do front-endu, zapne se interval pro funkci Update 
 {
     await fetch('TextureFile.json')
     .then((response) => response.json())
     .then((json) => Textures = json);
-
-    await loadSprites();
+    await loadSprites();    
 
     addTexturesToDiv();
-    buttons = {paint: document.getElementById("btn1"),move:document.getElementById("btn2")};
 
     setInterval(Update,16)
 }
 
-function Update()
+function Update()   //spusti funkci pro vykreslování 
 {
     Draw()
 }
 
-function Draw()
+function Draw() //vymaže a vykresli objekty, grid, popřípadě označení nebo zkopírované objekty
 {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     DrawObjects();
@@ -78,7 +78,7 @@ function Draw()
     }
 }
 
-function DrawObjects()
+function DrawObjects()  //vykrezli objekty
 {
     SortLayers(AllGameObjects)
 
@@ -93,12 +93,12 @@ function DrawObjects()
     }
 }
 
-function SortLayers(arr) 
+function SortLayers(arr) //seřadí objekty podle proměné layer od nejmenšího po nejvštší
 {
     arr.sort(function(a, b){return a.layer - b.layer});
 }
 
-function DrawGrid()
+function DrawGrid() //vykresli mřížku
 {
     ctx.strokeStyle = grid.lineColor;
     ctx.lineWidth = grid.lineWidth;
@@ -137,7 +137,7 @@ function DrawGrid()
     }
 }
 
-function DrawSelect()
+function DrawSelect() //vykreslí značení
 {
     let posS = WorldToCnavas(selectPos.strart.x,selectPos.strart.y);
     let posE = WorldToCnavas(selectPos.end.x,selectPos.end.y);
@@ -150,7 +150,7 @@ function DrawSelect()
     ctx.stroke()
 }
 
-function DrawSelectedObjects()
+function DrawSelectedObjects() //vykreslí pruhledné bloky kterými právě uživatel kreslí
 {
     if(currentTool != 1 )
         return
@@ -184,7 +184,7 @@ function DrawSelectedObjects()
     }
 }
 
-function DrawObjectSelection()
+function DrawObjectSelection() //vykreslí označené objekty
 {
     for(let i = 0; i < selectedObjects.length; i++)
     {   
@@ -199,7 +199,7 @@ function DrawObjectSelection()
     }
 }
 
-function CanvasToWorld(x,y)
+function CanvasToWorld(x,y) //převede pozici x,y z obrazovky do světa
 {
     
     return{
@@ -208,7 +208,7 @@ function CanvasToWorld(x,y)
     }
 }
 
-function WorldToCnavas(x,y)
+function WorldToCnavas(x,y) //převede pozici x,y ze světa na obrazovku
 {
     return{
         x: (x* editorCamera.zoom + canvas.width/2 ) + editorCamera.position.x  ,
@@ -216,7 +216,7 @@ function WorldToCnavas(x,y)
     }
 }
 
-function addBlock(x,y)
+function addBlock(x,y)  //přidá blok nebo zkopírovené bloky
 {   
     if(currentTool != 1 )
         return
@@ -310,7 +310,7 @@ function addBlock(x,y)
     }
 }
 
-function removeBlock(x,y)
+function removeBlock(x,y) //odebere blok
 {
 
     let pos = CanvasToWorld(x,y)
@@ -321,7 +321,7 @@ function removeBlock(x,y)
     for(let i = 0; i < AllGameObjects.length;i++)
     {
         
-       if((currentLayer == AllGameObjects[i].layer) && (pos.x == AllGameObjects[i].x && pos.y == AllGameObjects[i].y))
+       if((AllLayers || (currentLayer == AllGameObjects[i].layer)) && (pos.x == AllGameObjects[i].x && pos.y == AllGameObjects[i].y))
        {
             history.push({type:1, objects: [AllGameObjects[i]]})
             AllGameObjects.splice(i,1)
@@ -329,7 +329,7 @@ function removeBlock(x,y)
     }
 }
 
-function findSelectedBlocks()
+function findSelectedBlocks() //najde označené objekty
 {
     selectedObjects = [];
     for(let i = 0; i < AllGameObjects.length;i++)
@@ -344,7 +344,7 @@ function findSelectedBlocks()
     }
 }
 
-function onTextureClick(obj)
+function onTextureClick(obj) //změní momentálně vybraný objekt
 {
     currentBlock = obj
     selectedObjects = [];
@@ -355,7 +355,7 @@ function onTextureClick(obj)
     }
 }
 
-function addTexturesToDiv()
+function addTexturesToDiv() //přidá textury na front-end
 {
     for(let i = 0; i < Textures.length;i++)
     {
@@ -376,7 +376,7 @@ function addTexturesToDiv()
     }
 }
 
-function downloadMap() 
+function downloadMap()  //stáhne mapu
 {
     const a = document.createElement("a");
     const file = new Blob([JSON.stringify(AllGameObjects)], { type: "text/plain" });
@@ -385,7 +385,7 @@ function downloadMap()
     a.click();
 }
 
-function importMap()
+function importMap()  //importuje mapu
 {
     let input = document.createElement('input');
     input.type = 'file';
@@ -409,7 +409,7 @@ function importMap()
     history = [];
 }
 
-async function loadSprites() 
+async function loadSprites()  //načte všechny textury do pole
 {
     let temp;
     await fetch("../textureLoader.json")
@@ -435,8 +435,7 @@ async function loadSprites()
     }
 }
 
-
-function paintTool()
+function paintTool()    //přepínání nástroje pro malování
 {
     if(currentTool == 1)
     {
@@ -451,7 +450,7 @@ function paintTool()
     }
 }
 
-function moveTool()
+function moveTool() //přepínání nástroje pro pohyb s objekty
 {
     if(currentTool == 2)
     {
@@ -466,38 +465,28 @@ function moveTool()
     }
 }
 
-//------------- nesahej na to uz ffs ---------------
-let layerBtn = document.getElementById("btn3");
-let layerValue = document.getElementById("layerValues");
-
-function LayerActive() {
-
-    if(layerValue.style.visibility == "visible") {
-        layerValue.style.visibility = "hidden";
-        layerBtn.style.color = "black"
-    } else {
-        layerValue.style.visibility = "visible";
-        layerBtn.style.color = "white"
-    }
-    
-}
-
-function layerChange(value)
+function layerChange(value) //pokud se zmení input vrstvy
 {
     currentLayer = value;
     selectedObjects = [];
 }
 
-function updateLayerInput()
+function updateLayerInput() //aktualizace inputu vrstvy
 {
     let input = document.getElementById("LayerInput");
     input.value = currentLayer;
 }
 
-function AllLayersChange()
+function AllLayersChange(value) //pokud se zmení checkbox pro vsechny vrstvy
 {
-    AllLayers = !AllLayers;
+    AllLayers = value;
     selectedObjects = [];
+}
+
+function updateAllLayerInput() //aktualizace checkboxu pro vsechny vrstvy
+{
+    let input = document.getElementById("AllLayerInput");
+    input.checked = AllLayers;
 }
 
 //----- MODAL ---------
@@ -526,9 +515,9 @@ window.onclick = function(event)
 }
 //--------------------------------------------------
 
-canvas.addEventListener("mousedown", (e)=> 
+canvas.addEventListener("mousedown", (e)=>  
 { 
-    if(currentTool != 2)
+    if(currentTool != 2) //pokud je vybraný move tool tam vymaže označení je pokud uživatel klikne vedle označených objektů
     {
         selectedObjects = [];
     }
@@ -554,7 +543,7 @@ canvas.addEventListener("mousedown", (e)=>
         }
     }
 
-    if(e.button == 0 && e.shiftKey)
+    if(e.button == 0 && e.shiftKey) //pro označování
     {   
         isSelecting = true;
         let temp = CanvasToWorld(e.offsetX,e.offsetY)
@@ -563,17 +552,17 @@ canvas.addEventListener("mousedown", (e)=>
         selectPos.end.x = temp.x
         selectPos.end.y = temp.y
     }
-    else if(e.button == 1)
+    else if(e.button == 1) //pro pohyb - koleško myši
     {
         isDraging = true;
         editorCamera.dragPosition.x = e.offsetX - editorCamera.position.x
         editorCamera.dragPosition.y = e.offsetY - editorCamera.position.y;
     }
-    else if(e.button == 0 && (currentBlock != null || copiedObjects.length != 0) && currentTool == 1)
+    else if(e.button == 0 && (currentBlock != null || copiedObjects.length != 0) && currentTool == 1) //podmínka pro přidání objektu
     {
         addBlock(e.offsetX,e.offsetY)
     }
-    else if(e.button == 0 && currentTool == 2)
+    else if(e.button == 0 && currentTool == 2)  //podmínka pro pohyb s objektem
     {  
         let temp = CanvasToWorld(e.offsetX,e.offsetY)
 
@@ -614,7 +603,7 @@ canvas.addEventListener("mousemove", (e) =>
     }
     else if(isSelecting && !e.shiftKey)
     {
-        isSelecting = false;
+        isSelecting = false;    
     }
     else if(isSelecting)
     {
@@ -661,7 +650,7 @@ canvas.addEventListener("mousemove", (e) =>
 
         selectedObjects.forEach(el =>
         {
-            for(let i = 0; i < movingObjectsStartPos.length; i++) //fro loop kvuli moznosti pouziti break
+            for(let i = 0; i < movingObjectsStartPos.length; i++) //posunuti objektu
             {
                 if(el.id == movingObjectsStartPos[i].id)
                 {
@@ -711,13 +700,13 @@ document.addEventListener("keydown", (e) =>
 {
     switch(e.code)
     {
-        case "Space":
+        case "Space":   //vrati na startující pozici na mapě
             editorCamera.position.x = 0;
             editorCamera.position.y = 0;
             editorCamera.zoom = 1;
         break;
 
-        case "Delete":
+        case "Delete":  //vymaze vsechny oznacene objekty
             if(selectedObjects.length != 0)
             {
                 for(let i = 0; i < selectedObjects.length;i++)
@@ -735,7 +724,7 @@ document.addEventListener("keydown", (e) =>
             }
         break;
 
-        case "KeyR":
+        case "KeyR": //otočení zkopírovaných objektu
             if(copiedObjects.length != 0)
             {
                 copiedObjects.forEach(el =>
@@ -747,21 +736,21 @@ document.addEventListener("keydown", (e) =>
             }
         break;
 
-        case "KeyB":
+        case "KeyB": //nástroj pro malování
             if(currentTool != 1)
             {
                 paintTool();
             }
         break;
 
-        case "KeyM":
+        case "KeyM": //nástroj pro pohyb s objekty
             if(currentTool != 2)
             {
                 moveTool()
             } 
         break;
 
-        case "ArrowUp":
+        case "ArrowUp": //měnění vrstvy
             if(currentLayer != 10)
             {
                 currentLayer++
@@ -769,7 +758,7 @@ document.addEventListener("keydown", (e) =>
             }
         break;
 
-        case "ArrowDown":
+        case "ArrowDown": //měnění vrstvy
             if(currentLayer != -10)
             {
                 currentLayer--
@@ -777,7 +766,7 @@ document.addEventListener("keydown", (e) =>
             }
         break;
 
-        case "KeyW":
+        case "KeyW": //měnění vrstvy
             if(currentLayer != 10)
             {
                 currentLayer++
@@ -785,7 +774,7 @@ document.addEventListener("keydown", (e) =>
             }
         break;
 
-        case "KeyS":
+        case "KeyS": //měnění vrstvy
             if(currentLayer != -10)
             {
                 currentLayer--
@@ -793,9 +782,10 @@ document.addEventListener("keydown", (e) =>
             }
         break;
 
-        case "KeyE":
+        case "KeyE": //zobrazení všech vrstev
         {
             AllLayers = !AllLayers;
+            updateAllLayerInput()
         }
     }
 
@@ -805,7 +795,7 @@ document.addEventListener("keydown", (e) =>
         
         if(history.length != 0)
         {
-            if(history[history.length-1].type == 0)
+            if(history[history.length-1].type == 0) //typ pridaní objektu
             {
                 let temp = []
                 for(let i = 0; i < AllGameObjects.length; i++)
@@ -822,7 +812,7 @@ document.addEventListener("keydown", (e) =>
                 undoHistory.push({type:0,objects: temp});
                 history.pop()
             }
-            else if(history[history.length-1].type == 1)
+            else if(history[history.length-1].type == 1) //typ odebraní objektu
             {
                 let temp = []
                 for(let i = 0; i < history[history.length-1].objects.length;i++)
@@ -834,7 +824,7 @@ document.addEventListener("keydown", (e) =>
                 undoHistory.push({type:1,objects: temp});
                 history.pop();
             }
-            else if(history[history.length-1].type == 2)
+            else if(history[history.length-1].type == 2)//typ pohnuti s objektem
             {
                 let temp = [];
                 history[history.length-1].objects.forEach(obj =>
@@ -860,7 +850,7 @@ document.addEventListener("keydown", (e) =>
 
         if(undoHistory.length != 0)
         {
-            if(undoHistory[undoHistory.length-1].type == 0)
+            if(undoHistory[undoHistory.length-1].type == 0)//typ pridaní objektu
             {
                 let temp = []
                 for(let i = 0; i < undoHistory[undoHistory.length-1].objects.length; i++)
@@ -871,7 +861,7 @@ document.addEventListener("keydown", (e) =>
                 history.push({type:0,objects: temp});
                 undoHistory.pop();
             }
-            else if(undoHistory[undoHistory.length-1].type == 1)
+            else if(undoHistory[undoHistory.length-1].type == 1)//typ odebraní objektu
             {
                 let temp = [];
                 for(let i = 0; i < AllGameObjects.length; i++)
@@ -889,7 +879,7 @@ document.addEventListener("keydown", (e) =>
                 history.push({type:1,objects: temp});
                 undoHistory.pop()
             }
-            else if(undoHistory[undoHistory.length-1].type == 2)
+            else if(undoHistory[undoHistory.length-1].type == 2)//typ pohnuti s objektem
             {
                 let temp = [];
                 undoHistory[undoHistory.length-1].objects.forEach(obj =>
@@ -909,7 +899,7 @@ document.addEventListener("keydown", (e) =>
             }
         }
     }
-    else if(e.code == "KeyC" && e.ctrlKey) //copie
+    else if(e.code == "KeyC" && e.ctrlKey) //Copy, najde stred oznacených objektu
     {
         if(selectedObjects.length == 0)
             return;
@@ -965,7 +955,7 @@ document.addEventListener("keydown", (e) =>
             copiedObjects[copiedObjects.length-1].y -= stredY
         })
     }
-    else if(e.code == "KeyA" && e.shiftKey)
+    else if(e.code == "KeyA" && e.shiftKey) //vybere vsechny objekty
     {
         AllGameObjects.forEach(el => 
         {
@@ -978,7 +968,7 @@ document.addEventListener("keydown", (e) =>
     }
 })
 
-canvas.addEventListener("wheel", (e)=> 
+canvas.addEventListener("wheel", (e)=>  //přibližování kamery
 {  
     startPos = {x:e.offsetX - canvas.width/2 ,y:e.offsetY - canvas.height/2}
     endPos = {x:0 ,y:0 }
