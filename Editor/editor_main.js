@@ -404,6 +404,9 @@ function importMap()
     };
 
     input.click();
+    selectedObjects = [];
+    undoHistory = [];
+    history = [];
 }
 
 async function loadSprites() 
@@ -789,6 +792,11 @@ document.addEventListener("keydown", (e) =>
                 updateLayerInput()
             }
         break;
+
+        case "KeyE":
+        {
+            AllLayers = !AllLayers;
+        }
     }
 
     if(e.code == "KeyZ" && e.ctrlKey) //Undo
