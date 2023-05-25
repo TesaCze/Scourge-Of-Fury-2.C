@@ -46,7 +46,7 @@ class PhysicGameObjects extends GameObjects //objekty s kolizemi
         {  
            
             if (
-                this.y + this.height / 2 > blok.y - blok.height / 2 &&
+                this.y + this.height / 2 > blok.y - blok.height / 2 && //kontroluje kolize od středu objektu
                 this.y - this.height / 2 < blok.y + blok.height / 2 &&
                 this.x - this.width / 2 < blok.x + blok.width / 2 &&
                 this.x + this.width / 2 > blok.x - blok.width / 2
@@ -93,19 +93,19 @@ class Player extends PhysicGameObjects{
             
     constructor(x, y, width, height, layer, sprites,tag,id, haveCollision,isStatic,speed, hp){
         super(x, y, width, height, layer, sprites,tag,id, haveCollision,isStatic)
-        this.isColliding = false;
-        this.dir = {left:false, right: false, up:false, down:false}
-        this.speed = 8;
-        this.isAttacking = false;
-        this.hp = 10;
-        this.isFlipped = false;
-        this.isAlive = true;
-        this.lost = false;
-        this.won = false;
-        this.walkingSoundIsPlaying = false;
-        this.isHit = false;
+        this.isColliding = false;                                       //kontroluje zda koliduje
+        this.dir = {left:false, right: false, up:false, down:false}     //kontroluje smer hrace pro movement
+        this.speed = 8;                                                 //rychlost hrace
+        this.isAttacking = false;                                       //kontroluje zda hrac utoci
+        this.hp = 10;                                                   //pocet zivotu hrace
+        this.isFlipped = false;                                         //prevraceni spritu hrace
+        this.isAlive = true;                                            //kontroluje zda hráč žije
+        this.lost = false;                                              //prohra
+        this.won = false;                                               //výhra
+        this.walkingSoundIsPlaying = false;                             //přehrávání zvuku chůze
+        this.isHit = false;                                             //hráč dostal damage od nepřítele
 
-        document.addEventListener("keypress", (event) => {
+        document.addEventListener("keypress", (event) => {          //event na movement a převrácení
             if(this.isAlive == true && this.won == false && this.lost == false) {
                 switch (event.key) {
                 case "a":
@@ -140,13 +140,9 @@ class Player extends PhysicGameObjects{
                     this.dir.down = false;
             }
         });
-
-        document.addEventListener("click", (event) => {
-            return 0;
-        })
     }
 
-    Move() {
+    Move() {            //movement hráče
         if(this.isHit == false && this.won == false && this.lost == false) {
             this.x += this.speed * this.dir.right;
             this.x -= this.speed * this.dir.left;
@@ -166,7 +162,7 @@ class Player extends PhysicGameObjects{
         
     }
 
-    Health() {
+    Health() {          //kontroluje kolize mezi nepritelem a hracem a ubere zivoty
         let enemy;
         for(let i = 0; i < this.AllGameObjects.length; i++) {
             if(this.AllGameObjects[i].tag == "enemy") {
@@ -201,17 +197,17 @@ class Player extends PhysicGameObjects{
                     }
                     
             }
-            if(this.isHit == true) {
+            if(this.isHit == true) {        //změna animace na zasáhnutí
                 this.currentSprite = 0;
                 this.currentAnimation = 3;
             }
-            if(this.hp <= 0) {
+            if(this.hp <= 0) {              //smrt hráče
                 this.isAlive = false;
                 this.hp = 0;
                 this.lost = true;
             }
 
-                if(this.isAlive == false) {
+                if(this.isAlive == false) {      //animace smrti
                     this.currentAnimation = 3;                   
                 } 
             }
@@ -242,12 +238,12 @@ class Player extends PhysicGameObjects{
 class Sword extends PhysicGameObjects {
     constructor(x, y, width, height, layer, sprites,tag,id, haveCollision,isStatic) {
         super(x, y, width, height, layer, sprites,tag,id, haveCollision,isStatic)
-        this.isAttacking = false; 
-        this.isFlipped = false;
-        this.canAttack = true;
-        this.haveCollision = false;
+        this.isAttacking = false;               //kontroluje zda hráč útočí
+        this.isFlipped = false;                 //převracuje sprite meče
+        this.canAttack = true;                  //zabrňuje neustálé útočení
+        this.haveCollision = false;             //kontorluje kolize
 
-        canvas.addEventListener("click", (event) => {
+        canvas.addEventListener("click", (event) => {       
             let player;
         for(let i = 0; i < this.AllGameObjects.length; i++) {
                 if(this.AllGameObjects[i].tag == "player") {
@@ -255,7 +251,7 @@ class Sword extends PhysicGameObjects {
                     break;
                 }
             }
-            let swordHit = new Audio("../Sounds/swordHit.wav")
+            let swordHit = new Audio("../Sounds/swordHit.wav")      //přehraje zvuk na klik 
             if(this.canAttack == true && player.isHit == false && player.isAlive == true && player.won == false) {
                 swordHit.volume = 0.3;
                 swordHit.play();
@@ -288,7 +284,7 @@ class Sword extends PhysicGameObjects {
         });
     }
 
-    Move() { 
+    Move() {        //nastavuje pozici meče na pozici hráče
         let player;
         for(let i = 0; i < this.AllGameObjects.length; i++) {
                 if(this.AllGameObjects[i].tag == "player") {
@@ -307,7 +303,7 @@ class Sword extends PhysicGameObjects {
         }
     }
 
-    Attack() {
+    Attack() {          //přehrávání animace útoku
         let player;
         for(let i = 0; i < this.AllGameObjects.length; i++) {
                 if(this.AllGameObjects[i].tag == "player") {
@@ -341,17 +337,17 @@ class Sword extends PhysicGameObjects {
 class Enemy extends PhysicGameObjects{
     constructor(x, y, width, height, layer, sprites,tag,id, haveCollision,isStatic) {
         super(x, y, width, height, layer, sprites,tag,id, haveCollision,isStatic)
-        this.speed = 5;
-        this.isAttacking = false;
-        this.isSeeing = false;
-        this.traceX = this.x + 1;     //vubec nevim proc tam musi byt +1 ale bez toho to nefaka
-        this.traceY = this.y;   
-        this.walls = [];
-        this.lastX = x;
+        this.speed = 5;                 //rychlost nepřítele
+        this.isAttacking = false;       //kontroluje zda nepřítel může útočit
+        this.isSeeing = false;          //kontroluje zda nepřítel vidí hráče
+        this.traceX = this.x + 1;           //vubec nevim proc tam musi byt +1 ale bez toho to nefaka
+        this.traceY = this.y;           //puvodni pozice hrace
+        this.walls = [];                //array se všemi pozicemi stěn
+        this.lastX = x;                 //kontroluje zda se hrac hybe
         this.lastY = y;
-        this.isFlipped = false;
-        this.canAttack = true;
-        this.isDead = false;
+        this.isFlipped = false;         //prevraceni spritu hrace
+        this.canAttack = true;          //kontroluje zda nepřítel může útočit
+        this.isDead = false;            //smrt nepřítele
     }
 
 
@@ -390,7 +386,7 @@ class Enemy extends PhysicGameObjects{
             }
         }
 
-        if(this.currentAnimation != 2) {
+        if(this.currentAnimation != 2) {        //pokud hrac neni zasazen, prehraje animace behu nebo stani
             if(Math.floor(this.lastX) == Math.floor(this.x) && Math.floor(this.lastY) == Math.floor(this.y)) {
                 this.currentAnimation = 0;
             } else {
@@ -400,23 +396,20 @@ class Enemy extends PhysicGameObjects{
         
 
         }
-    //--------------Toban------------
 
-    Magnitude(pos){
+    Magnitude(pos){             //delka kolik ma nepritel ujit
         return Math.sqrt((pos.x * pos.x) + (pos.y * pos.y));
     }
 
-    Normalized(pos){
+    Normalized(pos){            //min -1 max 1, zpracuje smer 
         let m = this.Magnitude(pos);
         return {x:(pos.x / m), y:(pos.y / m)}
     }
     
-    Direction(player){
+    Direction(player){          //vypocita směr kam ma nepritel jit
         let dir = {x:player.x-this.x, y: player.y - this.y}
         return (this.Normalized(dir))
     }
-
-    //-----------------------------
 
     FindPlayer() {                      // kontroluje zda enemy vidi hrace
         let player;
@@ -453,21 +446,21 @@ class Enemy extends PhysicGameObjects{
 
     }
     
-    RetMagnitude(pos){
+    RetMagnitude(pos){          //delka kolik ma nepritel ujit
         return Math.sqrt((pos.x * pos.x) + (pos.y * pos.y));
     }
 
-    RetNormalized(pos){
+    RetNormalized(pos){         //min -1 max 1, zpracuje smer 
         let m = this.RetMagnitude(pos);
         return {x:(pos.x / m), y:(pos.y / m)}
     }
     
-    RetDirection(){
+    RetDirection(){             //urcuje smer na spawn
         let dir = {x:this.traceX-this.x, y: this.traceY - this.y}
         return (this.RetNormalized(dir))
     }
 
-    Distance(player) {
+    Distance(player) {          //vzdálenost mezi nepritelem a hracem
         return Math.sqrt((player.x - this.x)* (player.x - this.x) + (player.y - this.y) *(player.y - this.y))
     }
 
@@ -482,7 +475,7 @@ class Enemy extends PhysicGameObjects{
                 this.walls.push(this.AllGameObjects[i]) 
             }
             for (let y = 0; y < this.walls.length; y++) {
-                if ((this.y + this.height / 2 + 2) > this.walls[y].y - this.walls[y].height / 2 &&
+                if ((this.y + this.height / 2 + 2) > this.walls[y].y - this.walls[y].height / 2 &&  //kontrola kolizi
                     (this.y - this.height / 2 - 2) < this.walls[y].y + this.walls[y].height / 2 &&
                     (this.x - this.width / 2 - 2) < this.walls[y].x + this.walls[y].width / 2 &&
                     (this.x + this.width / 2 + 2) > this.walls[y].x - this.walls[y].width / 2) {
@@ -495,7 +488,7 @@ class Enemy extends PhysicGameObjects{
                 let currX;
                 let currY;
     
-                if (
+                if (                            //vyhybani se stenam
                     Math.abs(top) < down &&
                     Math.abs(top) < Math.abs(right) &&
                     Math.abs(top) < left
@@ -560,7 +553,7 @@ class Enemy extends PhysicGameObjects{
         this.y += 1;
     }
 
-    Hit() {
+    Hit() {                 //smrt nepritele
         let sword;
         for(let i = 0; i < this.AllGameObjects.length; i++) {
             if(this.AllGameObjects[i].tag == "sword") {
@@ -588,7 +581,7 @@ class Enemy extends PhysicGameObjects{
     }
 
     Update() {
-        if(this.currentAnimation != 2) {
+        if(this.currentAnimation != 2) {    //kdyz nepritel zemre update se vypne
             this.Move();
             this.Hit();
             this.WallCollision();
@@ -600,33 +593,26 @@ class Enemy extends PhysicGameObjects{
     
 }
 
-class Camera {
-    constructor(x, y, zoom) {
-        this.x = x,
-        this.y = y,
-        this.zoom = zoom
+class Camera {          //slouzi pro pozicovani hrace na stred obrazovky
+    constructor(x, y) {
+        this.x = x,     //pozice X
+        this.y = y      //pozice Y
     }
 }
 
 class Game{
     constructor(ctx, canvas, camera) {
-        this.AllGameObjects = [];
-        this.ctx = ctx;
-        this.canvas = canvas;
-        this.camera = camera
-        this.enemyCount = 0;
+        this.AllGameObjects = [];       //array se vsemi objekty
+        this.ctx = ctx;                 //2d context canvasu
+        this.canvas = canvas;           //canvas
+        this.camera = camera            //kamera
+        this.enemyCount = 0;            //pocet nepratel
         this.sprites = []; //0 - hrac, 1 - enemy, 2 - hp, 3 - sword, // 4...12 - tiles
-        this.playerHp = 10; 
-
-        this.LoadSprites()
-        addEventListener("keyup", (event) => {
-            if(event.key == "p") {
-                this.Hit();
-            }
-        });
+        this.playerHp = 10;             //pocet zivotu
+        this.LoadSprites()              //nacteni spritu
     }
 
-    async LoadSprites() //nevim jak to udelat jinak a vim ze je to strasne spatne ake bude to tak
+    async LoadSprites() //prednacte sprity
     {
         let temp;
         await fetch("../textureLoader.json")
@@ -652,7 +638,7 @@ class Game{
         }
     }
 
-    EnemyStartCount()
+    EnemyStartCount()       //spocita pocet nepratel pri spusteni
     {
         for(let i = 0; i < this.AllGameObjects.length; i++) {
             if(this.AllGameObjects[i].tag == "enemy") {
@@ -661,7 +647,7 @@ class Game{
         }
     }
 
-    AnimationUpdate() {
+    AnimationUpdate() {       //meni animace
         for(let i = 0; i < this.AllGameObjects.length; i++) {
              if(this.AllGameObjects[i].currentSprite == this.sprites[this.AllGameObjects[i].sprites][this.AllGameObjects[i].currentAnimation].length - 1) {
                 this.AllGameObjects[i].currentSprite = 0;
@@ -671,7 +657,7 @@ class Game{
         }
     }
 
-    DrawLayers() {
+    DrawLayers() {          //vykreslovani objektu a prevraceni
         for (let i = 0; i < this.AllGameObjects.length; i++) {
 
             let texture = this.sprites[this.AllGameObjects[i].sprites][this.AllGameObjects[i].currentAnimation][this.AllGameObjects[i].currentSprite];
@@ -689,7 +675,7 @@ class Game{
         }
     }
 
-    PlayerHealth() {
+    PlayerHealth() {        //vyzobrazovani zivotu na UI
         let player;
         for(let i = 0; i < this.AllGameObjects.length; i++) {
             if(this.AllGameObjects[i].tag == "player") {
@@ -698,18 +684,18 @@ class Game{
             }
         }
 
-        let yOffset = 20;
-        let xOffset = 20;
-        let space = 30;
-        let HeartSize = 30;
+        let yOffset = 20;       //margin z vrchu
+        let xOffset = 20;       //margin z leveho rohu
+        let space = 30;         //mezera mezi srdicky
+        let HeartSize = 30;     //velikost srdicek
 
-        let fullHp = this.sprites[2][0][0];
+        let fullHp = this.sprites[2][0][0];     //plne srdicko
 
-        let empty = this.sprites[2][2][0];
+        let empty = this.sprites[2][2][0];      //prazdne srdicko
 
-        let half = this.sprites[2][1][0];
+        let half = this.sprites[2][1][0];       //poloprazdne srdicko
 
-       for(let i = 0; i < 5; i++)
+       for(let i = 0; i < 5; i++)       //zmena plneho srdicka na poloprazdne po zasazeni
         {
             if(player.hp >= i*2 +2)
             {
@@ -726,7 +712,7 @@ class Game{
         }
     }    
     
-    YouDied() {
+    YouDied() {         //obrazovka po umrti hrace
         let player;
         for(let i = 0; i < this.AllGameObjects.length; i++) {
             if(this.AllGameObjects[i].tag == "player") {
@@ -751,7 +737,7 @@ class Game{
         
     }
 
-    YouWon() {
+    YouWon() {          //obrazovka po vyhre
         let player;
         for(let i = 0; i < this.AllGameObjects.length; i++) {
             if(this.AllGameObjects[i].tag == "player") {
@@ -775,7 +761,7 @@ class Game{
         }
     }
 
-    EnemyCount() {
+    EnemyCount() {          //pocita prubezny pocet nepratel
         let player;
         for(let i = 0; i < this.AllGameObjects.length; i++) {
             if(this.AllGameObjects[i].tag == "player") {
@@ -798,26 +784,26 @@ class Game{
         }
     }
 
-    Hit() {
+    Hit() {         //ubira zivoty hracovi
         if(this.playerHp > 0) {
             this.playerHp --;
         }
     }
 
-    Render() {
+    Render() {         //vykreslovani canvasu a UI
         this.ctx.clearRect(0, 0, canvas.width, canvas.height);
         this.DrawLayers();
         this.PlayerHealth();
     }
 
-    canvasPos(GameObjects) {
+    canvasPos(GameObjects) {        //nastavi center point objektu na stred
         return {
             x: GameObjects.x + canvas.width / 2 - GameObjects.width / 2,
             y: -GameObjects.y + canvas.height / 2 - GameObjects.height / 2,
         };
     }
 
-    Update() {
+    Update() { 
         for (let i = 0; i < this.AllGameObjects.length; i++) {
             if(this.AllGameObjects[i].Update != undefined)
             {
@@ -831,7 +817,7 @@ class Game{
         this.YouDied();
     }
 
-    SortLayers() {
+    SortLayers() {      //seradi layers
         this.AllGameObjects.sort(function(a, b)
         {return a.layer - b.layer});
     }
