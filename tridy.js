@@ -574,7 +574,6 @@ class Enemy extends PhysicGameObjects{
                 this.currentAnimation = 2;
                 this.layer = -1; 
                 this.haveCollision = false;
-                this.canAttack = false;
                 this.isDead = true;
             }    
         }
