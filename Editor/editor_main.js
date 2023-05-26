@@ -662,7 +662,7 @@ canvas.addEventListener("mousemove", (e) =>
         })
     }
 
-    if(e.buttons == 1 && (currentBlock != null || copiedObjects.length != 0) && !e.shiftKey)
+    if(e.buttons == 1 && (currentBlock != null || copiedObjects.length != 0) && !e.shiftKey) //opakované přidávání objektů
     {
         addBlock(e.offsetX,e.offsetY)
     }
