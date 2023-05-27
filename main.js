@@ -10,7 +10,7 @@ let sword = new Sword(-10, -75, 75, 75, 0,3,"sword");
 let map;         
 let newGameObject;
 let currentLvl;
-let levels = ["../Maps/testMap.json"]
+let levels = ["../Maps/lvl1.json", "../Maps/lvl2.json", "../Maps/lvl3.json"]
 let updateInterval
 let animationInterval
 

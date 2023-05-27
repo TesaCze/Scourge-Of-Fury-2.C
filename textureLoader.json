@@ -3,7 +3,7 @@
     [
         ["../Sprites/Player/idle/idle-1.png","../Sprites/Player/idle/idle-2.png","../Sprites/Player/idle/idle-3.png","../Sprites/Player/idle/idle-4.png"], 
         ["../Sprites/Player/walk/walk-1.png","../Sprites/Player/walk/walk-2.png","../Sprites/Player/walk/walk-3.png","../Sprites/Player/walk/walk-4.png"],
-        ["../Sprites/Player/Death/death-1.png","../Sprites/Player/Death/death-2.png","../Sprites/Player/Death/death-3.png","../Sprites/Player/Death/death-4.png"],
+        ["../Sprites/Player/Death/death.png"],
         ["../Sprites/Player/Hit/hit.png"]
     ],
 

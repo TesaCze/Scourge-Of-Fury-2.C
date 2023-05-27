@@ -208,7 +208,7 @@ class Player extends PhysicGameObjects{
             }
 
                 if(this.isAlive == false) {      //animace smrti
-                    this.currentAnimation = 3;                   
+                    this.currentAnimation = 2;                   
                 } 
             }
         }       
@@ -661,7 +661,7 @@ class Game{
 
             let texture = this.sprites[this.AllGameObjects[i].sprites][this.AllGameObjects[i].currentAnimation][this.AllGameObjects[i].currentSprite];
             
-            if(this.AllGameObjects[i].isFlipped == false) 
+            if(this.AllGameObjects[i].isFlipped == false) //kontroluje zda je hrac/nepritel prevraceny
             {
                 ctx.drawImage(texture, this.canvasPos(this.AllGameObjects[i]).x - this.camera.x, this.canvasPos(this.AllGameObjects[i]).y + this.camera.y, 75, 75); 
             }
