@@ -2,7 +2,6 @@ let canvas = document.getElementById("kanvas");
 let ctx = canvas.getContext("2d");
 ctx.imageSmoothingEnabled = false;
 
-addEventListener("load", (event) => {selectLevel(0);});
 
 let camera = new Camera(0, 0, 0);
 let game;
@@ -13,6 +12,16 @@ let currentLvl;
 let levels = ["../Maps/lvl1.json", "../Maps/lvl2.json", "../Maps/lvl3.json"]
 let updateInterval
 let animationInterval
+
+if(localStorage.getItem("currentLevel") == undefined)
+{
+    currentLvl = 0;
+}
+else
+{
+    currentLvl = localStorage.getItem("currentLevel");
+}
+addEventListener("load", (event) => {selectLevel(currentLvl);});
 
 
 async function LoadLevel() 
@@ -39,6 +48,8 @@ async function selectLevel(level)
         await LoadJson(levels[level])
         LoadLevel();
     }
+
+    localStorage.setItem("currentLevel", level);
 }
 
 async function LoadJson(path)
