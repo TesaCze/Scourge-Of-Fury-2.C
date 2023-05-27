@@ -469,21 +469,19 @@ class Enemy extends PhysicGameObjects{
         this.lastX = this.x;
         this.lastY = this.y;
 
-        this.walls = [];
+
         for(let i = 0; i < this.AllGameObjects.length; i++) {
             if(this.AllGameObjects[i].tag == "wall" && this.AllGameObjects[i].haveCollision == true) {
-                this.walls.push(this.AllGameObjects[i]) 
-            }
-            for (let y = 0; y < this.walls.length; y++) {
-                if ((this.y + this.height / 2 + 2) > this.walls[y].y - this.walls[y].height / 2 &&  //kontrola kolizi
-                    (this.y - this.height / 2 - 2) < this.walls[y].y + this.walls[y].height / 2 &&
-                    (this.x - this.width / 2 - 2) < this.walls[y].x + this.walls[y].width / 2 &&
-                    (this.x + this.width / 2 + 2) > this.walls[y].x - this.walls[y].width / 2) {
 
-                let top = this.walls[y].y - this.walls[y].height / 2 - (this.y + this.height / 2);
-                let down = this.walls[y].y + this.walls[y].height / 2 - (this.y - this.height / 2);
-                let right = this.walls[y].x - this.walls[y].width / 2 - (this.x + this.width / 2);
-                let left = this.walls[y].x + this.walls[y].width / 2 - (this.x - this.width / 2);
+                if ((this.y + this.height / 2 + 2) > this.AllGameObjects[i].y - this.AllGameObjects[i].height / 2 &&  //kontrola kolizi
+                    (this.y - this.height / 2 - 2) < this.AllGameObjects[i].y + this.AllGameObjects[i].height / 2 &&
+                    (this.x - this.width / 2 - 2) < this.AllGameObjects[i].x + this.AllGameObjects[i].width / 2 &&
+                    (this.x + this.width / 2 + 2) > this.AllGameObjects[i].x - this.AllGameObjects[i].width / 2) {
+
+                let top = this.AllGameObjects[i].y - this.AllGameObjects[i].height / 2 - (this.y + this.height / 2);
+                let down = this.AllGameObjects[i].y + this.AllGameObjects[i].height / 2 - (this.y - this.height / 2);
+                let right = this.AllGameObjects[i].x - this.AllGameObjects[i].width / 2 - (this.x + this.width / 2);
+                let left = this.AllGameObjects[i].x + this.AllGameObjects[i].width / 2 - (this.x - this.width / 2);
 
                 let currX;
                 let currY;
