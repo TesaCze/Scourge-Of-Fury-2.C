@@ -283,10 +283,10 @@ h3 {
 
 .modal-content {
     background-color: #202020;
-    margin-top: 5%;
+    margin-top: 2%;
     padding: 20px;
     width: 50%;
-    height: 70%;
+    height: 85%;
     z-index: 12;
     font-family: "VT323";
     color: white;
